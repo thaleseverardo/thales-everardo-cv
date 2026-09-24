@@ -41,6 +41,16 @@
           var raw = localStorage.getItem('thales-everardo-cv');
           var parsed = raw ? JSON.parse(raw) : null;
           var savedTheme = parsed && parsed.theme ? parsed.theme : null;
+          var savedLang = parsed && parsed.language ? parsed.language : null;
+          if (savedLang === 'PT' || (!savedLang && navigator.language && navigator.language.startsWith('pt'))) {
+            document.documentElement.lang = 'pt-BR';
+          } else if (savedLang === 'ES' || (!savedLang && navigator.language && navigator.language.startsWith('es'))) {
+            document.documentElement.lang = 'es-ES';
+          } else if (savedLang === 'FR' || (!savedLang && navigator.language && navigator.language.startsWith('fr'))) {
+            document.documentElement.lang = 'fr-FR';
+          } else {
+            document.documentElement.lang = 'en-US';
+          }
           var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
           var theme = savedTheme || (prefersDark ? 'dark' : 'light');
           if (theme === 'dark') {

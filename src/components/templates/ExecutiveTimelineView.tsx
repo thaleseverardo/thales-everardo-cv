@@ -25,11 +25,10 @@ export const ExecutiveTimelineView: React.FC<ExecutiveTimelineViewProps> = ({
   selectedTag = null,
   onClearFilter,
 }) => {
-  
   const matchingNodes = nodes
-  .filter((node) => isNodeActiveInFilter(node, profileLens, searchTerm, selectedTag, language))
-  .slice()
-  .reverse();
+    .filter((node) => isNodeActiveInFilter(node, profileLens, searchTerm, selectedTag, language))
+    .slice()
+    .reverse();
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex-1">
@@ -70,8 +69,9 @@ export const ExecutiveTimelineView: React.FC<ExecutiveTimelineViewProps> = ({
             const content = getNodeContent(node, language);
 
             return (
-              <div
+              <article
                 key={node.id}
+                role="article"
                 className={`relative rounded-xl border p-5 sm:p-6 transition-all hover:shadow-lg ${
                   theme === 'dark'
                     ? 'bg-zinc-900/60 border-zinc-800 hover:border-zinc-700'
@@ -166,13 +166,13 @@ export const ExecutiveTimelineView: React.FC<ExecutiveTimelineViewProps> = ({
 
                   <button
                     onClick={() => onSelectNode(node.id)}
-                    className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded font-mono text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 transition-colors shrink-0"
+                    className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded font-mono text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 transition-colors shrink-0 cursor-pointer"
                   >
                     <span>{t(language, 'timeline.inspectButton')}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>
