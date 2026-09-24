@@ -1,4 +1,3 @@
-import { getDecodedEmail, getDecodedPhone } from '../utils/contactSecurity';
 import { ArchitectureNode, ProfileLens } from '../types';
 
 export const PROFILE_LENSES_CONFIG: Record<

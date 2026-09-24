@@ -18,6 +18,7 @@ import { CURRICULUM_NODES, PROFILE_DATA } from '../../data/curriculumData';
 import { playSound } from '../../utils/audio';
 import { AppLanguage, AppTheme } from '../../types';
 import { t, getNodeContent } from '../../i18n/translations';
+import { useAuth } from '../../hooks/useAuth';
 
 interface RawResumeModalProps {
   isOpen: boolean;
@@ -34,12 +35,16 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
   language: initialLanguage,
   theme,
 }) => {
+  const { isAuthenticated, contact, signInWithGoogle } = useAuth();
   const [activeLang, setActiveLang] = useState<AppLanguage>(initialLanguage);
   const [copied, setCopied] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [emailCopiedFeedback, setEmailCopiedFeedback] = useState(false);
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
+
+  const email = contact?.email || '';
+  const phone = contact?.phone || '';
 
   if (!isOpen) {
     if (showDownloadMenu) setShowDownloadMenu(false);
@@ -83,7 +88,7 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
     return `# Thales Everardo
 **${isPT ? PROFILE_DATA.titlePT : PROFILE_DATA.title}**
 
-📧 ${PROFILE_DATA.email} | 📱 ${PROFILE_DATA.phone} | 📍 ${isPT ? PROFILE_DATA.locationPT : PROFILE_DATA.location}
+📧 ${isAuthenticated ? email : '[Protected - Google Sign-In Required]'} | 📱 ${isAuthenticated ? phone : '[Protected - Google Sign-In Required]'} | 📍 ${isPT ? PROFILE_DATA.locationPT : PROFILE_DATA.location}
 🔗 [GitHub](${PROFILE_DATA.github}) | 🔗 [LinkedIn](${PROFILE_DATA.linkedin})
 
 ---
@@ -255,7 +260,7 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
             </div>
           </div>
 
-          {/* BOTÕES DE AÇÃO */}
+          {/* AÇÕES DE UTILIDADE */}
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={handlePrint}
@@ -270,7 +275,7 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
               <Printer className="w-4 h-4" />
             </button>
 
-            {/* DOWNLOAD */}
+            {/* MENU DOWNLOAD */}
             <div className="relative">
               <button
                 onClick={() => {
@@ -326,7 +331,7 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
               )}
             </div>
 
-            {/* COMPARTILHAR */}
+            {/* MENU COMPARTILHAR */}
             <div className="relative">
               <button
                 onClick={() => {
@@ -431,7 +436,7 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
           </div>
         </div>
 
-        {/* CORPO DO CURRÍCULO */}
+        {/* CORPO DO CV */}
         <div
           className={`flex-1 overflow-y-auto p-5 sm:p-10 font-sans leading-relaxed text-sm print:p-0 print:text-black print:overflow-visible ${
             theme === 'dark' ? 'bg-zinc-950 text-zinc-200' : 'bg-white text-slate-800'
@@ -441,7 +446,7 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
           <div className="relative border-b-2 pb-5 mb-6 dark:border-zinc-800 border-slate-300 print:border-black">
             <button
               onClick={handleCopyMarkdown}
-              className="absolute top-0 right-0 p-1 text-slate-400 hover:text-slate-800 dark:text-zinc-500 dark:hover:text-zinc-200 transition-colors print:hidden focus:outline-none"
+              className="absolute top-0 right-0 p-1 text-slate-400 hover:text-slate-800 dark:text-zinc-500 dark:hover:text-zinc-200 transition-colors print:hidden focus:outline-none cursor-pointer"
               title={copied ? t(activeLang, 'resume.copied') : t(activeLang, 'resume.copy')}
               aria-label={t(activeLang, 'resume.copy')}
             >
@@ -454,21 +459,34 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
               {activeLang === 'PT' ? PROFILE_DATA.titlePT : PROFILE_DATA.title}
             </div>
 
-            {/* LINHA DE CONTATO DIRETA */}
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs font-mono opacity-80 mt-3">
-              <span className="flex items-center gap-1.5">
-                <Mail className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
-                <a href={`mailto:${PROFILE_DATA.email}`} className="hover:underline font-semibold">
-                  {PROFILE_DATA.email}
-                </a>
-              </span>
-              <span className="opacity-40">•</span>
-              <span className="flex items-center gap-1.5">
-                <Phone className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
-                <a href="https://wa.me/5511949447774" target="_blank" rel="noopener noreferrer" className="hover:underline font-semibold">
-                  {PROFILE_DATA.phone}
-                </a>
-              </span>
+            {/* LINHA DE CONTATO BLINDADA COM DATA-NOSNIPPET E CARREGADA DO FIRESTORE */}
+            <div data-nosnippet="true" className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-mono opacity-90 mt-3">
+              {isAuthenticated ? (
+                <>
+                  <span className="flex items-center gap-1.5">
+                    <Mail className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400 shrink-0" />
+                    <a href={`mailto:${email}`} className="hover:underline font-semibold select-all">
+                      {email || 'Carregando...'}
+                    </a>
+                  </span>
+                  <span className="opacity-40">•</span>
+                  <span className="flex items-center gap-1.5">
+                    <Phone className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                    <a href={`https://wa.me/${phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="hover:underline font-semibold select-all">
+                      {phone || 'Carregando...'}
+                    </a>
+                  </span>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => signInWithGoogle()}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md border border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 font-semibold transition-colors focus:outline-none cursor-pointer select-none"
+                >
+                  <Mail className="w-3.5 h-3.5 shrink-0" />
+                  <span>{activeLang === 'PT' ? '🔒 Desbloquear e-mail e telefone com Google' : '🔒 Unlock email & phone with Google'}</span>
+                </button>
+              )}
               <span className="opacity-40">•</span>
               <span className="flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" />

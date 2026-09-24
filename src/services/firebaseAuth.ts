@@ -1,18 +1,13 @@
-/**
- * Firebase Auth Service Real (Google OAuth)
- * Executa signInWithPopup real abrindo o diálogo de autenticação de contas do Google.
- */
-
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import {
   getAuth,
   signInWithPopup,
   GoogleAuthProvider,
-  GithubAuthProvider,
   signOut,
   onAuthStateChanged,
   User,
 } from 'firebase/auth';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
 export interface AuthUser {
   uid: string;
@@ -22,7 +17,11 @@ export interface AuthUser {
   provider: string;
 }
 
-// Configuração lida do arquivo .env.local
+export interface ContactData {
+  email: string;
+  phone: string;
+}
+
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || '',
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || '',
@@ -33,10 +32,10 @@ const firebaseConfig = {
 };
 
 const isConfigured = Boolean(firebaseConfig.apiKey && firebaseConfig.authDomain);
-
-// Inicialização segura do Firebase (Singleton)
 const app = getApps().length > 0 ? getApp() : (isConfigured ? initializeApp(firebaseConfig) : null);
-const auth = app ? getAuth(app) : null;
+
+export const auth = app ? getAuth(app) : null;
+export const db = app ? getFirestore(app) : null;
 
 type AuthListener = (user: AuthUser | null) => void;
 const listeners: Set<AuthListener> = new Set();
@@ -53,7 +52,6 @@ function mapFirebaseUser(user: User | null): AuthUser | null {
   };
 }
 
-// Observador real de estado da sessão do Firebase
 if (auth) {
   onAuthStateChanged(auth, (user) => {
     currentUser = mapFirebaseUser(user);
@@ -67,65 +65,22 @@ export function subscribeToAuth(callback: AuthListener): () => void {
   return () => listeners.delete(callback);
 }
 
-/**
- * Dispara a janela real de login do Google (OAuth Popup)
- */
 export async function signInWithGoogle(): Promise<AuthUser> {
   if (!isConfigured || !auth) {
-    const errorMsg =
-      '⚠️ Firebase não configurado!\n\nPara o login real do Google funcionar:\n1. Acesse https://console.firebase.google.com\n2. Crie um projeto e ative "Authentication > Google"\n3. Preencha as chaves no arquivo .env.local';
-    alert(errorMsg);
-    throw new Error('Firebase Auth keys missing in .env.local');
+    alert('Configuração do Firebase ausente no .env.local.');
+    throw new Error('Firebase Auth not configured');
   }
 
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({ prompt: 'select_account' });
 
-  try {
-    const result = await signInWithPopup(auth, provider);
-    const user = mapFirebaseUser(result.user);
-    if (!user) throw new Error('Falha ao processar usuário.');
-    currentUser = user;
-    return user;
-  } catch (error: any) {
-    if (error.code === 'auth/popup-closed-by-user') {
-      console.warn('Login cancelado pelo usuário.');
-    } else {
-      console.error('Erro no Google Sign-In:', error);
-      alert(`Erro na autenticação: ${error.message}`);
-    }
-    throw error;
-  }
+  const result = await signInWithPopup(auth, provider);
+  const user = mapFirebaseUser(result.user);
+  if (!user) throw new Error('Falha ao autenticar usuário.');
+  currentUser = user;
+  return user;
 }
 
-/**
- * Dispara a janela real de login do GitHub (OAuth Popup)
- */
-export async function signInWithGithub(): Promise<AuthUser> {
-  if (!isConfigured || !auth) {
-    alert('Configure o GitHub Provider no console do Firebase e adicione as chaves no .env.local.');
-    throw new Error('Firebase Auth keys missing');
-  }
-
-  const provider = new GithubAuthProvider();
-  try {
-    const result = await signInWithPopup(auth, provider);
-    const user = mapFirebaseUser(result.user);
-    if (!user) throw new Error('Falha ao processar usuário.');
-    currentUser = user;
-    return user;
-  } catch (error: any) {
-    if (error.code !== 'auth/popup-closed-by-user') {
-      console.error('Erro no GitHub Sign-In:', error);
-      alert(`Erro na autenticação: ${error.message}`);
-    }
-    throw error;
-  }
-}
-
-/**
- * Encerra a sessão real do Firebase
- */
 export async function signOutUser(): Promise<void> {
   if (auth) {
     await signOut(auth);
@@ -135,20 +90,23 @@ export async function signOutUser(): Promise<void> {
 }
 
 /**
- * Libera os dados protegidos apenas para usuários autenticados via Firebase
+ * Consulta autenticada ao Cloud Firestore
  */
-export function getAuthorizedContact(user: AuthUser | null) {
-  if (!user) {
-    return {
-      email: '[Acesso Restrito - Faça Login com Google]',
-      phone: '[Acesso Restrito - Faça Login com Google]',
-      isLocked: true,
-    };
+export async function fetchProtectedContact(user: AuthUser | null): Promise<ContactData | null> {
+  if (!user || !db) return null;
+
+  try {
+    const snap = await getDoc(doc(db, 'portfolio', 'contacts'));
+    if (snap.exists()) {
+      const data = snap.data();
+      return {
+        email: data.email || '',
+        phone: data.phone || '',
+      };
+    }
+  } catch (error) {
+    console.error('Erro ao buscar contatos protegidos no Firestore:', error);
   }
 
-  return {
-    email: 'thales.everardo@gmail.com',
-    phone: '+55 (11) 94944-7774',
-    isLocked: false,
-  };
+  return null;
 }

@@ -181,7 +181,7 @@ export const CLIOverlay: React.FC<CLIOverlayProps> = ({
         onOpenContact();
         outputNode = (
           <div className="text-emerald-400 font-mono text-xs">
-            ⚡ Handshake modal initialized: Email {PROFILE_DATA.email} | Phone {PROFILE_DATA.phone}
+            ⚡ Handshake modal initialized: Contatos protegidos contra indexadores. Autentique-se no modal para visualizar.
           </div>
         );
         break;

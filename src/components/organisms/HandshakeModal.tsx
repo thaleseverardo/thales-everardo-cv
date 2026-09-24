@@ -54,7 +54,7 @@ export const HandshakeModal: React.FC<HandshakeModalProps> = ({
   const handleSendDraft = (e: React.FormEvent) => {
     e.preventDefault();
     const defaultBody = t(language, 'handshake.defaultBody');
-    const mailtoUrl = `mailto:${PROFILE_DATA.email}?subject=${encodeURIComponent(
+    const mailtoUrl = `mailto:${isAuthenticated ? contact.email : 'contato@portfolio'}?subject=${encodeURIComponent(
       inquirySubject
     )}&body=${encodeURIComponent(inquiryNote || defaultBody)}`;
     window.location.href = mailtoUrl;
