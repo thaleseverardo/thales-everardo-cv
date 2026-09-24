@@ -39,19 +39,7 @@ export const db = app ? getFirestore(app) : null;
 
 type AuthListener = (user: AuthUser | null) => void;
 const listeners: Set<AuthListener> = new Set();
-
-// Recupera sessão persistida localmente no PWA
-function getPersistedUser(): AuthUser | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const raw = sessionStorage.getItem('thales-verified-session');
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
-let currentUser: AuthUser | null = getPersistedUser();
+let currentUser: AuthUser | null = null;
 
 function mapFirebaseUser(user: User | null): AuthUser | null {
   if (!user) return null;
@@ -64,11 +52,16 @@ function mapFirebaseUser(user: User | null): AuthUser | null {
   };
 }
 
+// Limpeza preventiva de sessões de teste anteriores
+if (typeof window !== 'undefined') {
+  try {
+    sessionStorage.removeItem('thales-verified-session');
+  } catch {}
+}
+
 if (auth) {
   onAuthStateChanged(auth, (user) => {
-    if (user) {
-      currentUser = mapFirebaseUser(user);
-    }
+    currentUser = mapFirebaseUser(user);
     listeners.forEach((cb) => cb(currentUser));
   });
 }
@@ -80,85 +73,59 @@ export function subscribeToAuth(callback: AuthListener): () => void {
 }
 
 /**
- * Autenticação inteligente compatível com PWA Mobile e GitHub Pages
+ * Dispara a janela oficial do Google OAuth em qualquer dispositivo (Desktop, Mobile e PWA)
  */
 export async function signInWithGoogle(): Promise<AuthUser> {
-  // Detecta se está em PWA standalone no celular
-  const isStandalone = typeof window !== 'undefined' && (
-    window.matchMedia('(display-mode: standalone)').matches ||
-    (window.navigator as unknown as { standalone?: boolean }).standalone === true
-  );
-
-  // Se o Firebase estiver configurado E NÃO estiver bloqueado no PWA standalone
-  if (isFirebaseConfigured && auth && !isStandalone) {
-    try {
-      const provider = new GoogleAuthProvider();
-      provider.setCustomParameters({ prompt: 'select_account' });
-      const result = await signInWithPopup(auth, provider);
-      const user = mapFirebaseUser(result.user);
-      if (user) {
-        currentUser = user;
-        listeners.forEach((cb) => cb(currentUser));
-        return user;
-      }
-    } catch (err: unknown) {
-      const error = err as { code?: string };
-      // Se o popup for bloqueado pelo browser mobile, avança para verificação humana
-      if (error?.code !== 'auth/popup-blocked' && error?.code !== 'auth/popup-closed-by-user') {
-        console.warn('Fallback ativado devido a restrição de popup no dispositivo:', err);
-      }
-    }
+  if (!isFirebaseConfigured || !auth) {
+    alert('As credenciais do Firebase ainda não foram injetadas no build.');
+    throw new Error('Firebase Auth not configured');
   }
 
-  // Fallback Resiliente para PWA Instalado / GitHub Pages sem popup
-  const verifiedUser: AuthUser = {
-    uid: `recruiter-${Date.now()}`,
-    displayName: 'Recrutador Verificado',
-    email: 'acesso.autorizado@portfolio',
-    photoURL: null,
-    provider: 'verified-session',
-  };
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
 
-  currentUser = verifiedUser;
   try {
-    sessionStorage.setItem('thales-verified-session', JSON.stringify(verifiedUser));
-  } catch {}
-
-  listeners.forEach((cb) => cb(currentUser));
-  return verifiedUser;
+    const result = await signInWithPopup(auth, provider);
+    const user = mapFirebaseUser(result.user);
+    if (!user) throw new Error('Falha ao processar login do Google.');
+    currentUser = user;
+    listeners.forEach((cb) => cb(currentUser));
+    return user;
+  } catch (error: any) {
+    if (error?.code === 'auth/popup-closed-by-user') {
+      console.warn('Login cancelado pelo usuário.');
+    } else {
+      console.error('Erro na autenticação do Google:', error);
+      alert(`Falha no login: ${error?.message || 'Erro desconhecido'}`);
+    }
+    throw error;
+  }
 }
 
 export async function signOutUser(): Promise<void> {
-  if (auth && isFirebaseConfigured) {
-    try {
-      await signOut(auth);
-    } catch {}
+  if (auth) {
+    await signOut(auth);
   }
   currentUser = null;
-  try {
-    sessionStorage.removeItem('thales-verified-session');
-  } catch {}
   listeners.forEach((cb) => cb(null));
 }
 
 export async function fetchProtectedContact(user: AuthUser | null): Promise<ContactData | null> {
-  if (!user) return null;
+  if (!user || !db) return null;
 
-  // Se o Firestore estiver online, tenta buscar o documento
-  if (db && isFirebaseConfigured) {
-    try {
-      const snap = await getDoc(doc(db, 'portfolio', 'contacts'));
-      if (snap.exists()) {
-        const data = snap.data();
-        return {
-          email: data.email || 'thales.everardo@gmail.com',
-          phone: data.phone || '+55 11 96296 9508',
-        };
-      }
-    } catch {}
+  try {
+    const snap = await getDoc(doc(db, 'portfolio', 'contacts'));
+    if (snap.exists()) {
+      const data = snap.data();
+      return {
+        email: data.email || 'thales.everardo@gmail.com',
+        phone: data.phone || '+55 11 96296 9508',
+      };
+    }
+  } catch (error) {
+    console.warn('Documento no Firestore não encontrado, usando entrega canônica autorizada:', error);
   }
 
-  // Entrega autorizada pós-validação
   return {
     email: 'thales.everardo@gmail.com',
     phone: '+55 11 96296 9508',
