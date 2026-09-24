@@ -6,7 +6,6 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(() => {
   return {
-    // Garante que os assets funcionem em qualquer subpasta do GitHub Pages
     base: '/thales-everardo-cv/',
     plugins: [
       react(),
@@ -26,19 +25,19 @@ export default defineConfig(() => {
           scope: './',
           icons: [
             {
-              src: '/pwa-192x192.png',
+              src: 'pwa-192x192.png',
               sizes: '192x192',
               type: 'image/png',
               purpose: 'any',
             },
             {
-              src: '/pwa-512x512.png',
+              src: 'pwa-512x512.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'any',
             },
             {
-              src: '/pwa-512x512.png',
+              src: 'pwa-512x512.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'maskable',
@@ -46,6 +45,8 @@ export default defineConfig(() => {
           ],
         },
         workbox: {
+          // Aumenta o limite de arquivo em cache de 2MB para 5MB (corrige o erro do pwa-512x512.png)
+          maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
           globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
           runtimeCaching: [
             {
@@ -85,7 +86,7 @@ export default defineConfig(() => {
     ],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve('.'),
       },
     },
     server: {
