@@ -7,7 +7,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 export default defineConfig(() => {
   return {
     // Garante que os assets funcionem em qualquer subpasta do GitHub Pages
-    base: './',
+    base: '/thales-everardo-cv/',
     plugins: [
       react(),
       tailwindcss(),
