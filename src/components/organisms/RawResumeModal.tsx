@@ -1,4 +1,3 @@
-import { useAuth } from '../../hooks/useAuth';
 import React, { useState } from 'react';
 import {
   X,
@@ -41,7 +40,6 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
   const [emailCopiedFeedback, setEmailCopiedFeedback] = useState(false);
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
-  const { isAuthenticated, contact, signInWithGoogle } = useAuth();
 
   if (!isOpen) {
     if (showDownloadMenu) setShowDownloadMenu(false);
@@ -97,13 +95,13 @@ ${isPT ? PROFILE_DATA.summaryPT : PROFILE_DATA.summary}
 
 ## ${t(activeLang, 'resume.coreExperience')}
 ${CURRICULUM_NODES.map((n) => {
-  const content = getNodeContent(n, activeLang);
-  return `### ${n.company} — ${content.role}
+  const c = getNodeContent(n, activeLang);
+  return `### ${n.company} — ${c.role}
 *${n.period} | ${n.location}*
 
-- **${t(activeLang, 'resume.businessRoi')}** ${content.businessValue}
-- **${t(activeLang, 'resume.engineeringFeat')}** ${content.engineeringFeat}
-- **${t(activeLang, 'resume.solution')}** ${content.architecturalSolution}
+- **${t(activeLang, 'resume.businessRoi')}** ${c.businessValue}
+- **${t(activeLang, 'resume.engineeringFeat')}** ${c.engineeringFeat}
+- **${t(activeLang, 'resume.solution')}** ${c.architecturalSolution}
 - **Stack:** \`${n.technologies.join('`, `')}\`
 `;
 }).join('\n')}
@@ -137,10 +135,6 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
     const msg =
       activeLang === 'PT'
         ? `Confira o currículo de Thales Everardo (Arquiteto de Sistemas / Staff Engineer): ${pdfUrl}`
-        : activeLang === 'ES'
-        ? `Consulte el currículum de Thales Everardo (Arquitecto de Sistemas / Staff Engineer): ${pdfUrl}`
-        : activeLang === 'FR'
-        ? `Consultez le CV de Thales Everardo (Architecte Systèmes / Staff Engineer): ${pdfUrl}`
         : `Check out Thales Everardo's Resume (Systems Architect / Staff Engineer): ${pdfUrl}`;
 
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
@@ -159,30 +153,20 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
     playSound('click', soundEnabled);
   };
 
-  // PADRÃO OURO DE MERCADO: Protocolo universal mailto + cópia resiliente do link simultânea
   const handleShareEmail = () => {
     const pdfUrl = getAbsoluteDocUrl('pdf');
     const subject =
       activeLang === 'PT'
         ? 'Currículo de Thales Everardo // Arquiteto de Sistemas'
-        : activeLang === 'ES'
-        ? 'Currículum de Thales Everardo // Arquitecto de Sistemas'
-        : activeLang === 'FR'
-        ? 'CV de Thales Everardo // Architecte Systèmes'
         : 'Resume - Thales Everardo // Systems Architect';
 
     const body =
       activeLang === 'PT'
-        ? `Olá,\r\n\r\nAcesse o currículo atualizado em PDF de Thales Everardo através do link direto abaixo:\r\n${pdfUrl}\r\n\r\nAtenciosamente,`
-        : activeLang === 'ES'
-        ? `Hola,\r\n\r\nConsulte el currículum actualizado en PDF de Thales Everardo en el enlace directo a continuación:\r\n${pdfUrl}\r\n\r\nSaludos cordiales,`
-        : activeLang === 'FR'
-        ? `Bonjour,\r\n\r\nVeuillez trouver le CV à jour de Thales Everardo via le lien direct ci-dessous :\r\n${pdfUrl}\r\n\r\nCordialement,`
-        : `Hello,\r\n\r\nPlease find the updated PDF resume of Thales Everardo via the direct link below:\r\n${pdfUrl}\r\n\r\nBest regards,`;
+        ? `Olá,\r\n\r\nAcesse o currículo em PDF de Thales Everardo no link abaixo:\r\n${pdfUrl}\r\n\r\nAtenciosamente,`
+        : `Hello,\r\n\r\nPlease find the PDF resume of Thales Everardo via the direct link below:\r\n${pdfUrl}\r\n\r\nBest regards,`;
 
     const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-    // 1. Dispara o protocolo do sistema operacional (abre Apple Mail, Outlook, app de email do celular, etc.)
     const anchor = document.createElement('a');
     anchor.href = mailtoUrl;
     anchor.rel = 'noopener noreferrer';
@@ -190,7 +174,6 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
     anchor.click();
     document.body.removeChild(anchor);
 
-    // 2. Fallback resiliente: copia o link direto do PDF para a área de transferência caso não haja app instalado
     navigator.clipboard.writeText(pdfUrl);
     setEmailCopiedFeedback(true);
     playSound('success', soundEnabled);
@@ -204,10 +187,7 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
   const handleNativeShare = async () => {
     const pdfUrl = getAbsoluteDocUrl('pdf');
     const title = `Thales Everardo - CV (${activeLang})`;
-    const text =
-      activeLang === 'PT'
-        ? 'Currículo de Thales Everardo - Arquiteto de Sistemas & Staff Engineer'
-        : 'Resume - Thales Everardo - Systems Architect & Staff Software Engineer';
+    const text = 'Currículo de Thales Everardo - Arquiteto de Sistemas & Staff Engineer';
 
     try {
       if (typeof navigator !== 'undefined' && navigator.share) {
@@ -215,9 +195,7 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
         setShowShareMenu(false);
         playSound('success', soundEnabled);
       }
-    } catch {
-      // Ignora cancelamento pelo usuário
-    }
+    } catch {}
   };
 
   return (
@@ -234,21 +212,19 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
             : 'bg-white border-slate-300 text-slate-900'
         }`}
       >
-        {/* BARRA SUPERIOR HARMONIZADA */}
+        {/* BARRA SUPERIOR */}
         <div
           className={`px-4 sm:px-6 h-14 border-b flex items-center justify-between gap-3 shrink-0 print:hidden ${
             theme === 'dark' ? 'bg-zinc-900/90 border-zinc-800' : 'bg-slate-100/90 border-slate-200'
           }`}
         >
-          {/* LADO ESQUERDO: SEGMENTED CONTROL SIMÉTRICO */}
+          {/* SELETOR DE IDIOMA */}
           <div className="flex items-center min-w-0">
             <div
               role="tablist"
               aria-label="Language selector"
               className={`grid grid-cols-4 w-36 sm:w-48 h-9 p-1 rounded-lg border text-xs font-mono shadow-2xs shrink-0 ${
-                theme === 'dark'
-                  ? 'bg-zinc-950 border-zinc-800'
-                  : 'bg-white border-slate-300'
+                theme === 'dark' ? 'bg-zinc-950 border-zinc-800' : 'bg-white border-slate-300'
               }`}
             >
               {(['PT', 'EN', 'ES', 'FR'] as const).map((langCode) => {
@@ -264,7 +240,7 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
                         playSound('click', soundEnabled);
                       }
                     }}
-                    className={`w-full h-full rounded-md text-[11px] font-bold transition-all flex items-center justify-center focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 ${
+                    className={`w-full h-full rounded-md text-[11px] font-bold transition-all flex items-center justify-center focus:outline-hidden ${
                       isActive
                         ? 'bg-blue-600 text-white shadow-2xs'
                         : theme === 'dark'
@@ -279,12 +255,11 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
             </div>
           </div>
 
-          {/* LADO DIREITO: ORDEM HARMONIZADA [IMPRIMIR] -> [DOWNLOAD] -> [COMPARTILHAR] -> [FECHAR] */}
+          {/* BOTÕES DE AÇÃO */}
           <div className="flex items-center gap-2 shrink-0">
-            {/* 1. IMPRIMIR (oculto no mobile para evitar overflow horizontal em telas < 390px) */}
             <button
               onClick={handlePrint}
-              className={`hidden sm:flex h-9 w-9 rounded-lg border items-center justify-center transition-all focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 shadow-2xs ${
+              className={`hidden sm:flex h-9 w-9 rounded-lg border items-center justify-center transition-all focus:outline-hidden shadow-2xs ${
                 theme === 'dark'
                   ? 'bg-zinc-950 border-zinc-800 text-zinc-300 hover:bg-zinc-900 hover:text-white'
                   : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-slate-900'
@@ -295,7 +270,7 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
               <Printer className="w-4 h-4" />
             </button>
 
-            {/* 2. DOWNLOAD */}
+            {/* DOWNLOAD */}
             <div className="relative">
               <button
                 onClick={() => {
@@ -303,7 +278,7 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
                   setShowShareMenu(false);
                   playSound('click', soundEnabled);
                 }}
-                className={`h-9 w-9 rounded-lg border flex items-center justify-center transition-all focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 shadow-2xs ${
+                className={`h-9 w-9 rounded-lg border flex items-center justify-center transition-all focus:outline-hidden shadow-2xs ${
                   showDownloadMenu
                     ? theme === 'dark'
                       ? 'bg-zinc-900 border-cyan-500/50 text-cyan-300 shadow-sm'
@@ -314,7 +289,6 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
                 }`}
                 title="Download"
                 aria-expanded={showDownloadMenu}
-                aria-haspopup="menu"
               >
                 <Download className="w-4 h-4" />
               </button>
@@ -326,7 +300,6 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
                     <div className="px-3.5 py-2 text-[10px] font-bold opacity-60 uppercase border-b border-slate-100 dark:border-zinc-800 tracking-wider">
                       {activeLang === 'PT' ? 'Download Estático' : 'Static Download'}
                     </div>
-
                     <button
                       onClick={() => downloadStaticFile('pdf')}
                       className="w-full text-left px-3.5 py-2.5 hover:bg-slate-50 dark:hover:bg-zinc-900 transition-colors text-slate-800 dark:text-zinc-200 border-b border-slate-100 dark:border-zinc-800/80 flex items-center justify-between"
@@ -353,7 +326,7 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
               )}
             </div>
 
-            {/* 3. COMPARTILHAR (PADRÃO OURO DE MERCADO) */}
+            {/* COMPARTILHAR */}
             <div className="relative">
               <button
                 onClick={() => {
@@ -361,7 +334,7 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
                   setShowDownloadMenu(false);
                   playSound('click', soundEnabled);
                 }}
-                className={`h-9 w-9 rounded-lg border flex items-center justify-center transition-all focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 shadow-2xs ${
+                className={`h-9 w-9 rounded-lg border flex items-center justify-center transition-all focus:outline-hidden shadow-2xs ${
                   showShareMenu
                     ? theme === 'dark'
                       ? 'bg-zinc-900 border-cyan-500/50 text-cyan-300 shadow-sm'
@@ -372,7 +345,6 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
                 }`}
                 title={activeLang === 'PT' ? 'Compartilhar' : 'Share'}
                 aria-expanded={showShareMenu}
-                aria-haspopup="menu"
               >
                 <Share2 className="w-4 h-4" />
               </button>
@@ -384,7 +356,6 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
                     <div className="px-3.5 py-2 text-[10px] font-bold opacity-60 uppercase border-b border-slate-100 dark:border-zinc-800 tracking-wider">
                       {activeLang === 'PT' ? 'Compartilhar CV' : 'Share Resume'}
                     </div>
-
                     <button
                       onClick={handleShareWhatsApp}
                       className="w-full text-left px-3.5 py-2.5 hover:bg-slate-50 dark:hover:bg-zinc-900 transition-colors text-slate-800 dark:text-zinc-200 border-b border-slate-100 dark:border-zinc-800/80 flex items-center gap-2.5"
@@ -392,7 +363,6 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
                       <MessageCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                       <span>WhatsApp</span>
                     </button>
-
                     <button
                       onClick={handleShareLinkedIn}
                       className="w-full text-left px-3.5 py-2.5 hover:bg-slate-50 dark:hover:bg-zinc-900 transition-colors text-slate-800 dark:text-zinc-200 border-b border-slate-100 dark:border-zinc-800/80 flex items-center gap-2.5"
@@ -400,8 +370,6 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
                       <Linkedin className="w-4 h-4 text-blue-600 dark:text-cyan-400 shrink-0" />
                       <span>LinkedIn</span>
                     </button>
-
-                    {/* E-MAIL UNIVERSAL (MAILTO + AUTO-COPY FALLBACK) */}
                     <button
                       onClick={handleShareEmail}
                       className="w-full text-left px-3.5 py-2.5 hover:bg-slate-50 dark:hover:bg-zinc-900 transition-colors text-slate-800 dark:text-zinc-200 border-b border-slate-100 dark:border-zinc-800/80 flex items-center justify-between"
@@ -416,7 +384,6 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
                         </span>
                       )}
                     </button>
-
                     {typeof navigator !== 'undefined' && 'share' in navigator && (
                       <button
                         onClick={handleNativeShare}
@@ -426,8 +393,6 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
                         <span>{activeLang === 'PT' ? 'Outros Apps...' : 'Other Apps...'}</span>
                       </button>
                     )}
-
-                    {/* COPIAR LINK DO PDF */}
                     <button
                       onClick={handleCopyPdfLink}
                       className="w-full text-left px-3.5 py-2.5 hover:bg-slate-50 dark:hover:bg-zinc-900 transition-colors text-slate-800 dark:text-zinc-200 flex items-center justify-between"
@@ -440,12 +405,8 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
                         )}
                         <span className="truncate">
                           {copiedLink
-                            ? activeLang === 'PT'
-                              ? 'Link Copiado!'
-                              : 'Copied!'
-                            : activeLang === 'PT'
-                            ? 'Copiar Link do PDF'
-                            : 'Copy PDF Link'}
+                            ? activeLang === 'PT' ? 'Link Copiado!' : 'Copied!'
+                            : activeLang === 'PT' ? 'Copiar Link do PDF' : 'Copy PDF Link'}
                         </span>
                       </span>
                     </button>
@@ -454,13 +415,11 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
               )}
             </div>
 
-            {/* SEPARADOR GEOMÉTRICO */}
             <div className="w-px h-5 bg-slate-300 dark:bg-zinc-800 mx-0.5" />
 
-            {/* 4. FECHAR (X) */}
             <button
               onClick={onClose}
-              className={`h-9 w-9 rounded-lg border border-transparent flex items-center justify-center transition-all focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 ${
+              className={`h-9 w-9 rounded-lg border border-transparent flex items-center justify-center transition-all focus:outline-hidden ${
                 theme === 'dark'
                   ? 'text-zinc-400 hover:text-white hover:bg-zinc-900 hover:border-zinc-800'
                   : 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/80 hover:border-slate-300'
@@ -478,6 +437,7 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
             theme === 'dark' ? 'bg-zinc-950 text-zinc-200' : 'bg-white text-slate-800'
           }`}
         >
+          {/* CABEÇALHO */}
           <div className="relative border-b-2 pb-5 mb-6 dark:border-zinc-800 border-slate-300 print:border-black">
             <button
               onClick={handleCopyMarkdown}
@@ -494,38 +454,30 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
               {activeLang === 'PT' ? PROFILE_DATA.titlePT : PROFILE_DATA.title}
             </div>
 
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-mono opacity-80 mt-3">
-              <span className="flex items-center gap-1">
-                <Mail className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-                {isAuthenticated ? (
-                  <a href={`mailto:${contact.email}`} className="hover:underline text-emerald-600 dark:text-emerald-400 font-bold">
-                    {contact.email}
-                  </a>
-                ) : (
-                  <button onClick={() => signInWithGoogle()} className="text-amber-500 hover:underline">
-                    [🔒 {activeLang === 'PT' ? 'Fazer login para ver e-mail' : 'Login to view email'}]
-                  </button>
-                )}
+            {/* LINHA DE CONTATO DIRETA */}
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs font-mono opacity-80 mt-3">
+              <span className="flex items-center gap-1.5">
+                <Mail className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+                <a href={`mailto:${PROFILE_DATA.email}`} className="hover:underline font-semibold">
+                  {PROFILE_DATA.email}
+                </a>
               </span>
-              <span className="hidden sm:inline">•</span>
-              <span className="flex items-center gap-1">
-                <Phone className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-                {isAuthenticated ? (
-                  <span className="text-emerald-600 dark:text-emerald-400 font-bold">{contact.phone}</span>
-                ) : (
-                  <button onClick={() => signInWithGoogle()} className="text-amber-500 hover:underline">
-                    [🔒 {activeLang === 'PT' ? 'Telefone protegido' : 'Phone protected'}]
-                  </button>
-                )}
+              <span className="opacity-40">•</span>
+              <span className="flex items-center gap-1.5">
+                <Phone className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+                <a href="https://wa.me/5511949447774" target="_blank" rel="noopener noreferrer" className="hover:underline font-semibold">
+                  {PROFILE_DATA.phone}
+                </a>
               </span>
-              <span className="hidden sm:inline">•</span>
-              <span className="flex items-center gap-1">
-                <MapPin className="w-3.5 h-3.5 text-rose-500" />
+              <span className="opacity-40">•</span>
+              <span className="flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" />
                 <span>{activeLang === 'PT' ? PROFILE_DATA.locationPT : PROFILE_DATA.location}</span>
               </span>
             </div>
           </div>
 
+          {/* RESUMO EXECUTIVO */}
           <div className="mb-6 space-y-2">
             <h2 className="text-xs font-mono font-bold uppercase tracking-wider border-b pb-1 dark:border-zinc-800 border-slate-200 text-blue-600 dark:text-blue-400 print:text-black">
               {t(activeLang, 'resume.executiveSummary')}
@@ -535,6 +487,7 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
             </p>
           </div>
 
+          {/* EXPERIÊNCIA ARQUITETURAL */}
           <div className="mb-6 space-y-5">
             <h2 className="text-xs font-mono font-bold uppercase tracking-wider border-b pb-1 dark:border-zinc-800 border-slate-200 text-blue-600 dark:text-blue-400 print:text-black">
               {t(activeLang, 'resume.coreExperience')}
@@ -588,6 +541,7 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
             })}
           </div>
 
+          {/* FORMAÇÃO & CERTIFICAÇÕES */}
           <div className="mb-6 space-y-3">
             <h2 className="text-xs font-mono font-bold uppercase tracking-wider border-b pb-1 dark:border-zinc-800 border-slate-200 text-blue-600 dark:text-blue-400 print:text-black">
               {t(activeLang, 'resume.educationCert')}

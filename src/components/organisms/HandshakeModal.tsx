@@ -136,10 +136,7 @@ export const HandshakeModal: React.FC<HandshakeModalProps> = ({
             <p>{t(language, 'handshake.availabilityDesc')}</p>
           </div>
 
-          <div className="space-y-3">
-            <AuthContactGate type="email" language={language} theme={theme} />
-            <AuthContactGate type="phone" language={language} theme={theme} />
-          </div>
+          <AuthContactGate language={language} theme={theme} />
 
           <div className="flex items-center gap-2 flex-wrap">
             <a
