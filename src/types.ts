@@ -1,6 +1,6 @@
 export type SystemMode = 'DIGITAL_ARCHITECTURE' | 'PHYSICAL_OPERATIONS';
 export type SystemHealth = 'HEALTHY' | 'DEGRADED' | 'CRITICAL';
-export type AppLanguage = 'PT' | 'EN';
+export type AppLanguage = 'PT' | 'EN' | 'ES' | 'FR';
 export type AppTheme = 'dark' | 'light';
 export type ViewLayout = 'GRAPH' | 'TIMELINE';
 export type ProfileLens = 'ALL' | 'ARCHITECTURE' | 'DATA' | 'SOFTWARE_ENG' | 'DATABASE';
@@ -8,11 +8,11 @@ export type NodeVisualShape = 'STREAM_PULSE' | 'PROCESSOR_CORE' | 'DATABASE_CYLI
 
 export interface SystemState {
   mode: SystemMode;
-  rps: number; // Controlled by Traffic Slider (100 to 100,000)
-  isLatencyOptimized: boolean; // Toggles Atento latency demo (7 days -> 20 min)
-  isPurgeExecuted: boolean; // Toggles Altitude 11TB purge demo
-  isSyncActive: boolean; // Toggles Summerhill ERP -> POS sync demo
-  activeNodeId: string | null; // Currently open node in Inspector Drawer
+  rps: number;
+  isLatencyOptimized: boolean;
+  isPurgeExecuted: boolean;
+  isSyncActive: boolean;
+  activeNodeId: string | null;
   systemHealth: SystemHealth;
   failureInjected: boolean;
   failureReason?: string;
@@ -62,7 +62,7 @@ export interface ArchitectureNode {
   location: string;
   period: string;
   metricHighlight: string;
-  businessValue: string; // Plain-English / Executive Business Value explanation
+  businessValue: string;
   metricDetails: MetricHighlight[];
   engineeringFeat: string;
   contextProblem: string;
@@ -74,7 +74,7 @@ export interface ArchitectureNode {
   lenses: ProfileLens[];
   modeVisibility: 'both' | 'digital' | 'physical';
   position: {
-    digital: { x: number; y: number }; // percentages (0-100)
+    digital: { x: number; y: number };
     physical: { x: number; y: number };
   };
   connectedTo: string[];
@@ -85,4 +85,6 @@ export interface ArchitectureNode {
     description: string;
   };
   pt: NodeTranslation;
+  es?: Partial<NodeTranslation>;
+  fr?: Partial<NodeTranslation>;
 }

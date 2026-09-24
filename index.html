@@ -1,28 +1,47 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en-US">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Thales Reis - System Architect & Software Engineer</title>
-    <meta name="description" content="Interactive system architecture and observability portfolio for Thales Reis, showcasing resilient pipelines, latency optimization, and enterprise distributed systems." />
-    <meta property="og:title" content="Thales Reis - System Architect & Software Engineer" />
-    <meta property="og:description" content="Interactive system architecture and observability portfolio for Thales Reis, showcasing resilient pipelines, latency optimization, and enterprise distributed systems." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Thales Everardo - System Architect & Software Engineer</title>
+    <meta name="description" content="Interactive system architecture and observability portfolio for Thales Everardo, showcasing resilient pipelines, latency optimization, and enterprise distributed systems." />
+    <meta property="og:title" content="Thales Everardo - System Architect & Software Engineer" />
+    <meta property="og:description" content="Interactive system architecture and observability portfolio for Thales Everardo, showcasing resilient pipelines, latency optimization, and enterprise distributed systems." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#09090b" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="ThalesReis" />
+    <meta name="apple-mobile-web-app-title" content="ThalesEverardo" />
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Anti-flicker: lê 'theme' do JSON único 'thales-everardo-cv' antes da renderização -->
+    <script>
+      (function() {
+        try {
+          var raw = localStorage.getItem('thales-everardo-cv');
+          var parsed = raw ? JSON.parse(raw) : null;
+          var savedTheme = parsed && parsed.theme ? parsed.theme : null;
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = savedTheme || (prefersDark ? 'dark' : 'light');
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+          } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.add('light');
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
-  <body class="bg-zinc-950 text-zinc-100 antialiased selection:bg-emerald-500/30 selection:text-emerald-300">
+  <body class="bg-slate-50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 antialiased selection:bg-emerald-500/30 selection:text-emerald-300">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

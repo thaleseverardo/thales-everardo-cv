@@ -1,0 +1,121 @@
+%PDF-1.4
+%����
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R 7 0 R] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 3720 >>
+stream
+BT
+/F1 9.5 Tf
+40 805 Td
+13.5 TL
+(Thales Everardo - Engenheiro de Software Staff & Arquiteto de Sistemas) Tj T*
+(Email: thales.everardo@gmail.com | Tel: +55 \(11\) 94944-7774 | S�o Paulo - SP, Brasil) Tj T*
+(GitHub: https://github.com/thaleseverardo | LinkedIn: https://linkedin.com/in/thaleseverardo) Tj T*
+(---------------------------------------------------------------------------) Tj T*
+/F2 10.5 Tf (RESUMO EXECUTIVO) Tj T* /F1 9.5 Tf
+(Arquiteto de Sistemas e Engenheiro de Software Staff com mais de 10 anos de) Tj T*
+(experi�ncia em engenharia de dados, microsservi�os distribu�dos, computa��o tolerante) Tj T*
+(a falhas e arquiteturas orientadas a eventos \(EDA\). Especialista na elimina��o de) Tj T*
+(lat�ncias cr�ticas em ambientes com alta volumetria transacional e conformidade ACID.) Tj T*
+(---------------------------------------------------------------------------) Tj T*
+/F2 10.5 Tf (EXPERI�NCIA ARQUITETURAL EM PRODU��O) Tj T* /F1 9.5 Tf
+/F2 9.5 Tf ([01] Cons�rcio Magalu - Engenheiro de Software S�nior / Arquiteto) Tj T* /F1 9.5 Tf
+(    05/2024 - Atual | S�o Paulo, Brasil) Tj T*
+(    * Impacto Comercial: Elimina��o do lock em produ��o e mitiga��o de risco de) Tj T*
+(indisponibilidade em fechamentos fiscais.) Tj T*
+(    * Feito T�cnico: Purga ass�ncrona particionada de 11TB de logs legados em base) Tj T*
+(SQL Server sem travamento transacional.) Tj T*
+(    * Solu��o: Pipeline em lotes desacoplados com janelas din�micas fora do hor�rio) Tj T*
+(de pico e monitoramento de press�o de logs.) Tj T*
+(    * Stack: C#, .NET Core, SQL Server, Sybase, Kafka, Docker, Kubernetes) Tj T*
+() Tj T*
+/F2 9.5 Tf ([02] Grupo GPS - Engenheiro de Software S�nior) Tj T* /F1 9.5 Tf
+(    06/2023 - 05/2024 | S�o Paulo, Brasil) Tj T*
+(    * Impacto Comercial: Redu��o de 99,8% no tempo de processamento cont�bil e) Tj T*
+(apura��o de folha de pagamento.) Tj T*
+(    * Feito T�cnico: Redu��o da lat�ncia do pipeline cont�bil de 7 dias para 20) Tj T*
+(minutos com alta consist�ncia.) Tj T*
+(    * Solu��o: Otimiza��o profunda de �ndices, particionamento de tabelas hist�ricas) Tj T*
+(e paraleliza��o ass�ncrona em C#.) Tj T*
+(    * Stack: C#, T-SQL, SQL Server, Tuning de �ndices, ASP.NET Core) Tj T*
+() Tj T*
+/F2 9.5 Tf ([03] Ambar / Construtech - Engenheiro de Software Especialista) Tj T* /F1 9.5 Tf
+(    07/2021 - 06/2023 | S�o Carlos - SP, Brasil) Tj T*
+(    * Impacto Comercial: Sincroniza��o em tempo real de cat�logos e estoques entre 5) Tj T*
+(centros de distribui��o sem perda de pedidos.) Tj T*
+(    * Feito T�cnico: Arquitetura de mensageria com barramento padr�o GS1) Tj T*
+(sincronizando ERP e sistemas POS em tempo real.) Tj T*
+(    * Solu��o: Padr�o Outbox transacional com filas RabbitMQ e fallback local com) Tj T*
+(idempot�ncia.) Tj T*
+(    * Stack: C#, RabbitMQ, SQL Server, GS1 Architecture, Microservices) Tj T*
+() Tj T*
+/F2 9.5 Tf ([04] Summerhill / Eco Wave - Engenheiro de Software) Tj T* /F1 9.5 Tf
+(    11/2019 - 06/2021 | Toronto, Canad�) Tj T*
+(    * Impacto Comercial: Otimiza��o de rotas de campo e auditorias energ�ticas) Tj T*
+(reduzindo o custo operacional por visita em 22%.) Tj T*
+(    * Feito T�cnico: Motor de otimiza��o de rotas geogr�ficas para equipes t�cnicas) Tj T*
+(com cache offline resiliente.) Tj T*
+(    * Solu��o: Algoritmo heur�stico de roteamento combinado com SQLite local e) Tj T*
+(sincroniza��o bidirecional em segundo plano.) Tj T*
+(    * Stack: Python, TypeScript, Node.js, SQLite, GeoJSON, REST APIs) Tj T*
+() Tj T*
+/F2 9.5 Tf ([05] Pol�cia Militar do Estado de S�o Paulo - Engenheiro de Sistemas & Infraestrutura) Tj T* /F1 9.5 Tf
+(    02/2014 - 11/2019 | S�o Paulo, Brasil) Tj T*
+(    * Impacto Comercial: 99,99% de disponibilidade em sistemas de despacho de) Tj T*
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 8 0 R >>
+endobj
+8 0 obj
+<< /Length 776 >>
+stream
+BT
+/F1 9.5 Tf
+40 805 Td
+13.5 TL
+(emerg�ncia cr�tica e telecomunica��es.) Tj T*
+(    * Feito T�cnico: Infraestrutura de alta disponibilidade com failover automatizado) Tj T*
+(para servidores de emerg�ncia 190.) Tj T*
+(    * Solu��o: Redund�ncia ativa-ativa em bancos de dados relacionais e roteamento) Tj T*
+(din�mico SIP/VoIP com failover transparente.) Tj T*
+(    * Stack: Linux Server, Active Directory, Redes e Roteamento, SIP/VoIP, Shell Script, Python) Tj T*
+() Tj T*
+(---------------------------------------------------------------------------) Tj T*
+/F2 10.5 Tf (FORMA��O ACAD�MICA & CERTIFICA��ES) Tj T* /F1 9.5 Tf
+(  - P�s-Gradua��o em Arquitetura de Software e Solu��es Distribu�das, FIAP) Tj T*
+(  - Gradua��o em Tecnologia da Informa��o e Sistemas, FATEC) Tj T*
+ET
+endstream
+endobj
+xref
+0 9
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000127 00000 n 
+0000000224 00000 n 
+0000000326 00000 n 
+0000000468 00000 n 
+0000004240 00000 n 
+0000004382 00000 n 
+trailer
+<< /Size 9 /Root 1 0 R >>
+startxref
+5209
+%%EOF

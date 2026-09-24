@@ -9,13 +9,11 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  Terminal,
-  Shield,
-  Layers,
 } from 'lucide-react';
-import { SystemState } from '../types';
-import { CURRICULUM_NODES, PROFILE_LENSES_CONFIG } from '../data/curriculumData';
-import { useSoundEffects } from '../hooks/useSoundEffects';
+import { SystemState, MetricHighlight } from '../../types';
+import { CURRICULUM_NODES } from '../../data/curriculumData';
+import { useSoundEffects } from '../../hooks/useSoundEffects';
+import { t, getNodeContent } from '../../i18n/translations';
 
 interface NodeInspectorProps {
   nodeId: string | null;
@@ -49,9 +47,6 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
   } = systemState;
 
   const { play } = useSoundEffects(soundEnabled);
-  const isPT = language === 'PT';
-  const trans = isPT ? node.pt : null;
-
   const [activeTab, setActiveTab] = useState<'architecture' | 'logs'>('architecture');
 
   const currentIndex = CURRICULUM_NODES.findIndex((n) => n.id === nodeId);
@@ -74,25 +69,20 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
     }
   };
 
-  const shortTitle = trans ? trans.shortTitle : node.shortTitle;
-  const role = trans ? trans.role : node.role;
-  const businessValue = trans ? trans.businessValue : node.businessValue;
-  const engineeringFeat = trans ? trans.engineeringFeat : node.engineeringFeat;
-  const contextProblem = trans ? trans.contextProblem : node.contextProblem;
-  const architecturalSolution = trans ? trans.architecturalSolution : node.architecturalSolution;
-  const engineeringLesson = trans ? trans.engineeringLesson : node.engineeringLesson;
-  const metricDetails = trans ? trans.metricDetails : node.metricDetails;
+  const content = getNodeContent(node, language);
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/50 backdrop-blur-xs transition-opacity animate-in fade-in duration-150">
       <div className="flex-1" onClick={onClose} />
 
       <aside
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="node-inspector-title"
         className={`w-full max-w-xl h-full flex flex-col shadow-2xl border-l relative overflow-hidden transition-colors ${
           theme === 'dark' ? 'bg-[#09090b] border-zinc-800 text-zinc-100' : 'bg-white border-slate-200 text-slate-900'
         }`}
       >
-        {/* Header Toolbar */}
         <div
           className={`flex items-center justify-between px-5 py-3 border-b ${
             theme === 'dark' ? 'border-zinc-800 bg-zinc-950' : 'border-slate-200 bg-slate-50'
@@ -109,30 +99,29 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
             <button
               onClick={() => onSelectNode(prevNode.id)}
               className="p-1.5 rounded hover:bg-zinc-800/40 text-zinc-400"
-              title="Anterior"
+              title="Previous"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={() => onSelectNode(nextNode.id)}
               className="p-1.5 rounded hover:bg-zinc-800/40 text-zinc-400"
-              title="Próximo"
+              title="Next"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
             <button
               onClick={onClose}
               className="p-1.5 rounded ml-2 hover:bg-zinc-800/40 text-zinc-400 hover:text-white"
-              title="Fechar (Esc)"
+              title="Close (Esc)"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
         </div>
 
-        {/* Node Identity */}
         <div className="p-5 pb-3">
-          <h2 className="text-xl font-sans font-bold tracking-tight">{shortTitle}</h2>
+          <h2 id="node-inspector-title" className="text-xl font-sans font-bold tracking-tight">{content.shortTitle}</h2>
           <div className="flex items-center gap-4 mt-2 text-xs font-mono opacity-75 flex-wrap">
             <span className="flex items-center gap-1 font-semibold text-blue-600 dark:text-cyan-400">
               <Building2 className="w-3.5 h-3.5" />
@@ -147,10 +136,9 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
               {node.location}
             </span>
           </div>
-          <div className="text-xs font-sans opacity-70 mt-1">{role}</div>
+          <div className="text-xs font-sans opacity-70 mt-1">{content.role}</div>
         </div>
 
-        {/* Business ROI Callout */}
         <div className="px-5 pb-3">
           <div
             className={`p-3.5 rounded-lg border text-xs sm:text-sm font-sans leading-relaxed ${
@@ -161,13 +149,12 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
           >
             <div className="font-mono font-bold text-[11px] uppercase tracking-wider mb-1 flex items-center gap-1 text-blue-600 dark:text-cyan-400">
               <TrendingUp className="w-3.5 h-3.5" />
-              <span>{isPT ? 'Retorno Comercial (ROI):' : 'Executive Business ROI:'}</span>
+              <span>{t(language, 'inspector.roiTitle')}</span>
             </div>
-            <p>{businessValue}</p>
+            <p>{content.businessValue}</p>
           </div>
         </div>
 
-        {/* Navigation Tabs */}
         <div
           className={`flex border-b px-5 text-xs font-mono ${
             theme === 'dark' ? 'border-zinc-800 bg-zinc-950' : 'border-slate-200 bg-slate-50'
@@ -181,7 +168,7 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
                 : 'border-transparent opacity-60 hover:opacity-100'
             }`}
           >
-            {isPT ? 'ARQUITETURA & DESAFIO' : 'ARCHITECTURE & FEAT'}
+            {t(language, 'inspector.tabArchitecture')}
           </button>
           <button
             onClick={() => setActiveTab('logs')}
@@ -191,13 +178,11 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
                 : 'border-transparent opacity-60 hover:opacity-100'
             }`}
           >
-            {isPT ? 'LOGS EM TEMPO REAL' : 'SYSTEM TRACE'}
+            {t(language, 'inspector.tabLogs')}
           </button>
         </div>
 
-        {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto p-5 space-y-5">
-          {/* Interactive Simulation Switch inside Drawer */}
           {node.interactiveAction && (
             <div
               className={`p-3.5 rounded-lg border ${
@@ -207,13 +192,11 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
               <div className="flex items-center justify-between gap-2">
                 <span className="text-xs font-mono font-bold text-amber-500 flex items-center gap-1">
                   <Zap className="w-3.5 h-3.5" />
-                  {isPT ? 'Simulação de Produção' : 'Interactive Production Toggle'}
+                  {t(language, 'inspector.simulationTitle')}
                 </span>
               </div>
               <p className="text-xs font-sans opacity-80 mt-1">
-                {isPT && trans?.interactiveActionDescription
-                  ? trans.interactiveActionDescription
-                  : node.interactiveAction.description}
+                {content.interactiveActionDescription}
               </p>
               <button
                 onClick={handleAction}
@@ -226,20 +209,15 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
                 }`}
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>
-                  {isPT && trans?.interactiveActionLabel
-                    ? trans.interactiveActionLabel
-                    : node.interactiveAction.label}
-                </span>
+                <span>{content.interactiveActionLabel}</span>
               </button>
             </div>
           )}
 
           {activeTab === 'architecture' ? (
             <>
-              {/* Hard Metrics Grid */}
-              <div className="grid grid-cols-3 gap-2">
-                {metricDetails.map((m, idx) => (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                {content.metricDetails.map((m: MetricHighlight, idx: number) => (
                   <div
                     key={idx}
                     className={`p-2.5 rounded border font-mono text-xs ${
@@ -252,20 +230,19 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
                 ))}
               </div>
 
-              {/* The Bottleneck vs Solution */}
               <div className="space-y-3 text-xs sm:text-sm font-sans leading-relaxed">
                 <div>
                   <h4 className="font-mono font-bold text-xs uppercase opacity-70 mb-1">
-                    {isPT ? 'O Gargalo / Desafio:' : 'The Bottleneck:'}
+                    {t(language, 'inspector.bottleneckTitle')}
                   </h4>
-                  <p className="opacity-90">{contextProblem}</p>
+                  <p className="opacity-90">{content.contextProblem}</p>
                 </div>
 
                 <div>
                   <h4 className="font-mono font-bold text-xs uppercase opacity-70 mb-1">
-                    {isPT ? 'Solução Arquitetural Aplicada:' : 'Architectural Intervention:'}
+                    {t(language, 'inspector.solutionTitle')}
                   </h4>
-                  <p className="opacity-90">{architecturalSolution}</p>
+                  <p className="opacity-90">{content.architecturalSolution}</p>
                 </div>
 
                 <div
@@ -274,43 +251,40 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
                   }`}
                 >
                   <span className="font-mono font-bold not-italic block text-[11px] mb-1 text-blue-600 dark:text-cyan-400">
-                    {isPT ? 'PRINCÍPIO DE ENGENHARIA:' : 'ENGINEERING PRINCIPLE:'}
+                    {t(language, 'inspector.principleTitle')}
                   </span>
-                  &ldquo;{engineeringLesson}&rdquo;
+                  &ldquo;{content.engineeringLesson}&rdquo;
                 </div>
               </div>
 
-              {/* Technologies */}
               <div>
                 <h4 className="font-mono font-bold text-xs uppercase opacity-70 mb-2">
-                  {isPT ? 'Stack Técnica:' : 'Tech Stack:'}
+                  {t(language, 'inspector.techStack')}
                 </h4>
                 <div className="flex flex-wrap gap-1.5">
-                  {node.technologies.map((t, idx) => (
+                  {node.technologies.map((techItem, idx) => (
                     <span
                       key={idx}
                       className="px-2 py-0.5 rounded text-xs font-mono border dark:bg-zinc-900 dark:border-zinc-800 bg-slate-100 border-slate-200"
                     >
-                      {t}
+                      {techItem}
                     </span>
                   ))}
                 </div>
               </div>
             </>
           ) : (
-            /* System Log Trace */
             <div className="p-3.5 rounded-lg bg-zinc-950 border border-zinc-800 font-mono text-xs text-zinc-300 space-y-2">
               <div className="text-[10px] text-zinc-500 mb-2">// TELEMETRY_STREAM: {node.id}</div>
               <div>[00:00:01] CLUSTER_STATE: Active Invariants Verified (ACID OK)</div>
-              <div>[00:00:02] THROUGHPUT: {node.metricHighlight}</div>
+              <div>[00:00:02] THROUGHPUT: {content.metricHighlight}</div>
               <div>[00:00:03] FAILOVER: Circuit Breaker nominal with sub-second health checks</div>
             </div>
           )}
         </div>
 
-        {/* Footer Actions */}
         <div
-          className={`p-4 border-t flex items-center justify-between gap-3 ${
+          className={`p-4 pb-[max(1rem,env(safe-area-inset-bottom,0px))] border-t flex items-center justify-between gap-3 ${
             theme === 'dark' ? 'border-zinc-800 bg-zinc-950' : 'border-slate-200 bg-slate-50'
           }`}
         >
@@ -318,7 +292,7 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
             onClick={onClose}
             className="px-3 py-1.5 rounded font-mono text-xs font-semibold opacity-70 hover:opacity-100"
           >
-            {isPT ? 'FECHAR' : 'CLOSE'}
+            {t(language, 'inspector.close')}
           </button>
           <button
             onClick={() => {
@@ -327,7 +301,7 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
             }}
             className="px-4 py-1.5 rounded text-white text-xs font-mono font-bold bg-blue-600 hover:bg-blue-500 transition-colors shadow-xs"
           >
-            {isPT ? 'FALAR COM O THALES' : 'CONNECT WITH THALES'}
+            {t(language, 'inspector.connect')}
           </button>
         </div>
       </aside>

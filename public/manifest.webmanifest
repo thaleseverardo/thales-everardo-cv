@@ -1,0 +1,31 @@
+{
+  "id": "/",
+  "name": "Thales Everardo // Systems Architect",
+  "short_name": "ThalesEverardo",
+  "description": "Interactive Systems Architecture & Observability Portfolio - Thales Everardo",
+  "theme_color": "#09090b",
+  "background_color": "#09090b",
+  "display": "standalone",
+  "start_url": "./",
+  "scope": "./",
+  "icons": [
+    {
+      "src": "pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+Thales Everardo - Ingénieur Logiciel Staff & Architecte de Systèmes
+Email: thales.everardo@gmail.com | Tél: [Available via Portfolio Handshake] | São Paulo, Brésil
+GitHub: https://github.com/thaleseverardo | LinkedIn: https://linkedin.com/in/thaleseverardo
+
+============================================================
+RÉSUMÉ PROFESSIONNEL
+============================================================
+Architecte de Systèmes et Ingénieur Logiciel Staff avec plus de 10 ans d'expérience en ingénierie des données, microservices distribués, tolérance aux pannes et architectures orientées événements (EDA). Spécialiste de l'élimination des latences critiques dans les environnements transactionnels à haut débit sous stricte conformité ACID.
+
+============================================================
+EXPÉRIENCE ARCHITECTURALE EN PRODUCTION
+============================================================
+
+[01] Consórcio Magalu - Ingénieur Logiciel Senior / Architecte
+Period: 05/2024 - Présent | São Paulo, Brésil
+- Impact Commercial: Zéro verrouillage en production et élimination des risques lors des clôtures fiscales.
+- Prouesse Technique: Purge asynchrone partitionnée de 11 To de journaux sur SQL Server sans lock escalations.
+- Solution: Pipeline par lots découplés avec fenêtres dynamiques et surveillance de la pression des journaux.
+- Stack: C#, .NET Core, SQL Server, Sybase, Kafka, Docker, Kubernetes
+
+[02] Grupo GPS - Ingénieur Logiciel Senior
+Period: 06/2023 - 05/2024 | São Paulo, Brésil
+- Impact Commercial: Réduction de 99,8% du temps de traitement comptable et de paie multi-entités.
+- Prouesse Technique: Réduction de la latence du pipeline financier de 7 jours à 20 minutes avec cohérence absolue.
+- Solution: Optimisation d'index, partitionnement de tables et parallélisation asynchrone en C#.
+- Stack: C#, T-SQL, SQL Server, Tuning d'Index, ASP.NET Core
+
+[03] Ambar / Construtech - Ingénieur Logiciel Spécialiste
+Period: 07/2021 - 06/2023 | São Carlos, Brésil
+- Impact Commercial: Synchronisation en temps réel des stocks et catalogues sur 5 centres de distribution sans perte.
+- Prouesse Technique: Broker de messagerie au standard GS1 reliant ERP et points de vente POS en direct.
+- Solution: Pattern Transactional Outbox avec files RabbitMQ et stockage local idempotent.
+- Stack: C#, RabbitMQ, SQL Server, Architecture GS1, Microservices
+
+[04] Summerhill / Eco Wave - Ingénieur Logiciel
+Period: 11/2019 - 06/2021 | Toronto, Canada
+- Impact Commercial: Optimisation des tournées d'audits énergétiques réduisant les coûts de déplacement de 22%.
+- Prouesse Technique: Moteur d'optimisation d'itinéraires pour techniciens de terrain avec synchronisation hors-ligne.
+- Solution: Algorithme de routage heuristique associé à SQLite local et synchronisation résiliente.
+- Stack: Python, TypeScript, Node.js, SQLite, GeoJSON, REST APIs
+
+[05] Police Militaire de l'État de São Paulo - Ingénieur Systèmes & Infrastructure
+Period: 02/2014 - 11/2019 | São Paulo, Brésil
+- Impact Commercial: Disponibilité de 99,99% pour les centres d'appels d'urgence et télécommunications critiques.
+- Prouesse Technique: Infrastructure haute disponibilité avec basculement automatisé pour les répartiteurs 190.
+- Solution: Clustering actif-actif sur bases relationnelles et basculement dynamique SIP/VoIP transparent.
+- Stack: Linux Server, Active Directory, Réseaux, SIP/VoIP, Shell Script, Python
+
+============================================================
+FORMATION & CERTIFICATIONS
+============================================================
+- Diplôme d'Études Supérieures en Architecture Logicielle et Systèmes Distribués, FIAP
+- Licence en Technologies de l'Information et Systèmes, FATEC

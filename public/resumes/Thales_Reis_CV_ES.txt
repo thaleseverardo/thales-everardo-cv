@@ -1,0 +1,53 @@
+Thales Everardo - Ingeniero de Software Staff y Arquitecto de Sistemas
+Email: thales.everardo@gmail.com | Tel: [Available via Portfolio Handshake] | São Paulo, Brasil
+GitHub: https://github.com/thaleseverardo | LinkedIn: https://linkedin.com/in/thaleseverardo
+
+============================================================
+RESUMEN EJECUTIVO
+============================================================
+Arquitecto de Sistemas e Ingeniero de Software Staff con más de 10 años de experiencia en ingeniería de datos, microservicios distribuidos, tolerancia a fallos y arquitectura dirigida por eventos (EDA). Especialista en eliminar latencias críticas en entornos transaccionales de alto volumen con estricto cumplimiento ACID.
+
+============================================================
+EXPERIENCIA ARQUITECTÓNICA EN PRODUCCIÓN
+============================================================
+
+[01] Consórcio Magalu - Ingeniero de Software Senior / Arquitecto
+Period: 05/2024 - Actualidad | São Paulo, Brasil
+- Impacto Comercial: Cero bloqueos en producción y mitigación de riesgos de indisponibilidad fiscal.
+- Logro Técnico: Purga asíncrona particionada de 11TB de registros en SQL Server sin bloqueos transaccionales.
+- Solución: Pipeline por lotes desacoplados con ventanas dinámicas y control de presión de buffers.
+- Stack: C#, .NET Core, SQL Server, Sybase, Kafka, Docker, Kubernetes
+
+[02] Grupo GPS - Ingeniero de Software Senior
+Period: 06/2023 - 05/2024 | São Paulo, Brasil
+- Impacto Comercial: Reducción del 99,8% en el tiempo de procesamiento contable y liquidación de nóminas.
+- Logro Técnico: Reducción de la latencia contable de 7 días a 20 minutos con consistencia total.
+- Solución: Optimización de índices, particionamiento de tablas y procesamiento asíncrono en C#.
+- Stack: C#, T-SQL, SQL Server, Index Tuning, ASP.NET Core
+
+[03] Ambar / Construtech - Ingeniero de Software Especialista
+Period: 07/2021 - 06/2023 | São Carlos, Brasil
+- Impacto Comercial: Sincronización en tiempo real de catálogos e inventarios en 5 centros de distribución sin pérdidas.
+- Logro Técnico: Broker con estándar GS1 conectando ERP y puntos de venta POS en tiempo real.
+- Solución: Patrón Outbox transaccional con RabbitMQ y almacenamiento idempotente local.
+- Stack: C#, RabbitMQ, SQL Server, Arquitectura GS1, Microservicios
+
+[04] Summerhill / Eco Wave - Ingeniero de Software
+Period: 11/2019 - 06/2021 | Toronto, Canadá
+- Impacto Comercial: Optimización de rutas de campo reduciendo el coste operativo por visita en un 22%.
+- Logro Técnico: Motor de rutas geográficas para técnicos con sincronización offline-first.
+- Solución: Algoritmo heurístico de ruteo con caché SQLite local y sincronización en segundo plano.
+- Stack: Python, TypeScript, Node.js, SQLite, GeoJSON, REST APIs
+
+[05] Policía Militar del Estado de São Paulo - Ingeniero de Sistemas e Infraestructura
+Period: 02/2014 - 11/2019 | São Paulo, Brasil
+- Impacto Comercial: 99,99% de disponibilidad en despacho de emergencias y telecomunicaciones críticas.
+- Logro Técnico: Infraestructura de alta disponibilidad con failover automático para centros de despacho 190.
+- Solución: Clústeres activos-activos en bases de datos relacionales y conmutación SIP/VoIP transparente.
+- Stack: Linux Server, Active Directory, Redes, SIP/VoIP, Shell Script, Python
+
+============================================================
+EDUCACIÓN Y CERTIFICACIONES
+============================================================
+- Posgrado en Arquitectura de Software y Sistemas Distribuidos, FIAP
+- Licenciatura en Tecnología de la Información y Sistemas, FATEC

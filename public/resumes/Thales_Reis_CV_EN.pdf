@@ -1,0 +1,121 @@
+%PDF-1.4
+%����
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R 7 0 R] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 3607 >>
+stream
+BT
+/F1 9.5 Tf
+40 805 Td
+13.5 TL
+(Thales Everardo - Staff Software Engineer & Systems Architect) Tj T*
+(Email: thales.everardo@gmail.com | Phone: +55 \(11\) 94944-7774 | S�o Paulo, Brazil) Tj T*
+(GitHub: https://github.com/thaleseverardo | LinkedIn: https://linkedin.com/in/thaleseverardo) Tj T*
+(---------------------------------------------------------------------------) Tj T*
+/F2 10.5 Tf (EXECUTIVE SUMMARY) Tj T* /F1 9.5 Tf
+(Systems Architect and Staff Software Engineer with over 10 years of experience in) Tj T*
+(data engineering, distributed microservices, fault-tolerant computing, and event-) Tj T*
+(driven architectures \(EDA\). Specialist in eliminating critical latencies in high-) Tj T*
+(throughput transactional environments under strict ACID compliance.) Tj T*
+(---------------------------------------------------------------------------) Tj T*
+/F2 10.5 Tf (CORE ARCHITECTURAL EXPERIENCE IN PRODUCTION) Tj T* /F1 9.5 Tf
+/F2 9.5 Tf ([01] Cons�rcio Magalu - Senior Software Engineer / Architect) Tj T* /F1 9.5 Tf
+(    05/2024 - Present | S�o Paulo, Brazil) Tj T*
+(    * Business ROI: Zero production locks and complete mitigation of downtime risks) Tj T*
+(during fiscal reconciliations.) Tj T*
+(    * Engineering Feat: Partitioned asynchronous purge of 11TB legacy transaction) Tj T*
+(logs on SQL Server without lock escalations.) Tj T*
+(    * Solution: Decoupled chunked batches governed by dynamic windows and log buffer) Tj T*
+(pressure monitoring.) Tj T*
+(    * Stack: C#, .NET Core, SQL Server, Sybase, Kafka, Docker, Kubernetes) Tj T*
+() Tj T*
+/F2 9.5 Tf ([02] Grupo GPS - Senior Software Engineer) Tj T* /F1 9.5 Tf
+(    06/2023 - 05/2024 | S�o Paulo, Brazil) Tj T*
+(    * Business ROI: 99.8% reduction in accounting batch processing and multi-tenant) Tj T*
+(payroll settlement time.) Tj T*
+(    * Engineering Feat: Slashed financial computation pipeline latency from 7 days) Tj T*
+(down to 20 minutes with full consistency.) Tj T*
+(    * Solution: Deep query tuning, clustered table partitioning, and high-concurrency) Tj T*
+(async processing in C#.) Tj T*
+(    * Stack: C#, T-SQL, SQL Server, Index Optimization, ASP.NET Core) Tj T*
+() Tj T*
+/F2 9.5 Tf ([03] Ambar / Construtech - Specialist Software Engineer) Tj T* /F1 9.5 Tf
+(    07/2021 - 06/2023 | S�o Carlos, Brazil) Tj T*
+(    * Business ROI: Real-time synchronization of catalogs and inventories across 5) Tj T*
+(distribution centers with zero order loss.) Tj T*
+(    * Engineering Feat: GS1 standard messaging broker bridging enterprise ERP and POS) Tj T*
+(endpoints in real-time.) Tj T*
+(    * Solution: Transactional Outbox pattern backed by RabbitMQ queues and local) Tj T*
+(idempotent fallback stores.) Tj T*
+(    * Stack: C#, RabbitMQ, SQL Server, GS1 Architecture, Microservices) Tj T*
+() Tj T*
+/F2 9.5 Tf ([04] Summerhill / Eco Wave - Software Engineer) Tj T* /F1 9.5 Tf
+(    11/2019 - 06/2021 | Toronto, Canada) Tj T*
+(    * Business ROI: Route optimization and energy field audits lowering operational) Tj T*
+(travel costs by 22%.) Tj T*
+(    * Engineering Feat: Geographic route optimization engine for field technicians) Tj T*
+(with offline-first synchronization.) Tj T*
+(    * Solution: Heuristic routing algorithm paired with local SQLite caching and) Tj T*
+(resilient background sync.) Tj T*
+(    * Stack: Python, TypeScript, Node.js, SQLite, GeoJSON, REST APIs) Tj T*
+() Tj T*
+/F2 9.5 Tf ([05] Military Police of S�o Paulo State - Systems & Infrastructure Engineer) Tj T* /F1 9.5 Tf
+(    02/2014 - 11/2019 | S�o Paulo, Brazil) Tj T*
+(    * Business ROI: 99.99% uptime for mission-critical emergency dispatch and) Tj T*
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 8 0 R >>
+endobj
+8 0 obj
+<< /Length 721 >>
+stream
+BT
+/F1 9.5 Tf
+40 805 Td
+13.5 TL
+(telecommunications infrastructure.) Tj T*
+(    * Engineering Feat: High-availability automated failover architecture for) Tj T*
+(emergency 911/190 dispatch centers.) Tj T*
+(    * Solution: Active-active relational clustering and dynamic SIP/VoIP carrier) Tj T*
+(failover.) Tj T*
+(    * Stack: Linux Server, Active Directory, Networking, SIP/VoIP, Shell Script, Python) Tj T*
+() Tj T*
+(---------------------------------------------------------------------------) Tj T*
+/F2 10.5 Tf (EDUCATION & CERTIFICATIONS) Tj T* /F1 9.5 Tf
+(  - Postgraduate Degree in Distributed Systems & Software Architecture, FIAP) Tj T*
+(  - Bachelor of Science in Information Technology & Systems, FATEC) Tj T*
+ET
+endstream
+endobj
+xref
+0 9
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000127 00000 n 
+0000000224 00000 n 
+0000000326 00000 n 
+0000000468 00000 n 
+0000004127 00000 n 
+0000004269 00000 n 
+trailer
+<< /Size 9 /Root 1 0 R >>
+startxref
+5041
+%%EOF

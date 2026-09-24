@@ -1,3 +1,4 @@
+import { getDecodedEmail, getDecodedPhone } from '../utils/contactSecurity';
 import { ArchitectureNode, ProfileLens } from '../types';
 
 export const PROFILE_LENSES_CONFIG: Record<
@@ -463,16 +464,20 @@ export const CURRICULUM_NODES: ArchitectureNode[] = [
 ];
 
 export const PROFILE_DATA = {
-  name: 'Thales Reis',
+  name: 'Thales Everardo',
   title: 'Staff Software Engineer & System Architect',
   titlePT: 'Engenheiro de Software Staff & Arquiteto de Sistemas',
   location: 'São Paulo, SP – Brazil (Open to Remote & Global Relocation)',
   locationPT: 'São Paulo, SP – Brasil (Aberto a Remoto e Realocação Global)',
-  email: 'thalesreistech@gmail.com',
-  phone: '+55 11 96296 9508',
-  github: 'https://github.com/thalesreistech',
-  linkedin: 'https://linkedin.com/in/thales-reis',
-  avatar: '/src/assets/images/thales_avatar_1790202745058.jpg',
+  get email() {
+    return getDecodedEmail();
+  },
+  get phone() {
+    return getDecodedPhone();
+  },
+  github: 'https://github.com/thaleseverardo',
+  linkedin: 'https://linkedin.com/in/thaleseverardo',
+  avatar: 'src/assets/images/thales_avatar_760x760.png',
   tagline: "I build resilient architectures that sustain heavy load without breaking.",
   taglinePT: "Construo arquiteturas resilientes que suportam alta carga sem cair.",
   executiveElevatorPitch: {

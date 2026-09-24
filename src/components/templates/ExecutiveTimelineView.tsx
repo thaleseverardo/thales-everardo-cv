@@ -1,13 +1,8 @@
 import React from 'react';
-import {
-  Calendar,
-  MapPin,
-  ArrowRight,
-  TrendingUp,
-  FileSearch,
-} from 'lucide-react';
-import { ArchitectureNode, AppLanguage, AppTheme, ProfileLens } from '../types';
-import { isNodeActiveInFilter } from '../utils/filterUtils';
+import { Calendar, MapPin, ArrowRight, TrendingUp, FileSearch } from 'lucide-react';
+import { ArchitectureNode, AppLanguage, AppTheme, ProfileLens, MetricHighlight } from '../../types';
+import { isNodeActiveInFilter } from '../../utils/filterUtils';
+import { t, getNodeContent } from '../../i18n/translations';
 
 interface ExecutiveTimelineViewProps {
   nodes: ArchitectureNode[];
@@ -30,60 +25,49 @@ export const ExecutiveTimelineView: React.FC<ExecutiveTimelineViewProps> = ({
   selectedTag = null,
   onClearFilter,
 }) => {
-  const isPT = language === 'PT';
-
-  const matchingNodes = nodes.filter((node) =>
-    isNodeActiveInFilter(node, profileLens, searchTerm, selectedTag, language)
-  );
+  
+  const matchingNodes = nodes
+  .filter((node) => isNodeActiveInFilter(node, profileLens, searchTerm, selectedTag, language))
+  .slice()
+  .reverse();
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex-1">
-      {/* Editorial Header */}
       <div className="mb-8 border-b pb-4 dark:border-zinc-800 border-slate-200">
         <h2 className="text-xl sm:text-2xl font-sans font-bold tracking-tight">
-          {isPT ? 'Trajetória & Arquitetura em Produção' : 'Production Systems & Career Milestones'}
+          {t(language, 'timeline.header')}
         </h2>
         <p
           className={`text-xs sm:text-sm mt-1 max-w-2xl font-sans ${
             theme === 'dark' ? 'text-zinc-400' : 'text-slate-600'
           }`}
         >
-          {isPT
-            ? 'Histórico linear de decisões técnicas, eliminação de latência crítica e arquitetura de missão crítica lideradas por Thales Reis.'
-            : 'A linear record of enterprise decisions, latency elimination, and mission-critical system migrations led by Thales Reis.'}
+          {t(language, 'timeline.subheader')}
         </p>
       </div>
 
-      {/* Empty State */}
       {matchingNodes.length === 0 ? (
         <div className="p-8 text-center rounded-xl border dark:bg-zinc-900/40 dark:border-zinc-800 bg-white border-slate-200">
           <FileSearch className="w-8 h-8 mx-auto opacity-40 mb-2" />
           <h3 className="font-sans font-bold text-sm">
-            {isPT ? 'Nenhum marco encontrado' : 'No milestones found'}
+            {t(language, 'timeline.emptyTitle')}
           </h3>
           <p className="text-xs opacity-70 mt-1 max-w-sm mx-auto">
-            {isPT
-              ? `Nenhum subsistema atende à busca "${searchTerm}".`
-              : `No architectural system matched the search "${searchTerm}".`}
+            {t(language, 'timeline.emptyDesc')}
           </p>
           {onClearFilter && (
             <button
               onClick={onClearFilter}
               className="mt-4 px-3 py-1.5 rounded-md font-mono text-xs font-bold bg-blue-600 text-white"
             >
-              {isPT ? 'Redefinir Filtros' : 'Reset Filters'}
+              {t(language, 'timeline.resetFilters')}
             </button>
           )}
         </div>
       ) : (
-        /* Linear Timeline Stack */
         <div className="space-y-6 relative border-l-2 ml-3 sm:ml-5 pl-5 sm:pl-7 dark:border-zinc-800 border-slate-200 pb-10">
           {matchingNodes.map((node) => {
-            const trans = isPT ? node.pt : null;
-            const title = trans ? trans.shortTitle : node.shortTitle;
-            const role = trans ? trans.role : node.role;
-            const businessValue = trans ? trans.businessValue : node.businessValue;
-            const metrics = trans ? trans.metricDetails : node.metricDetails;
+            const content = getNodeContent(node, language);
 
             return (
               <div
@@ -94,9 +78,8 @@ export const ExecutiveTimelineView: React.FC<ExecutiveTimelineViewProps> = ({
                     : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
                 }`}
               >
-                {/* Timeline Pin */}
                 <div
-                  className={`absolute -left-[31px] sm:-left-[39px] top-6 w-5 h-5 rounded-full border-2 flex items-center justify-center font-mono text-[10px] font-bold ${
+                  className={`absolute -left-7.75 sm:-left-9.75 top-6 w-5 h-5 rounded-full border-2 flex items-center justify-center font-mono text-[10px] font-bold ${
                     theme === 'dark'
                       ? 'bg-zinc-950 border-cyan-400 text-cyan-400'
                       : 'bg-white border-blue-600 text-blue-700 shadow-2xs'
@@ -105,7 +88,6 @@ export const ExecutiveTimelineView: React.FC<ExecutiveTimelineViewProps> = ({
                   {node.number}
                 </div>
 
-                {/* Company & Role Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b dark:border-zinc-800/80 border-slate-100 pb-3">
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
@@ -119,9 +101,9 @@ export const ExecutiveTimelineView: React.FC<ExecutiveTimelineViewProps> = ({
                       </span>
                     </div>
                     <h3 className="text-base sm:text-lg font-sans font-bold mt-1 tracking-tight text-zinc-900 dark:text-zinc-100">
-                      {title}
+                      {content.shortTitle}
                     </h3>
-                    <div className="text-xs font-sans opacity-75 mt-0.5">{role}</div>
+                    <div className="text-xs font-sans opacity-75 mt-0.5">{content.role}</div>
                   </div>
 
                   <div className="flex items-center gap-1.5 font-mono text-xs opacity-60 shrink-0 mt-1 sm:mt-0">
@@ -130,7 +112,6 @@ export const ExecutiveTimelineView: React.FC<ExecutiveTimelineViewProps> = ({
                   </div>
                 </div>
 
-                {/* ROI / Business Value Callout */}
                 <div
                   className={`my-3.5 p-3 rounded-lg border text-xs sm:text-sm font-sans leading-relaxed ${
                     theme === 'dark'
@@ -140,14 +121,13 @@ export const ExecutiveTimelineView: React.FC<ExecutiveTimelineViewProps> = ({
                 >
                   <div className="font-mono font-bold text-[11px] uppercase tracking-wider mb-1 flex items-center gap-1.5 text-blue-700 dark:text-cyan-400">
                     <TrendingUp className="w-3.5 h-3.5 shrink-0" />
-                    <span>{isPT ? 'Impacto Comercial Direto:' : 'Direct Business Impact:'}</span>
+                    <span>{t(language, 'timeline.businessImpact')}</span>
                   </div>
-                  <p>{businessValue}</p>
+                  <p>{content.businessValue}</p>
                 </div>
 
-                {/* Key Metric Highlights Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 my-3">
-                  {metrics.map((metric, i) => (
+                  {content.metricDetails.map((metric: MetricHighlight, i: number) => (
                     <div
                       key={i}
                       className={`p-2.5 rounded border font-mono text-xs ${
@@ -163,7 +143,6 @@ export const ExecutiveTimelineView: React.FC<ExecutiveTimelineViewProps> = ({
                   ))}
                 </div>
 
-                {/* Footer Strip: Technologies & CTA */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t dark:border-zinc-800/80 border-slate-100">
                   <div className="flex items-center gap-1.5 flex-wrap">
                     {node.technologies.slice(0, 5).map((tech, tIdx) => (
@@ -179,7 +158,7 @@ export const ExecutiveTimelineView: React.FC<ExecutiveTimelineViewProps> = ({
                       </span>
                     ))}
                     {node.technologies.length > 5 && (
-                      <span className="text-[11px] font-mono opacity-40">
+                      <span className="text-[11px] font-mono dark:text-zinc-400 text-slate-500 font-semibold">
                         +{node.technologies.length - 5}
                       </span>
                     )}
@@ -189,7 +168,7 @@ export const ExecutiveTimelineView: React.FC<ExecutiveTimelineViewProps> = ({
                     onClick={() => onSelectNode(node.id)}
                     className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded font-mono text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 transition-colors shrink-0"
                   >
-                    <span>{isPT ? 'INSPECIONAR ARQUITETURA' : 'INSPECT SYSTEM'}</span>
+                    <span>{t(language, 'timeline.inspectButton')}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>

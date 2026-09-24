@@ -4,9 +4,10 @@ import path from 'path';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
-export default defineConfig(() => {
+export default defineConfig(({ mode }) => {
   return {
-    base: '/thales-everardo-cv/',
+    // No 'npm run dev' roda na raiz '/', no build de produção para o GitHub Pages usa '/thales-everardo-cv/'
+    base: mode === 'production' ? '/thales-everardo-cv/' : '/',
     plugins: [
       react(),
       tailwindcss(),
@@ -15,9 +16,9 @@ export default defineConfig(() => {
         includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon.svg'],
         manifest: {
           id: '/',
-          name: 'Thales Reis // Systems Architect',
-          short_name: 'ThalesReis',
-          description: 'Interactive Systems Architecture & Observability Portfolio - Thales Reis',
+          name: 'Thales Everardo // Systems Architect',
+          short_name: 'ThalesEverardo',
+          description: 'Interactive Systems Architecture & Observability Portfolio - Thales Everardo',
           theme_color: '#09090b',
           background_color: '#09090b',
           display: 'standalone',
@@ -45,7 +46,6 @@ export default defineConfig(() => {
           ],
         },
         workbox: {
-          // Aumenta o limite de arquivo em cache de 2MB para 5MB (corrige o erro do pwa-512x512.png)
           maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
           globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
           runtimeCaching: [
@@ -80,7 +80,8 @@ export default defineConfig(() => {
           ],
         },
         devOptions: {
-          enabled: true,
+          // Desativado em dev para não sequestrar o localhost:3000 com cache antigo
+          enabled: false,
         },
       }),
     ],

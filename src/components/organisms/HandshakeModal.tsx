@@ -3,7 +3,6 @@ import {
   X,
   Mail,
   Phone,
-  MapPin,
   Github,
   Linkedin,
   FileDown,
@@ -15,9 +14,11 @@ import {
   ShieldCheck,
   MessageSquare,
 } from 'lucide-react';
-import { PROFILE_DATA } from '../data/curriculumData';
-import { playSound } from '../utils/audio';
-import { AppLanguage, AppTheme } from '../types';
+import { PROFILE_DATA } from '../../data/curriculumData';
+import { playSound } from '../../utils/audio';
+import { AppLanguage, AppTheme } from '../../types';
+import { t } from '../../i18n/translations';
+import { Button } from '../atoms/Button';
 
 interface HandshakeModalProps {
   isOpen: boolean;
@@ -36,16 +37,9 @@ export const HandshakeModal: React.FC<HandshakeModalProps> = ({
   language,
   theme,
 }) => {
-  const isPT = language === 'PT';
-
   const [copiedField, setCopiedField] = useState<'email' | 'phone' | null>(null);
-  const [inquirySubject, setInquirySubject] = useState(
-    isPT
-      ? 'Oportunidade para Arquiteto de Sistemas / Engenheiro Sênior'
-      : 'Senior Systems Architect / Staff Engineer Opportunity'
-  );
+  const [inquirySubject, setInquirySubject] = useState(t(language, 'handshake.subjectDefault'));
   const [inquiryNote, setInquiryNote] = useState('');
-  const [sentSuccess, setSentSuccess] = useState(false);
 
   if (!isOpen) return null;
 
@@ -58,19 +52,19 @@ export const HandshakeModal: React.FC<HandshakeModalProps> = ({
 
   const handleSendDraft = (e: React.FormEvent) => {
     e.preventDefault();
-    const defaultBody = isPT
-      ? 'Olá Thales, explorei seu portfólio interativo de arquitetura e gostaria de conversar sobre uma oportunidade técnica para sua senioridade.'
-      : 'Hi Thales, I explored your interactive architecture portfolio and would like to discuss a systems engineering / technical leadership role.';
+    const defaultBody = t(language, 'handshake.defaultBody');
     const mailtoUrl = `mailto:${PROFILE_DATA.email}?subject=${encodeURIComponent(
       inquirySubject
     )}&body=${encodeURIComponent(inquiryNote || defaultBody)}`;
     window.location.href = mailtoUrl;
-    setSentSuccess(true);
     playSound('success', soundEnabled);
   };
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="handshake-modal-title"
       className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-in fade-in duration-150"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -83,7 +77,6 @@ export const HandshakeModal: React.FC<HandshakeModalProps> = ({
             : 'bg-white border-slate-300 text-slate-900'
         }`}
       >
-        {/* Modal Top Bar */}
         <div
           className={`px-5 py-4 border-b flex items-center justify-between ${
             theme === 'dark' ? 'bg-zinc-900/90 border-zinc-800' : 'bg-slate-50 border-slate-200'
@@ -101,16 +94,15 @@ export const HandshakeModal: React.FC<HandshakeModalProps> = ({
             </div>
             <div>
               <div className="text-xs font-mono opacity-70">
-                {isPT ? 'INICIAR CONTATO PROFISSIONAL' : 'INITIATE ARCHITECTURAL HANDSHAKE'}
+                {t(language, 'handshake.subtitle')}
               </div>
               <h2
+                id="handshake-modal-title"
                 className={`text-base font-mono font-bold ${
                   theme === 'dark' ? 'text-cyan-400' : 'text-blue-700'
                 }`}
               >
-                {isPT
-                  ? 'CONTRATAR THALES REIS // ARQUITETO DE SISTEMAS'
-                  : 'HIRE THALES REIS // SYSTEM ARCHITECT'}
+                {t(language, 'handshake.title')}
               </h2>
             </div>
           </div>
@@ -124,9 +116,7 @@ export const HandshakeModal: React.FC<HandshakeModalProps> = ({
           </button>
         </div>
 
-        {/* Modal Body */}
         <div className="p-5 sm:p-6 space-y-6">
-          {/* Executive Value Strip */}
           <div
             className={`p-3.5 rounded-lg border text-xs leading-relaxed ${
               theme === 'dark'
@@ -140,27 +130,19 @@ export const HandshakeModal: React.FC<HandshakeModalProps> = ({
               }`}
             >
               <ShieldCheck className="w-4 h-4" />
-              <span>
-                {isPT ? 'DISPONIBILIDADE PROFISSIONAL:' : 'PROFESSIONAL AVAILABILITY:'}
-              </span>
+              <span>{t(language, 'handshake.availabilityTitle')}</span>
             </div>
-            <p>
-              {isPT
-                ? 'Aberto a posições sênior de Arquiteto de Software, Staff / Principal Engineer e Tech Lead. Modelos: Remoto Global, Híbrido em São Paulo ou realocação internacional.'
-                : 'Open to Senior Systems Architect, Staff / Principal Software Engineer, and Tech Lead positions. Models: Global Remote, Hybrid in São Paulo, or Global Relocation.'}
-            </p>
+            <p>{t(language, 'handshake.availabilityDesc')}</p>
           </div>
 
-          {/* Quick Direct Contacts Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {/* Email Card */}
             <div
               className={`p-3.5 rounded-lg border flex items-center justify-between ${
                 theme === 'dark' ? 'bg-zinc-900/80 border-zinc-800' : 'bg-slate-50 border-slate-200'
               }`}
             >
               <div className="min-w-0 pr-2">
-                <div className="text-[11px] font-mono opacity-60">E-MAIL</div>
+                <div className="text-[11px] font-mono opacity-60">{t(language, 'handshake.emailLabel')}</div>
                 <div
                   className={`text-xs font-mono font-semibold truncate ${
                     theme === 'dark' ? 'text-cyan-400' : 'text-blue-700'
@@ -186,7 +168,6 @@ export const HandshakeModal: React.FC<HandshakeModalProps> = ({
               </button>
             </div>
 
-            {/* Phone Card */}
             <div
               className={`p-3.5 rounded-lg border flex items-center justify-between ${
                 theme === 'dark' ? 'bg-zinc-900/80 border-zinc-800' : 'bg-slate-50 border-slate-200'
@@ -194,7 +175,7 @@ export const HandshakeModal: React.FC<HandshakeModalProps> = ({
             >
               <div className="min-w-0 pr-2">
                 <div className="text-[11px] font-mono opacity-60">
-                  {isPT ? 'TELEFONE / WHATSAPP' : 'PHONE / WHATSAPP'}
+                  {t(language, 'handshake.phoneLabel')}
                 </div>
                 <div
                   className={`text-xs font-mono font-semibold truncate ${
@@ -222,7 +203,6 @@ export const HandshakeModal: React.FC<HandshakeModalProps> = ({
             </div>
           </div>
 
-          {/* Social Profiles & CV */}
           <div className="flex items-center gap-2 flex-wrap">
             <a
               href={PROFILE_DATA.linkedin}
@@ -254,27 +234,24 @@ export const HandshakeModal: React.FC<HandshakeModalProps> = ({
               <ExternalLink className="w-3 h-3 opacity-60" />
             </a>
 
-            <button
+            <Button
+              variant="secondary"
+              size="sm"
+              icon={<FileDown className="w-3.5 h-3.5" />}
               onClick={() => {
                 onClose();
                 onOpenResume();
               }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded border text-xs font-mono font-bold transition-colors ml-auto ${
-                theme === 'dark'
-                  ? 'bg-cyan-600/20 hover:bg-cyan-600/30 border-cyan-500/40 text-cyan-300'
-                  : 'bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700'
-              }`}
+              className={`ml-auto ${theme === 'dark' ? 'border-cyan-500/40 text-cyan-300 bg-cyan-600/10 hover:bg-cyan-600/20' : 'bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200'}`}
             >
-              <FileDown className="w-3.5 h-3.5" />
-              <span>{isPT ? 'VER CURRÍCULO (RAW CV)' : 'VIEW RAW ATS CV'}</span>
-            </button>
+              {t(language, 'handshake.viewResume')}
+            </Button>
           </div>
 
-          {/* Fast Email Dispatch Form */}
           <form onSubmit={handleSendDraft} className="space-y-3 pt-2 border-t dark:border-zinc-800 border-slate-200">
             <div className="flex items-center gap-1.5 text-xs font-mono opacity-80">
               <MessageSquare className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400" />
-              <span>{isPT ? 'MENSAGEM RÁPIDA VIA CLIENTE DE E-MAIL' : 'SEND RAPID DISPATCH'}</span>
+              <span>{t(language, 'handshake.rapidDispatch')}</span>
             </div>
 
             <div>
@@ -282,7 +259,6 @@ export const HandshakeModal: React.FC<HandshakeModalProps> = ({
                 type="text"
                 value={inquirySubject}
                 onChange={(e) => setInquirySubject(e.target.value)}
-                placeholder={isPT ? 'Assunto da Oportunidade' : 'Opportunity Subject'}
                 className={`w-full px-3 py-2 rounded-md border text-xs font-mono focus:outline-hidden focus:ring-1 ${
                   theme === 'dark'
                     ? 'bg-zinc-900 border-zinc-800 text-zinc-100 focus:ring-cyan-400'
@@ -297,11 +273,7 @@ export const HandshakeModal: React.FC<HandshakeModalProps> = ({
                 rows={3}
                 value={inquiryNote}
                 onChange={(e) => setInquiryNote(e.target.value)}
-                placeholder={
-                  isPT
-                    ? 'Escreva uma mensagem rápida para o Thales...'
-                    : 'Write a quick note to Thales...'
-                }
+                placeholder={t(language, 'handshake.notePlaceholder')}
                 className={`w-full px-3 py-2 rounded-md border text-xs font-sans focus:outline-hidden focus:ring-1 ${
                   theme === 'dark'
                     ? 'bg-zinc-900 border-zinc-800 text-zinc-100 focus:ring-cyan-400'
@@ -310,17 +282,15 @@ export const HandshakeModal: React.FC<HandshakeModalProps> = ({
               />
             </div>
 
-            <button
+            <Button
               type="submit"
-              className={`w-full py-2.5 px-4 rounded-md text-white font-mono text-xs font-bold flex items-center justify-center gap-2 transition-colors shadow-md ${
-                theme === 'dark'
-                  ? 'bg-emerald-600 hover:bg-emerald-500'
-                  : 'bg-blue-600 hover:bg-blue-700'
-              }`}
+              variant={theme === 'dark' ? 'danger' : 'primary'}
+              size="md"
+              icon={<Send className="w-3.5 h-3.5" />}
+              className={`w-full shadow-md ${theme === 'dark' ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : ''}`}
             >
-              <Send className="w-3.5 h-3.5" />
-              <span>{isPT ? 'ABRIR E-MAIL DE CONTATO' : 'DISPATCH HANDSHAKE EMAIL'}</span>
-            </button>
+              {t(language, 'handshake.sendButton')}
+            </Button>
           </form>
         </div>
       </div>

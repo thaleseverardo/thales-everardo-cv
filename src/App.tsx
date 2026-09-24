@@ -4,25 +4,48 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { SystemState } from './types';
-import { ControlPanel } from './components/ControlPanel';
-import { SystemCanvas } from './components/SystemCanvas';
-import { ExecutiveTimelineView } from './components/ExecutiveTimelineView';
-import { NodeInspector } from './components/NodeInspector';
-import { CLIOverlay } from './components/CLIOverlay';
-import { HandshakeModal } from './components/HandshakeModal';
-import { RawResumeModal } from './components/RawResumeModal';
-import { FooterBar } from './components/FooterBar';
-import { OfflineIndicator } from './components/OfflineIndicator';
+import { SystemState, AppTheme } from './types';
+import { ControlPanel } from './components/organisms/ControlPanel';
+import { SystemCanvas } from './components/templates/SystemCanvas';
+import { ExecutiveTimelineView } from './components/templates/ExecutiveTimelineView';
+import { NodeInspector } from './components/organisms/NodeInspector';
+import { CLIOverlay } from './components/organisms/CLIOverlay';
+import { HandshakeModal } from './components/organisms/HandshakeModal';
+import { RawResumeModal } from './components/organisms/RawResumeModal';
+import { FooterBar } from './components/organisms/FooterBar';
+import { OfflineIndicator } from './components/atoms/OfflineIndicator';
+import { PWAInstallPrompt } from './components/organisms/PWAInstallPrompt';
+
+function applyThemeDOM(theme: AppTheme) {
+  if (typeof document === 'undefined') return;
+  if (theme === 'dark') {
+    document.documentElement.classList.add('dark');
+    document.documentElement.classList.remove('light');
+  } else {
+    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.add('light');
+  }
+}
 import { CURRICULUM_NODES } from './data/curriculumData';
+import { getStoredPreferences, updateStoredPreferences } from './utils/storageUtils';
+import { detectLocalLanguage, resolveCountryToLanguage, BCP47_TAGS } from './utils/geoLanguageUtils';
+
+function getInitialTheme(): AppTheme {
+  if (typeof window === 'undefined') return 'light';
+  try {
+    const prefs = getStoredPreferences();
+    if (prefs.theme === 'dark' || prefs.theme === 'light') {
+      return prefs.theme;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+  } catch (e) {}
+  return 'light';
+}
 
 export default function App() {
   const [systemState, setSystemState] = useState<SystemState>(() => {
-    const isBrowserPT =
-      typeof navigator !== 'undefined' &&
-      (navigator.language.startsWith('pt') || navigator.languages?.some((l) => l.startsWith('pt')));
-
-    // Mobile-first UX: screens under 768px default to TIMELINE layout for optimal thumb ergonomics
     const isMobileScreen = typeof window !== 'undefined' && window.innerWidth < 768;
 
     return {
@@ -36,8 +59,8 @@ export default function App() {
       failureInjected: false,
       recoveredCount: 0,
       soundEnabled: true,
-      language: isBrowserPT ? 'PT' : 'EN',
-      theme: 'dark',
+      language: detectLocalLanguage(), // PT para lusófonos, ES para hispanófonos, FR para francófonos, EN padrão
+      theme: getInitialTheme(),
       profileLens: 'ALL',
       viewLayout: isMobileScreen ? 'TIMELINE' : 'GRAPH',
       onboardingDismissed: true,
@@ -50,36 +73,62 @@ export default function App() {
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
 
+  // Verificação em segundo plano por IP com AbortController
+  useEffect(() => {
+    const controller = new AbortController();
+
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('geo') || params.get('country') || params.get('lang')) return;
+
+      const prefs = getStoredPreferences();
+      if (prefs.language) return;
+
+      fetch('https://api.country.is/', { signal: controller.signal })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && data.country) {
+            const detected = resolveCountryToLanguage(data.country);
+            setSystemState((prev) => 
+              prev.language !== detected ? { ...prev, language: detected } : prev
+            );
+          }
+        })
+        .catch(() => {});
+    } catch (e) {}
+
+    return () => controller.abort();
+  }, []);
+
   const updateState = useCallback((updates: Partial<SystemState>) => {
     setSystemState((prev) => {
       const next = { ...prev, ...updates };
-      if (updates.theme && typeof document !== 'undefined') {
-        if (updates.theme === 'dark') {
-          document.documentElement.classList.add('dark');
-          document.documentElement.classList.remove('light');
-        } else {
-          document.documentElement.classList.remove('dark');
-          document.documentElement.classList.add('light');
-        }
+
+      if (updates.language) {
+        updateStoredPreferences({ language: updates.language });
       }
+
+      if (updates.theme) {
+        updateStoredPreferences({ theme: updates.theme });
+        applyThemeDOM(updates.theme);
+      }
+
       return next;
     });
   }, []);
 
-  // Sync initial theme
+  // Sincroniza a tag BCP 47 no HTML (pt-BR, es-ES, fr-FR, en-US)
   useEffect(() => {
     if (typeof document !== 'undefined') {
-      if (systemState.theme === 'dark') {
-        document.documentElement.classList.add('dark');
-        document.documentElement.classList.remove('light');
-      } else {
-        document.documentElement.classList.remove('dark');
-        document.documentElement.classList.add('light');
-      }
+      document.documentElement.lang = BCP47_TAGS[systemState.language] || 'en-US';
     }
+  }, [systemState.language]);
+
+  useEffect(() => {
+    applyThemeDOM(systemState.theme);
   }, [systemState.theme]);
 
-  // Global Keyboard Shortcuts (Ctrl+K or Cmd+K for CLI, ESC for drawers/modals)
+  // Global Keyboard Shortcuts (Ctrl+K para CLI, ESC para modais)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
@@ -103,9 +152,16 @@ export default function App() {
         systemState.theme === 'dark' ? 'bg-[#09090b] text-zinc-100' : 'bg-slate-50 text-slate-900'
       }`}
     >
-      <OfflineIndicator language={systemState.language} theme={systemState.theme} />
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:font-mono focus:text-xs focus:rounded-md focus:shadow-xl focus:outline-hidden"
+      >
+        {systemState.language === 'PT' ? 'Pular para o conteúdo principal' : systemState.language === 'ES' ? 'Saltar al contenido principal' : systemState.language === 'FR' ? 'Passer au contenu principal' : 'Skip to main content'}
+      </a>
 
-      {/* Unified Executive Header */}
+      <OfflineIndicator language={systemState.language} theme={systemState.theme} />
+      <PWAInstallPrompt language={systemState.language} theme={systemState.theme} />
+
       <ControlPanel
         systemState={systemState}
         updateState={updateState}
@@ -114,8 +170,7 @@ export default function App() {
         onOpenResume={() => setIsResumeOpen(true)}
       />
 
-      {/* Core Architectural Presentation */}
-      <main className="flex-1 relative flex flex-col">
+      <main id="main-content" tabIndex={-1} className="flex-1 relative flex flex-col focus:outline-hidden">
         {systemState.viewLayout === 'GRAPH' ? (
           <SystemCanvas
             systemState={systemState}
@@ -136,7 +191,6 @@ export default function App() {
         )}
       </main>
 
-      {/* Inspector Drawer */}
       <NodeInspector
         nodeId={systemState.activeNodeId}
         onClose={() => updateState({ activeNodeId: null })}
@@ -149,7 +203,6 @@ export default function App() {
         }}
       />
 
-      {/* Cybernetic CLI Overlay */}
       <CLIOverlay
         isOpen={isCLIOpen}
         onClose={() => setIsCLIOpen(false)}
@@ -165,7 +218,6 @@ export default function App() {
         }}
       />
 
-      {/* Handshake & Hiring Modal */}
       <HandshakeModal
         isOpen={isContactOpen}
         onClose={() => setIsContactOpen(false)}
@@ -178,7 +230,6 @@ export default function App() {
         theme={systemState.theme}
       />
 
-      {/* Clean ATS Resume Modal */}
       <RawResumeModal
         isOpen={isResumeOpen}
         onClose={() => setIsResumeOpen(false)}
@@ -187,7 +238,6 @@ export default function App() {
         theme={systemState.theme}
       />
 
-      {/* Discrete Status Bar */}
       <FooterBar
         systemState={systemState}
         updateState={updateState}

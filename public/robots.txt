@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /resumes/
+
+Sitemap: https://thaleseverardo.github.io/thales-everardo-cv/sitemap.xml
