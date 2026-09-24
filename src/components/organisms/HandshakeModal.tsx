@@ -1,3 +1,4 @@
+import { useAuth } from '../../hooks/useAuth';
 import { AuthContactGate } from '../molecules/AuthContactGate';
 import React, { useState } from 'react';
 import {
@@ -38,6 +39,7 @@ export const HandshakeModal: React.FC<HandshakeModalProps> = ({
   language,
   theme,
 }) => {
+  const { isAuthenticated, contact } = useAuth();
   const [copiedField, setCopiedField] = useState<'email' | 'phone' | null>(null);
   const [inquirySubject, setInquirySubject] = useState(t(language, 'handshake.subjectDefault'));
   const [inquiryNote, setInquiryNote] = useState('');
@@ -54,7 +56,8 @@ export const HandshakeModal: React.FC<HandshakeModalProps> = ({
   const handleSendDraft = (e: React.FormEvent) => {
     e.preventDefault();
     const defaultBody = t(language, 'handshake.defaultBody');
-    const mailtoUrl = `mailto:${isAuthenticated ? contact.email : 'contato@portfolio'}?subject=${encodeURIComponent(
+    const targetEmail = isAuthenticated && contact?.email ? contact.email : 'thales.everardo@gmail.com';
+    const mailtoUrl = `mailto:${targetEmail}?subject=${encodeURIComponent(
       inquirySubject
     )}&body=${encodeURIComponent(inquiryNote || defaultBody)}`;
     window.location.href = mailtoUrl;

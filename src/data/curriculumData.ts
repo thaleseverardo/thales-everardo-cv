@@ -469,10 +469,10 @@ export const PROFILE_DATA = {
   location: 'São Paulo, SP – Brazil (Open to Remote & Global Relocation)',
   locationPT: 'São Paulo, SP – Brasil (Aberto a Remoto e Realocação Global)',
   get email() {
-    return getDecodedEmail();
+    return '';
   },
   get phone() {
-    return getDecodedPhone();
+    return '';
   },
   github: 'https://github.com/thaleseverardo',
   linkedin: 'https://linkedin.com/in/thaleseverardo',
