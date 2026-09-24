@@ -1,3 +1,4 @@
+import { AuthContactGate } from '../molecules/AuthContactGate';
 import React, { useState } from 'react';
 import {
   X,
@@ -135,72 +136,9 @@ export const HandshakeModal: React.FC<HandshakeModalProps> = ({
             <p>{t(language, 'handshake.availabilityDesc')}</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div
-              className={`p-3.5 rounded-lg border flex items-center justify-between ${
-                theme === 'dark' ? 'bg-zinc-900/80 border-zinc-800' : 'bg-slate-50 border-slate-200'
-              }`}
-            >
-              <div className="min-w-0 pr-2">
-                <div className="text-[11px] font-mono opacity-60">{t(language, 'handshake.emailLabel')}</div>
-                <div
-                  className={`text-xs font-mono font-semibold truncate ${
-                    theme === 'dark' ? 'text-cyan-400' : 'text-blue-700'
-                  }`}
-                >
-                  {PROFILE_DATA.email}
-                </div>
-              </div>
-              <button
-                onClick={() => copyToClipboard(PROFILE_DATA.email, 'email')}
-                className={`p-2 rounded border transition-colors shrink-0 ${
-                  theme === 'dark'
-                    ? 'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-200'
-                    : 'bg-white hover:bg-slate-100 border-slate-300 text-slate-800'
-                }`}
-                title="Copiar e-mail"
-              >
-                {copiedField === 'email' ? (
-                  <Check className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400" />
-                ) : (
-                  <Copy className="w-3.5 h-3.5" />
-                )}
-              </button>
-            </div>
-
-            <div
-              className={`p-3.5 rounded-lg border flex items-center justify-between ${
-                theme === 'dark' ? 'bg-zinc-900/80 border-zinc-800' : 'bg-slate-50 border-slate-200'
-              }`}
-            >
-              <div className="min-w-0 pr-2">
-                <div className="text-[11px] font-mono opacity-60">
-                  {t(language, 'handshake.phoneLabel')}
-                </div>
-                <div
-                  className={`text-xs font-mono font-semibold truncate ${
-                    theme === 'dark' ? 'text-cyan-400' : 'text-blue-700'
-                  }`}
-                >
-                  {PROFILE_DATA.phone}
-                </div>
-              </div>
-              <button
-                onClick={() => copyToClipboard(PROFILE_DATA.phone, 'phone')}
-                className={`p-2 rounded border transition-colors shrink-0 ${
-                  theme === 'dark'
-                    ? 'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-200'
-                    : 'bg-white hover:bg-slate-100 border-slate-300 text-slate-800'
-                }`}
-                title="Copiar telefone"
-              >
-                {copiedField === 'phone' ? (
-                  <Check className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400" />
-                ) : (
-                  <Copy className="w-3.5 h-3.5" />
-                )}
-              </button>
-            </div>
+          <div className="space-y-3">
+            <AuthContactGate type="email" language={language} theme={theme} />
+            <AuthContactGate type="phone" language={language} theme={theme} />
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">

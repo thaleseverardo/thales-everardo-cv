@@ -1,3 +1,4 @@
+import { useAuth } from '../../hooks/useAuth';
 import React, { useState } from 'react';
 import {
   X,
@@ -40,6 +41,7 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
   const [emailCopiedFeedback, setEmailCopiedFeedback] = useState(false);
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
+  const { isAuthenticated, contact, signInWithGoogle } = useAuth();
 
   if (!isOpen) {
     if (showDownloadMenu) setShowDownloadMenu(false);
@@ -495,14 +497,26 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-mono opacity-80 mt-3">
               <span className="flex items-center gap-1">
                 <Mail className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-                <a href={`mailto:${PROFILE_DATA.email}`} className="hover:underline">
-                  {PROFILE_DATA.email}
-                </a>
+                {isAuthenticated ? (
+                  <a href={`mailto:${contact.email}`} className="hover:underline text-emerald-600 dark:text-emerald-400 font-bold">
+                    {contact.email}
+                  </a>
+                ) : (
+                  <button onClick={() => signInWithGoogle()} className="text-amber-500 hover:underline">
+                    [🔒 {activeLang === 'PT' ? 'Fazer login para ver e-mail' : 'Login to view email'}]
+                  </button>
+                )}
               </span>
               <span className="hidden sm:inline">•</span>
               <span className="flex items-center gap-1">
                 <Phone className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-                <span>{PROFILE_DATA.phone}</span>
+                {isAuthenticated ? (
+                  <span className="text-emerald-600 dark:text-emerald-400 font-bold">{contact.phone}</span>
+                ) : (
+                  <button onClick={() => signInWithGoogle()} className="text-amber-500 hover:underline">
+                    [🔒 {activeLang === 'PT' ? 'Telefone protegido' : 'Phone protected'}]
+                  </button>
+                )}
               </span>
               <span className="hidden sm:inline">•</span>
               <span className="flex items-center gap-1">

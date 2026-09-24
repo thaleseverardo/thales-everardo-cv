@@ -1,7 +1,7 @@
 # Thales Everardo
 **Staff Software Engineer & Systems Architect**
 
-Email: thales.everardo@gmail.com | Phone: [Available via Portfolio Handshake] | São Paulo, Brazil
+Contact: Protected via Portfolio Auth Gate | São Paulo, Brazil| São Paulo, Brazil
 GitHub: https://github.com/thaleseverardo | LinkedIn: https://linkedin.com/in/thaleseverardo
 
 ---
