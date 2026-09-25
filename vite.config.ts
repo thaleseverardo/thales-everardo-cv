@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon.svg'],
+        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon.svg', 'robots.txt', 'sitemap.xml', 'llms.txt', 'llms-full.txt'],
         manifest: {
           id: '/',
           name: 'Thales Everardo // Systems Architect',
@@ -47,7 +47,14 @@ export default defineConfig(({ mode }) => {
         },
         workbox: {
           maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
-          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
+          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,xml,txt,md}'],
+          navigateFallbackDenylist: [
+            /\/sitemap\.xml$/,
+            /\/robots\.txt$/,
+            /\/llms\.txt$/,
+            /\/llms-full\.txt$/,
+            /\/resumes\/.*/
+          ],
           runtimeCaching: [
             {
               urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
