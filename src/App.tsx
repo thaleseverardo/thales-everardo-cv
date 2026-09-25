@@ -9,9 +9,6 @@ import { ControlPanel } from './components/organisms/ControlPanel';
 import { SystemCanvas } from './components/templates/SystemCanvas';
 import { ExecutiveTimelineView } from './components/templates/ExecutiveTimelineView';
 import { NodeInspector } from './components/organisms/NodeInspector';
-const CLIOverlay = React.lazy(() =>
-  import('./components/organisms/CLIOverlay').then((m) => ({ default: m.CLIOverlay }))
-);
 const HandshakeModal = React.lazy(() =>
   import('./components/organisms/HandshakeModal').then((m) => ({ default: m.HandshakeModal }))
 );
@@ -20,7 +17,6 @@ const RawResumeModal = React.lazy(() =>
 );
 import { FooterBar } from './components/organisms/FooterBar';
 import { OfflineIndicator } from './components/atoms/OfflineIndicator';
-import { PWAInstallPrompt } from './components/organisms/PWAInstallPrompt';
 
 function applyThemeDOM(theme: AppTheme) {
   if (typeof document === 'undefined') return;
@@ -75,7 +71,6 @@ export default function App() {
     };
   });
 
-  const [isCLIOpen, setIsCLIOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
 
@@ -110,12 +105,8 @@ export default function App() {
   // Global Keyboard Shortcuts (Ctrl+K para CLI, ESC para modais)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        setIsCLIOpen((prev) => !prev);
-      } else if (e.key === 'Escape') {
-        if (isCLIOpen) setIsCLIOpen(false);
-        else if (isContactOpen) setIsContactOpen(false);
+      if (e.key === 'Escape') {
+        if (isContactOpen) setIsContactOpen(false);
         else if (isResumeOpen) setIsResumeOpen(false);
         else if (systemState.activeNodeId) updateState({ activeNodeId: null });
       }
@@ -123,7 +114,7 @@ export default function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isCLIOpen, isContactOpen, isResumeOpen, systemState.activeNodeId, updateState]);
+  }, [isContactOpen, isResumeOpen, systemState.activeNodeId, updateState]);
 
   return (
     <div
@@ -139,12 +130,10 @@ export default function App() {
       </a>
 
       <OfflineIndicator language={systemState.language} theme={systemState.theme} />
-      <PWAInstallPrompt language={systemState.language} theme={systemState.theme} />
 
       <ControlPanel
         systemState={systemState}
         updateState={updateState}
-        onOpenCLI={() => setIsCLIOpen(true)}
         onOpenContact={() => setIsContactOpen(true)}
         onOpenResume={() => setIsResumeOpen(true)}
       />
@@ -182,24 +171,6 @@ export default function App() {
         }}
       />
 
-      {isCLIOpen && (
-        <React.Suspense fallback={null}>
-          <CLIOverlay
-            isOpen={isCLIOpen}
-            onClose={() => setIsCLIOpen(false)}
-            systemState={systemState}
-            updateState={updateState}
-            onOpenContact={() => {
-              setIsCLIOpen(false);
-              setIsContactOpen(true);
-            }}
-            onOpenResume={() => {
-              setIsCLIOpen(false);
-              setIsResumeOpen(true);
-            }}
-          />
-        </React.Suspense>
-      )}
 
       {isContactOpen && (
         <React.Suspense fallback={null}>
@@ -232,7 +203,6 @@ export default function App() {
       <FooterBar
         systemState={systemState}
         updateState={updateState}
-        onOpenCLI={() => setIsCLIOpen(true)}
       />
     </div>
   );

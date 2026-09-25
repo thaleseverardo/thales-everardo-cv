@@ -309,27 +309,26 @@ export const SystemCanvas: React.FC<SystemCanvasProps> = ({
                   play('click');
                 }
               }}
-              className={`absolute pointer-events-auto cursor-pointer w-75 sm:w-[320px] rounded-lg border transition-all duration-200 group focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-hidden ${
+              className={`absolute pointer-events-auto cursor-pointer w-80 sm:w-85 rounded-xl border transition-all duration-200 group focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-hidden ${
                 !isMatching
                   ? 'opacity-25 grayscale scale-95 z-10'
                   : 'opacity-100 scale-100 z-20'
               } ${
                 isSelected
-                  ? 'ring-2 ring-blue-600 border-blue-600 shadow-xl'
+                  ? 'ring-2 ring-blue-600 border-blue-600 shadow-2xl'
                   : theme === 'dark'
-                  ? 'bg-zinc-950/95 border-zinc-800 hover:border-zinc-700 shadow-md'
-                  : 'bg-white border-slate-300 hover:border-blue-400 shadow-xs'
+                  ? 'bg-zinc-950/95 border-zinc-800 hover:border-zinc-700 shadow-xl'
+                  : 'bg-white border-slate-300 hover:border-blue-400 shadow-md'
               }`}
             >
               <div
-                className={`px-3.5 py-2 border-b flex items-center justify-between rounded-t-lg ${
+                className={`px-4 py-2.5 border-b flex items-center justify-between rounded-t-xl ${
                   theme === 'dark' ? 'bg-zinc-900/80 border-zinc-800' : 'bg-slate-50 border-slate-200'
                 }`}
               >
                 <div className="flex items-center gap-1.5 font-mono text-[11px] min-w-0 pr-2">
-                  <span className="opacity-60">{node.number}</span>
-                  <span className="opacity-30">//</span>
-                  <span className="font-bold truncate text-zinc-900 dark:text-zinc-100">{node.company}</span>
+                  <span className="px-1.5 py-0.5 rounded bg-blue-600/10 text-blue-600 dark:text-cyan-400 dark:bg-cyan-500/10 font-bold">{node.number}</span>
+                  <span className="font-bold truncate text-zinc-900 dark:text-zinc-100" title={node.company}>{node.company}</span>
                 </div>
                 <div className="opacity-70 shrink-0">{renderShapeIcon(node.visualShape)}</div>
               </div>

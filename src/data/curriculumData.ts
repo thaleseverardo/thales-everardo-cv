@@ -475,7 +475,7 @@ export const PROFILE_DATA = {
     return '';
   },
   github: 'https://github.com/thaleseverardo',
-  linkedin: 'https://linkedin.com/in/thaleseverardo',
+  linkedin: 'https://br.linkedin.com/in/thaleseareis',
   avatar: 'src/assets/images/thales_avatar_760x760.webp?inline',
   tagline: "I build resilient architectures that sustain heavy load without breaking.",
   taglinePT: "Construo arquiteturas resilientes que suportam alta carga sem cair.",
