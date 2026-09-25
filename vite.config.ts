@@ -98,6 +98,9 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve('.'),
       },
     },
+    esbuild: {
+      drop: mode === 'production' ? ['console', 'debugger'] : [],
+    },
     build: {
       chunkSizeWarningLimit: 600,
       rollupOptions: {
