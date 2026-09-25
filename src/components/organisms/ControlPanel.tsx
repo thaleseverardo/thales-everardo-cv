@@ -24,7 +24,7 @@ import { PWAInstallButton } from '../molecules/PWAInstallButton';
 import { t } from '../../i18n/translations';
 import { Button } from '../atoms/Button';
 
-import thalesAvatar from '../../assets/images/thales_avatar_250x250.png';
+import thalesAvatar from '../../assets/images/thales_avatar_100x100.png';
 
 interface ControlPanelProps {
   systemState: SystemState;
