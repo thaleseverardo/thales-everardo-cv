@@ -59,11 +59,21 @@ if (typeof window !== 'undefined') {
   } catch {}
 }
 
-if (auth) {
-  onAuthStateChanged(auth, (user) => {
-    currentUser = mapFirebaseUser(user);
-    listeners.forEach((cb) => cb(currentUser));
-  });
+function initAuthListener() {
+  if (auth) {
+    onAuthStateChanged(auth, (user) => {
+      currentUser = mapFirebaseUser(user);
+      listeners.forEach((cb) => cb(currentUser));
+    });
+  }
+}
+
+if (typeof window !== "undefined") {
+  if ("requestIdleCallback" in window) {
+    (window as any).requestIdleCallback(() => initAuthListener(), { timeout: 2000 });
+  } else {
+    setTimeout(initAuthListener, 1200);
+  }
 }
 
 export function subscribeToAuth(callback: AuthListener): () => void {

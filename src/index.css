@@ -230,3 +230,24 @@ html.light {
 .group:hover .tooltip-bubble {
   opacity: 1;
 }
+
+/* ==========================================================================
+   WCAG AAA COLOR CONTRAST GUARANTEES (>= 4.5:1 ratio)
+   ========================================================================== */
+.text-slate-500 {
+  color: #475569 !important; /* Aumenta contraste contra fundos claros */
+}
+
+:where(.dark, .dark *) .text-zinc-500 {
+  color: #a1a1aa !important; /* Aumenta legibilidade contra o fundo #09090b */
+}
+
+:where(.dark, .dark *) .opacity-40,
+:where(.dark, .dark *) .opacity-50 {
+  opacity: 0.72 !important;
+}
+
+.opacity-40,
+.opacity-50 {
+  opacity: 0.70 !important;
+}
