@@ -59,14 +59,14 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
 
   const leftColRef = useRef<HTMLDivElement>(null);
   const settingsMenuRef = useRef<HTMLDivElement>(null);
-  const [showFullName, setShowFullName] = useState(false);
+  const [showFullName, setShowFullName] = useState(true);
 
   useEffect(() => {
     if (!leftColRef.current) return;
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0];
       if (entry) {
-        setShowFullName(entry.contentRect.width >= 375);
+        setShowFullName(entry.contentRect.width >= 320);
       }
     });
     observer.observe(leftColRef.current);
@@ -150,98 +150,381 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   ];
 
   return (
-    <header
-      className={`border-b sticky top-0 z-40 transition-colors select-none ${
-        theme === 'dark'
-          ? 'bg-[#09090b]/95 border-zinc-800/90 text-zinc-100 backdrop-blur-md'
-          : 'bg-white/95 border-slate-200 text-slate-900 backdrop-blur-md shadow-xs'
-      }`}
-    >
-      {failureInjected && (
-        <div className="bg-rose-950/90 border-b border-rose-600/40 text-rose-200 text-xs py-1.5 px-4 sm:px-6 flex items-center justify-between gap-3 font-mono">
-          <div className="flex items-center gap-2 truncate">
-            <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 animate-pulse" />
-            <span className="font-bold text-rose-300">
-              {t(language, 'incident.badge')}
-            </span>
-            <span className="truncate">
-              {t(language, 'incident.desc')}
-            </span>
-          </div>
-          <button
-            onClick={handlePanicToggle}
-            className="flex items-center gap-1.5 px-2.5 py-0.5 bg-rose-600 hover:bg-rose-500 text-white rounded font-bold text-[11px] transition-colors shrink-0"
-          >
-            <RotateCcw className="w-3 h-3 animate-spin" />
-            {t(language, 'incident.autoHeal')}
-          </button>
-        </div>
-      )}
-
-      {/* DESKTOP HEADER */}
-      <div className="w-full px-5 sm:px-8 h-21 hidden md:flex items-center justify-between gap-4 lg:gap-6">
-        {/* 1º TERÇO: Identidade */}
-        <div
-          ref={leftColRef}
-          className="flex-1 flex items-center justify-start gap-3.5 min-w-48.75 overflow-hidden"
-        >
-          <div className="relative w-15 h-15 rounded-full overflow-hidden border-2 border-slate-300 dark:border-zinc-700 shrink-0 shadow-xs">
-            <img
-              src={THALES_AVATAR_BASE64}
-              alt="Thales Everardo"
-              className="w-full h-full object-cover object-top"
-              loading="eager"
-            />
-          </div>
-
-          <div className="min-w-0 flex flex-col justify-center">
-            <h1 className="font-mono font-bold text-[15px] sm:text-base tracking-tight text-zinc-900 dark:text-zinc-100 whitespace-nowrap">
-              <span>THALES </span>
-              {showFullName && <span>EVERARDO ALBUQUERQUE </span>}
-              <span>REIS</span>
-            </h1>
-
-            <div className="text-xs sm:text-[12px] font-sans opacity-70 leading-normal flex flex-wrap items-baseline gap-x-1.5 pt-0.5">
-              <span className="whitespace-nowrap">{t(language, 'nav.staffTitle')}</span>
-              <span className="whitespace-nowrap flex items-baseline gap-1">
-                <span className="opacity-40">&</span>
-                <span>{t(language, 'nav.architectTitle')}</span>
+    <>
+      {/* 1. HEADER LIMPO: IDENTIFICAÇÃO + PAR ESTÉTICO (CURRÍCULO & CONTATAR) */}
+      <header
+        className={`border-b sticky top-0 z-40 transition-colors select-none ${
+          theme === 'dark'
+            ? 'bg-[#09090b] border-zinc-800 text-zinc-100'
+            : 'bg-white border-slate-200 text-slate-900 shadow-2xs'
+        }`}
+      >
+        {failureInjected && (
+          <div className="bg-rose-950 border-b border-rose-600/40 text-rose-200 text-xs py-1.5 px-4 sm:px-6 flex items-center justify-between gap-3 font-mono">
+            <div className="flex items-center gap-2 truncate">
+              <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 animate-pulse" />
+              <span className="font-bold text-rose-300">
+                {t(language, 'incident.badge')}
+              </span>
+              <span className="truncate">
+                {t(language, 'incident.desc')}
               </span>
             </div>
+            <button
+              onClick={handlePanicToggle}
+              className="flex items-center gap-1.5 px-2.5 py-0.5 bg-rose-600 hover:bg-rose-500 text-white rounded-md font-bold text-[11px] transition-colors shrink-0 cursor-pointer"
+            >
+              <RotateCcw className="w-3 h-3 animate-spin" />
+              {t(language, 'incident.autoHeal')}
+            </button>
+          </div>
+        )}
+
+        {/* HEADER DESKTOP */}
+        <div className="w-full px-5 sm:px-8 h-18 hidden md:flex items-center justify-between gap-4">
+          {/* Canto Esquerdo: Identidade Visual */}
+          <div
+            ref={leftColRef}
+            className="flex items-center justify-start gap-3.5 min-w-48 overflow-hidden"
+          >
+            <div className="relative w-13 h-13 rounded-full overflow-hidden border-2 border-slate-300 dark:border-zinc-700 shrink-0 shadow-xs">
+              <img
+                src={THALES_AVATAR_BASE64}
+                alt="Thales Everardo"
+                className="w-full h-full object-cover object-top"
+                loading="eager"
+              />
+            </div>
+
+            <div className="min-w-0 flex flex-col justify-center">
+              <h1 className="font-mono font-bold text-[15px] sm:text-base tracking-tight text-zinc-900 dark:text-zinc-100 whitespace-nowrap">
+                <span>THALES </span>
+                {showFullName ? <span>EVERARDO ALBUQUERQUE </span> : <span>EVERARDO </span>}
+                <span>REIS</span>
+              </h1>
+
+              <div className="text-xs font-sans opacity-70 leading-normal flex flex-wrap items-baseline gap-x-1.5 pt-0.5">
+                <span className="whitespace-nowrap">{t(language, 'nav.staffTitle')}</span>
+                <span className="whitespace-nowrap flex items-baseline gap-1">
+                  <span className="opacity-40">&</span>
+                  <span>{t(language, 'nav.architectTitle')}</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Canto Direito: Par Estético Rigorosamente Padronizado */}
+          <div className="flex items-center justify-end gap-2.5 shrink-0">
+            {/* BOTÃO CURRÍCULO (SECUNDÁRIO) */}
+            <button
+              onClick={() => {
+                onOpenResume();
+                play('click');
+              }}
+              className={`h-9 px-4 rounded-lg border font-mono font-bold text-xs flex items-center gap-2 transition-all shadow-xs shrink-0 cursor-pointer focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 ${
+                theme === 'dark'
+                  ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-700 text-zinc-200'
+                  : 'bg-white hover:bg-slate-50 border-slate-300 text-slate-800'
+              }`}
+            >
+              <FileText className="w-3.5 h-3.5 opacity-70 shrink-0" />
+              <span>{t(language, 'nav.cvButton')}</span>
+            </button>
+
+            {/* BOTÃO CONTATAR (PRIMÁRIO AZUL VIBRANTE) */}
+            <button
+              onClick={() => {
+                onOpenContact();
+                play('click');
+              }}
+              className="h-9 px-5 rounded-lg font-mono font-bold text-xs uppercase flex items-center gap-2 text-white bg-blue-600 hover:bg-blue-500 shadow-xs transition-colors shrink-0 cursor-pointer focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500"
+            >
+              <Mail className="w-3.5 h-3.5 shrink-0" />
+              <span>{t(language, 'nav.contactButton')}</span>
+            </button>
           </div>
         </div>
 
-        {/* 2º TERÇO: Lentes & Filtro */}
-        <div className="shrink-0 flex items-center justify-center gap-3">
+        {/* HEADER MOBILE */}
+        <div className="w-full px-4 h-16 flex md:hidden items-center justify-between">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="relative w-11 h-11 rounded-full overflow-hidden border-2 border-slate-300 dark:border-zinc-700 shrink-0 shadow-xs">
+              <img
+                src={THALES_AVATAR_BASE64}
+                alt="Thales Everardo"
+                className="w-full h-full object-cover object-top"
+                loading="eager"
+              />
+            </div>
+            <div className="min-w-0">
+              <span className="font-mono font-bold text-xs sm:text-sm tracking-tight block truncate">
+                Thales Everardo
+              </span>
+              <div className="text-[10px] font-sans opacity-60 leading-tight flex flex-wrap items-baseline gap-x-1">
+                <span className="whitespace-nowrap">{t(language, 'nav.staffTitle')}</span>
+                <span className="whitespace-nowrap flex items-baseline gap-0.5">
+                  <span className="opacity-40">&</span>
+                  <span>{t(language, 'nav.architectTitle')}</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <Button
+              variant="primary"
+              size="sm"
+              icon={<Mail className="w-3.5 h-3.5" />}
+              onClick={() => {
+                onOpenContact();
+                play('click');
+              }}
+              className="shadow-xs cursor-pointer h-9 px-3 text-xs uppercase"
+            >
+              {t(language, 'nav.contactButton')}
+            </Button>
+
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className={`p-2 rounded-lg border h-9 w-9 flex items-center justify-center ${
+                theme === 'dark'
+                  ? 'bg-zinc-900 border-zinc-800 text-zinc-200'
+                  : 'bg-slate-100 border-slate-300 text-slate-700'
+              }`}
+              aria-label="Menu"
+            >
+              <Menu className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* GAVETA MOBILE */}
+        {mobileMenuOpen && (
           <div
-            role="tablist"
-            className={`flex items-center p-1 h-9 rounded-xl border text-xs font-mono shrink-0 shadow-2xs ${
-              theme === 'dark' ? 'bg-zinc-900/90 border-zinc-800' : 'bg-slate-100 border-slate-300'
+            className={`md:hidden border-t px-4 py-3.5 space-y-3 font-mono text-xs ${
+              theme === 'dark' ? 'bg-zinc-950 border-zinc-800' : 'bg-slate-50 border-slate-200'
             }`}
           >
-            {allLenses.map((lensKey) => {
+            <div className="relative">
+              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-zinc-500 pointer-events-none" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => updateState({ searchTerm: e.target.value })}
+                placeholder={t(language, 'nav.filterPlaceholder')}
+                className={`w-full pl-9 pr-3 h-9 rounded-lg border text-xs font-mono focus:outline-hidden ${
+                  theme === 'dark'
+                    ? 'bg-zinc-900 border-zinc-800 text-zinc-100'
+                    : 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400'
+                }`}
+              />
+            </div>
+
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+              {allLenses.map((lensKey) => (
+                <button
+                  key={lensKey}
+                  onClick={() => {
+                    handleSelectLens(lensKey);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`px-3 py-1.5 rounded-lg text-xs whitespace-nowrap border cursor-pointer ${
+                    profileLens === lensKey
+                      ? 'bg-blue-600 text-white border-blue-600 font-bold'
+                      : theme === 'dark'
+                      ? 'bg-zinc-900 border-zinc-800 text-zinc-400'
+                      : 'bg-white border-slate-300 text-slate-600'
+                  }`}
+                >
+                  {language === 'PT'
+                    ? PROFILE_LENSES_CONFIG[lensKey].shortLabelPT
+                    : PROFILE_LENSES_CONFIG[lensKey].shortLabelEN}
+                </button>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 pt-1 border-t dark:border-zinc-800/80 border-slate-200">
+              <button
+                onClick={handleToggleSound}
+                className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg border text-xs font-sans font-medium transition-colors cursor-pointer ${
+                  theme === 'dark'
+                    ? 'bg-zinc-900 border-zinc-800 text-zinc-300'
+                    : 'bg-white border-slate-300 text-slate-700'
+                }`}
+              >
+                {soundEnabled ? (
+                  <Volume2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                ) : (
+                  <VolumeX className="w-4 h-4 opacity-40 shrink-0" />
+                )}
+                <span>{t(language, 'nav.audioFx')}</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenCLI();
+                  play('click');
+                }}
+                className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg border text-xs font-mono font-medium transition-colors cursor-pointer ${
+                  theme === 'dark'
+                    ? 'bg-zinc-900 border-zinc-800 text-cyan-400'
+                    : 'bg-white border-slate-300 text-blue-700'
+                }`}
+              >
+                <Terminal className="w-4 h-4 shrink-0" />
+                <span>{t(language, 'nav.openCli')}</span>
+              </button>
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t dark:border-zinc-800/80 border-slate-200">
+              <div className="flex items-center gap-2">
+                {/* SWITCHER COMPACTO MOBILE COM ZERO-INSET */}
+                <div className="inline-flex items-stretch h-9 rounded-lg border overflow-hidden border-slate-200 dark:border-zinc-800 bg-slate-100 dark:bg-zinc-900 shadow-2xs">
+                  <button
+                    onClick={() => {
+                      handleToggleViewLayout('GRAPH');
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`flex items-center gap-1.5 h-full px-3 text-xs font-semibold cursor-pointer ${
+                      viewLayout === 'GRAPH'
+                        ? theme === 'dark'
+                          ? 'bg-zinc-800 text-cyan-300 border-r border-zinc-700'
+                          : 'bg-white text-blue-600 border-r border-slate-200'
+                        : 'opacity-60'
+                    }`}
+                  >
+                    <Layers className="w-3.5 h-3.5" />
+                    <span>{t(language, 'nav.graphView')}</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleToggleViewLayout('TIMELINE');
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`flex items-center gap-1.5 h-full px-3 text-xs font-semibold cursor-pointer ${
+                      viewLayout === 'TIMELINE'
+                        ? theme === 'dark'
+                          ? 'bg-zinc-800 text-cyan-300 border-l border-zinc-700'
+                          : 'bg-white text-blue-600 border-l border-slate-200'
+                        : 'opacity-60'
+                    }`}
+                  >
+                    <List className="w-3.5 h-3.5" />
+                    <span>{t(language, 'nav.timelineView')}</span>
+                  </button>
+                </div>
+                <PWAInstallButton language={language} theme={theme} />
+              </div>
+
+              <div className="flex items-center gap-1">
+                {(['PT', 'EN', 'ES', 'FR'] as const).map((code) => (
+                  <button
+                    key={code}
+                    onClick={() => handleToggleLanguage(code)}
+                    className={`px-2 py-1 rounded border text-[11px] font-bold cursor-pointer ${
+                      language === code ? 'bg-blue-600 text-white border-blue-600' : 'opacity-60'
+                    }`}
+                  >
+                    {code}
+                  </button>
+                ))}
+                <button
+                  onClick={handleToggleTheme}
+                  className="p-1.5 ml-1 rounded border text-amber-400 cursor-pointer"
+                >
+                  {theme === 'dark' ? (
+                    <Sun className="w-3.5 h-3.5" />
+                  ) : (
+                    <Moon className="w-3.5 h-3.5 text-slate-700" />
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* 2. TOOLBAR FLUTUANTE SOBRE O CANVAS (COMPENSAÇÃO ÓPTICA VERTICAL SUB-PIXEL) */}
+      <div className="hidden md:flex w-full px-5 sm:px-8 pt-4 pb-2 z-30 relative pointer-events-none">
+        <div className="w-full flex items-center justify-between gap-3 pointer-events-auto">
+          {/* SELETOR DE MODO: ZERO-INSET COM COMPENSAÇÃO ÓPTICA */}
+          <div
+            className={`inline-flex items-stretch p-0 h-9 rounded-lg border text-xs font-mono shrink-0 overflow-hidden shadow-2xs ${
+              theme === 'dark'
+                ? 'bg-zinc-900 border-zinc-800'
+                : 'bg-slate-100 border-slate-200'
+            }`}
+          >
+            <button
+              onClick={() => handleToggleViewLayout('GRAPH')}
+              className={`flex items-center gap-1.5 h-full px-3.5 transition-colors text-xs cursor-pointer focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 ${
+                viewLayout === 'GRAPH'
+                  ? theme === 'dark'
+                    ? 'bg-zinc-800 text-cyan-300 font-semibold border-r border-zinc-700'
+                    : 'bg-white text-blue-600 font-semibold border-r border-slate-200'
+                  : theme === 'dark'
+                  ? 'text-zinc-400 hover:text-zinc-200'
+                  : 'text-slate-500 hover:text-slate-700'
+              }`}
+              title={t(language, 'nav.graphView')}
+            >
+              <Layers className={`w-3.5 h-3.5 shrink-0 ${viewLayout === 'GRAPH' ? (theme === 'dark' ? 'text-cyan-400' : 'text-blue-600') : 'opacity-60'}`} />
+              <span className="translate-y-[1px] leading-none">{t(language, 'nav.graphView')}</span>
+            </button>
+            <button
+              onClick={() => handleToggleViewLayout('TIMELINE')}
+              className={`flex items-center gap-1.5 h-full px-3.5 transition-colors text-xs cursor-pointer focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 ${
+                viewLayout === 'TIMELINE'
+                  ? theme === 'dark'
+                    ? 'bg-zinc-800 text-cyan-300 font-semibold border-l border-zinc-700'
+                    : 'bg-white text-blue-600 font-semibold border-l border-slate-200'
+                  : theme === 'dark'
+                  ? 'text-zinc-400 hover:text-zinc-200'
+                  : 'text-slate-500 hover:text-slate-700'
+              }`}
+              title={t(language, 'nav.timelineView')}
+            >
+              <List className={`w-3.5 h-3.5 shrink-0 ${viewLayout === 'TIMELINE' ? (theme === 'dark' ? 'text-cyan-400' : 'text-blue-600') : 'opacity-60'}`} />
+              <span className="translate-y-[1px] leading-none">{t(language, 'nav.timelineView')}</span>
+            </button>
+          </div>
+
+          {/* BARRA DE CATEGORIAS: ZERO-INSET FLUSH PILLS COM COMPENSAÇÃO ÓPTICA */}
+          <div
+            role="tablist"
+            className={`inline-flex items-stretch p-0 h-9 rounded-lg border text-xs font-mono shrink-0 overflow-hidden shadow-2xs ${
+              theme === 'dark'
+                ? 'bg-zinc-900 border-zinc-800'
+                : 'bg-slate-100 border-slate-200'
+            }`}
+          >
+            {allLenses.map((lensKey, idx) => {
               const lens = PROFILE_LENSES_CONFIG[lensKey];
               const isActive = profileLens === lensKey;
+              const isFirst = idx === 0;
+              const isLast = idx === allLenses.length - 1;
+
               return (
                 <button
                   key={lensKey}
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => handleSelectLens(lensKey)}
-                  className={`h-7 px-3 rounded-lg font-medium whitespace-nowrap text-xs flex items-center justify-center transition-all focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 ${
+                  className={`h-full px-3.5 whitespace-nowrap text-xs flex items-center justify-center transition-colors cursor-pointer focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 ${
                     isActive
                       ? theme === 'dark'
-                        ? 'bg-zinc-800 text-cyan-300 font-bold shadow-xs border border-zinc-700'
-                        : 'bg-white text-blue-700 font-bold shadow-xs border border-slate-200'
+                        ? `bg-zinc-800 text-cyan-300 font-semibold ${!isFirst ? 'border-l border-zinc-700' : ''} ${!isLast ? 'border-r border-zinc-700' : ''}`
+                        : `bg-white text-blue-600 font-semibold ${!isFirst ? 'border-l border-slate-200' : ''} ${!isLast ? 'border-r border-slate-200' : ''}`
                       : theme === 'dark'
-                      ? 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/40'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
+                      ? 'text-zinc-400 hover:text-zinc-200 font-normal hover:bg-zinc-800/40'
+                      : 'text-slate-600 hover:text-slate-900 font-normal hover:bg-slate-200/50'
                   }`}
                 >
-                  <span className="hidden 2xl:inline">
+                  <span className="translate-y-[1px] leading-none hidden xl:inline">
                     {language === 'PT' ? lens.labelPT : lens.labelEN}
                   </span>
-                  <span className="2xl:hidden">
+                  <span className="translate-y-[1px] leading-none xl:hidden">
                     {language === 'PT' ? lens.shortLabelPT : lens.shortLabelEN}
                   </span>
                 </button>
@@ -249,99 +532,32 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             })}
           </div>
 
-          {/* CAMPO DE BUSCA AMPLIADO */}
-          <div className="relative w-44 lg:w-56 focus-within:w-64 transition-all duration-200 shrink-0">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 opacity-40 pointer-events-none" />
+          {/* CAMPO DE BUSCA: ALINHAMENTO ÓPTICO DE BASELINE COM A LUPA */}
+          <div className="relative flex-1 min-w-44 focus-within:ring-1 focus-within:ring-blue-500 rounded-lg transition-all shadow-xs">
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-zinc-500 pointer-events-none" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => updateState({ searchTerm: e.target.value })}
               placeholder={t(language, 'nav.filterPlaceholder')}
-              className={`w-full pl-9 pr-7 h-9 rounded-lg text-xs font-mono border focus:outline-hidden transition-all shadow-2xs ${
+              className={`w-full pl-9 pr-7 h-9 rounded-lg text-xs font-mono border focus:outline-hidden transition-all pt-0.5 leading-none ${
                 theme === 'dark'
                   ? 'bg-zinc-900 border-zinc-800 text-zinc-100 focus:border-cyan-500 placeholder:text-zinc-500'
-                  : 'bg-white border-slate-300 text-slate-900 focus:border-blue-600 placeholder:text-slate-400'
+                  : 'bg-white border-slate-200 text-slate-900 focus:border-blue-500 placeholder:text-slate-400'
               }`}
             />
             {searchTerm && (
               <button
                 onClick={() => updateState({ searchTerm: '' })}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 opacity-40 hover:opacity-100"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 dark:text-zinc-500 dark:hover:text-zinc-200 cursor-pointer"
               >
                 <X className="w-3 h-3" />
               </button>
             )}
           </div>
-        </div>
 
-        {/* 3º TERÇO: Ações Principais & Preferências */}
-        <div className="flex-1 flex items-center justify-end gap-2 shrink-0 min-w-0">
-          {/* SWITCHER GRAPH / TIMELINE */}
-          <div
-            className={`flex items-center p-1 h-9 rounded-xl border text-xs font-mono shrink-0 shadow-2xs ${
-              theme === 'dark' ? 'bg-zinc-900/90 border-zinc-800' : 'bg-slate-100 border-slate-300'
-            }`}
-          >
-            <button
-              onClick={() => handleToggleViewLayout('GRAPH')}
-              className={`flex items-center gap-1.5 h-7 px-3 rounded-lg transition-all text-xs focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 ${
-                viewLayout === 'GRAPH'
-                  ? theme === 'dark'
-                    ? 'bg-zinc-800 text-cyan-300 font-bold border border-zinc-700 shadow-xs'
-                    : 'bg-white text-blue-700 font-bold border border-slate-200 shadow-xs'
-                  : 'opacity-65 hover:opacity-100'
-              }`}
-              title={t(language, 'nav.graphView')}
-            >
-              <Layers className="w-3.5 h-3.5" />
-              <span className="hidden xl:inline">{t(language, 'nav.graphView')}</span>
-            </button>
-            <button
-              onClick={() => handleToggleViewLayout('TIMELINE')}
-              className={`flex items-center gap-1.5 h-7 px-3 rounded-lg transition-all text-xs focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 ${
-                viewLayout === 'TIMELINE'
-                  ? theme === 'dark'
-                    ? 'bg-zinc-800 text-cyan-300 font-bold border border-zinc-700 shadow-xs'
-                    : 'bg-white text-blue-700 font-bold border border-slate-200 shadow-xs'
-                  : 'opacity-65 hover:opacity-100'
-              }`}
-              title={t(language, 'nav.timelineView')}
-            >
-              <List className="w-3.5 h-3.5" />
-              <span className="hidden xl:inline">{t(language, 'nav.timelineView')}</span>
-            </button>
-          </div>
-
-          {/* BOTÃO CV */}
-          <button
-            onClick={() => {
-              onOpenResume();
-              play('click');
-            }}
-            className={`h-9 px-3.5 rounded-lg border font-mono font-bold text-xs flex items-center gap-1.5 transition-all shadow-2xs shrink-0 focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 ${
-              theme === 'dark'
-                ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-200 hover:border-zinc-700'
-                : 'bg-white hover:bg-slate-50 border-slate-300 text-slate-800 hover:border-slate-400'
-            }`}
-          >
-            <FileText className="w-3.5 h-3.5 opacity-70" />
-            <span>{t(language, 'nav.cvButton')}</span>
-          </button>
-
-          {/* BOTÃO CONTACTAR */}
-          <button
-            onClick={() => {
-              onOpenContact();
-              play('click');
-            }}
-            className="h-9 px-4 rounded-lg font-mono font-bold text-xs flex items-center gap-1.5 text-white bg-blue-600 hover:bg-blue-500 shadow-xs transition-colors shrink-0 focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500"
-          >
-            <Mail className="w-3.5 h-3.5" />
-            <span className="hidden lg:inline">{t(language, 'nav.contactButton')}</span>
-          </button>
-
-          {/* BOTÃO & POPOVER DE PREFERÊNCIAS REFATORADO */}
-          <div className="relative" ref={settingsMenuRef}>
+          {/* WIDGET DE PREFERÊNCIAS: ALINHAMENTO ÓPTICO [ 🌙/☀️ • PT • ⚙️ ] */}
+          <div className="relative shrink-0" ref={settingsMenuRef}>
             <button
               aria-label={t(language, 'nav.preferences')}
               aria-haspopup="true"
@@ -350,37 +566,40 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                 setSettingsOpen((prev) => !prev);
                 play('click');
               }}
-              className={`h-9 px-3 rounded-lg border transition-all shrink-0 font-mono text-xs flex items-center gap-1.5 shadow-2xs focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 ${
+              className={`h-9 px-3 rounded-lg border transition-all shrink-0 font-mono text-xs flex items-center gap-2 shadow-xs cursor-pointer focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 ${
                 settingsOpen
                   ? theme === 'dark'
                     ? 'bg-zinc-800 border-cyan-500/50 text-cyan-300 shadow-md'
-                    : 'bg-slate-200 border-blue-400 text-blue-800 shadow-md'
+                    : 'bg-blue-50 border-blue-300 text-blue-800 shadow-md'
                   : theme === 'dark'
                   ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-300 hover:border-zinc-700'
-                  : 'bg-white hover:bg-slate-50 border-slate-300 text-slate-700 hover:border-slate-400'
+                  : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700 hover:border-slate-300'
               }`}
               title={t(language, 'nav.preferences')}
             >
-              <Settings className="w-3.5 h-3.5 opacity-80" />
-              <span className="font-bold text-[11px] opacity-90">{language}</span>
-              <span className="opacity-40">•</span>
+              {/* LUA / SOL */}
               {theme === 'dark' ? (
-                <Sun className="w-3.5 h-3.5 text-amber-400" />
+                <Sun className="w-3.5 h-3.5 text-amber-400 shrink-0" />
               ) : (
-                <Moon className="w-3.5 h-3.5 text-slate-700" />
+                <Moon className="w-3.5 h-3.5 text-slate-700 shrink-0" />
               )}
+              <span className="opacity-30 translate-y-[1px] leading-none">•</span>
+              {/* IDIOMA */}
+              <span className="font-bold text-[11px] opacity-90 translate-y-[1px] leading-none">{language}</span>
+              <span className="opacity-30 translate-y-[1px] leading-none">•</span>
+              {/* ENGRENAGEM */}
+              <Settings className="w-3.5 h-3.5 opacity-80 shrink-0" />
             </button>
 
             {/* POPOVER HARMONIZADO */}
             {settingsOpen && (
               <div
-                className={`absolute right-0 top-full mt-2 w-72 rounded-2xl border p-4 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-xl ${
+                className={`absolute right-0 top-full mt-2 w-72 rounded-xl border p-4 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-150 ${
                   theme === 'dark'
-                    ? 'bg-zinc-950/98 border-zinc-800 text-zinc-200 shadow-black/80'
-                    : 'bg-white/98 border-slate-200 text-slate-800 shadow-slate-400/25'
+                    ? 'bg-zinc-950 border-zinc-800 text-zinc-200 shadow-black/80'
+                    : 'bg-white border-slate-200 text-slate-800 shadow-slate-400/25'
                 }`}
               >
-                {/* CABEÇALHO DO POPOVER COM BOTÃO GHOST */}
                 <div className="flex items-center justify-between pb-3 mb-3 border-b dark:border-zinc-800/80 border-slate-100">
                   <span className="font-mono text-xs font-bold flex items-center gap-2 tracking-wide opacity-90">
                     <Settings className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
@@ -388,14 +607,14 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                   </span>
                   <button
                     onClick={() => setSettingsOpen(false)}
-                    className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors focus:outline-hidden"
+                    className="p-1 rounded-md text-slate-400 hover:text-slate-700 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer focus:outline-hidden"
                     aria-label="Fechar"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
 
-                {/* BLOCO 1: IDIOMA (FONT-SANS NOS NOMES + FONT-MONO NAS SIGLAS) */}
+                {/* IDIOMA */}
                 <div className="space-y-2 mb-3.5">
                   <div className="text-[10px] font-mono uppercase tracking-wider opacity-60 flex items-center gap-1.5 font-bold">
                     <Globe className="w-3 h-3 text-blue-600 dark:text-cyan-400" />
@@ -409,7 +628,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                           key={langItem.code}
                           data-testid={`language-toggle-${langItem.code.toLowerCase()}`}
                           onClick={() => handleToggleLanguage(langItem.code)}
-                          className={`flex items-center justify-between px-3 py-2 rounded-xl border text-xs transition-all focus:outline-hidden ${
+                          className={`flex items-center justify-between px-3 py-2 rounded-lg border text-xs transition-all cursor-pointer focus:outline-hidden ${
                             isSelected
                               ? theme === 'dark'
                                 ? 'bg-cyan-500/15 border-cyan-500/50 text-cyan-300 font-bold shadow-2xs'
@@ -427,20 +646,20 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                   </div>
                 </div>
 
-                {/* BLOCO 2: TEMA VISUAL (SEGMENTED CONTROL SIMÉTRICO PERFEITO) */}
+                {/* TEMA VISUAL */}
                 <div className="space-y-2 mb-3.5 pt-3 border-t dark:border-zinc-800/80 border-slate-100">
                   <div className="text-[10px] font-mono uppercase tracking-wider opacity-60 font-bold">
                     {t(language, 'nav.theme')}
                   </div>
-                  <div className="grid grid-cols-2 p-1 rounded-xl bg-slate-100 dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800">
+                  <div className="grid grid-cols-2 p-0 h-9 rounded-lg border overflow-hidden bg-slate-100 dark:bg-zinc-900 border-slate-200 dark:border-zinc-800 shadow-2xs">
                     <button
                       data-testid="theme-toggle"
                       onClick={() => {
                         if (theme !== 'light') handleToggleTheme();
                       }}
-                      className={`h-7.5 rounded-lg text-xs font-sans font-semibold flex items-center justify-center gap-1.5 transition-all focus:outline-hidden ${
+                      className={`h-full text-xs font-sans flex items-center justify-center gap-1.5 transition-colors cursor-pointer focus:outline-hidden ${
                         theme === 'light'
-                          ? 'bg-white text-blue-700 font-bold shadow-xs border border-slate-200/80'
+                          ? 'bg-white text-blue-600 font-bold border-r border-slate-200'
                           : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200'
                       }`}
                     >
@@ -451,9 +670,9 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                       onClick={() => {
                         if (theme !== 'dark') handleToggleTheme();
                       }}
-                      className={`h-7.5 rounded-lg text-xs font-sans font-semibold flex items-center justify-center gap-1.5 transition-all focus:outline-hidden ${
+                      className={`h-full text-xs font-sans flex items-center justify-center gap-1.5 transition-colors cursor-pointer focus:outline-hidden ${
                         theme === 'dark'
-                          ? 'bg-zinc-800 text-cyan-300 font-bold shadow-xs border border-zinc-700'
+                          ? 'bg-zinc-800 text-cyan-300 font-bold border-l border-zinc-700'
                           : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200'
                       }`}
                     >
@@ -463,7 +682,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                   </div>
                 </div>
 
-                {/* BLOCO 3: ÁUDIO FX (TOGGLE SWITCH DESLIZANTE PROFISSIONAL) */}
+                {/* ÁUDIO & SOM */}
                 <div className="space-y-2 pt-3 border-t dark:border-zinc-800/80 border-slate-100">
                   <div className="flex items-center justify-between py-1">
                     <span className="flex items-center gap-2 text-xs font-sans text-slate-700 dark:text-zinc-300">
@@ -475,7 +694,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                       <span className="font-medium">{t(language, 'nav.audioFx')}</span>
                     </span>
 
-                    {/* INTERACTIVE SLIDER TOGGLE SWITCH */}
                     <button
                       type="button"
                       role="switch"
@@ -495,14 +713,14 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                     </button>
                   </div>
 
-                  {/* BLOCO 4: BOTÃO TERMINAL CLI ELEGANTE */}
+                  {/* ATALHO TERMINAL CLI */}
                   <button
                     onClick={() => {
                       setSettingsOpen(false);
                       onOpenCLI();
                       play('click');
                     }}
-                    className={`w-full flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-mono transition-all mt-1 focus:outline-hidden ${
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg border text-xs font-mono transition-all mt-1 cursor-pointer focus:outline-hidden ${
                       theme === 'dark'
                         ? 'bg-zinc-900/60 border-zinc-800 hover:border-cyan-500/50 hover:bg-zinc-900 text-zinc-300 hover:text-cyan-300'
                         : 'bg-slate-50/80 border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 text-slate-700 hover:text-blue-700'
@@ -521,186 +739,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             )}
           </div>
         </div>
-      </div>
-
-      {/* MOBILE HEADER */}
-      <div className="w-full px-4 h-16 flex md:hidden items-center justify-between">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-slate-300 dark:border-zinc-700 shrink-0 shadow-xs">
-            <img
-              src={THALES_AVATAR_BASE64}
-              alt="Thales Everardo"
-              className="w-full h-full object-cover object-top"
-              loading="eager"
-            />
-          </div>
-          <div className="min-w-0">
-            <span className="font-mono font-bold text-xs sm:text-sm tracking-tight block truncate">
-              Thales Everardo
-            </span>
-            <div className="text-[10px] font-sans opacity-60 leading-tight flex flex-wrap items-baseline gap-x-1">
-              <span className="whitespace-nowrap">{t(language, 'nav.staffTitle')}</span>
-              <span className="whitespace-nowrap flex items-baseline gap-0.5">
-                <span className="opacity-40">&</span>
-                <span>{t(language, 'nav.architectTitle')}</span>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 shrink-0">
-          <Button
-            variant="primary"
-            size="sm"
-            icon={<Mail className="w-3.5 h-3.5" />}
-            onClick={() => {
-              onOpenContact();
-              play('click');
-            }}
-            className="shadow-xs"
-          >
-            {t(language, 'nav.contactButton')}
-          </Button>
-
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className={`p-2 rounded-lg border ${
-              theme === 'dark'
-                ? 'bg-zinc-900 border-zinc-800 text-zinc-200'
-                : 'bg-slate-100 border-slate-300 text-slate-700'
-            }`}
-            aria-label="Menu"
-          >
-            <Menu className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* MOBILE DRAWER */}
-      {mobileMenuOpen && (
-        <div
-          className={`md:hidden border-t px-4 py-3.5 space-y-3 font-mono text-xs ${
-            theme === 'dark' ? 'bg-zinc-950 border-zinc-800' : 'bg-slate-50 border-slate-200'
-          }`}
-        >
-          <div className="relative">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 opacity-40" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => updateState({ searchTerm: e.target.value })}
-              placeholder={t(language, 'nav.filterPlaceholder')}
-              className={`w-full pl-9 pr-3 py-2 rounded-lg border ${
-                theme === 'dark'
-                  ? 'bg-zinc-900 border-zinc-800 text-zinc-100'
-                  : 'bg-white border-slate-300 text-slate-900'
-              }`}
-            />
-          </div>
-
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
-            {allLenses.map((lensKey) => (
-              <button
-                key={lensKey}
-                onClick={() => {
-                  handleSelectLens(lensKey);
-                  setMobileMenuOpen(false);
-                }}
-                className={`px-3 py-1.5 rounded-lg text-xs whitespace-nowrap border ${
-                  profileLens === lensKey
-                    ? 'bg-blue-600 text-white border-blue-600 font-bold'
-                    : theme === 'dark'
-                    ? 'bg-zinc-900 border-zinc-800 text-zinc-400'
-                    : 'bg-white border-slate-300 text-slate-600'
-                }`}
-              >
-                {language === 'PT'
-                  ? PROFILE_LENSES_CONFIG[lensKey].shortLabelPT
-                  : PROFILE_LENSES_CONFIG[lensKey].shortLabelEN}
-              </button>
-            ))}
-          </div>
-
-          {/* AÇÕES DE UTILIDADE MOBILE (SOM & TERMINAL) */}
-          <div className="grid grid-cols-2 gap-2 pt-1 border-t dark:border-zinc-800/80 border-slate-200">
-            <button
-              onClick={handleToggleSound}
-              className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg border text-xs font-sans font-medium transition-colors ${
-                theme === 'dark'
-                  ? 'bg-zinc-900 border-zinc-800 text-zinc-300'
-                  : 'bg-white border-slate-300 text-slate-700'
-              }`}
-            >
-              {soundEnabled ? (
-                <Volume2 className="w-4 h-4 text-emerald-500 shrink-0" />
-              ) : (
-                <VolumeX className="w-4 h-4 opacity-40 shrink-0" />
-              )}
-              <span>{t(language, 'nav.audioFx')}</span>
-            </button>
-
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenCLI();
-                play('click');
-              }}
-              className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg border text-xs font-mono font-medium transition-colors ${
-                theme === 'dark'
-                  ? 'bg-zinc-900 border-zinc-800 text-cyan-400'
-                  : 'bg-white border-slate-300 text-blue-700'
-              }`}
-            >
-              <Terminal className="w-4 h-4 shrink-0" />
-              <span>{t(language, 'nav.openCli')}</span>
-            </button>
-          </div>
-
-          <div className="flex items-center justify-between pt-2 border-t dark:border-zinc-800/80 border-slate-200">
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => {
-                  handleToggleViewLayout(viewLayout === 'GRAPH' ? 'TIMELINE' : 'GRAPH');
-                  setMobileMenuOpen(false);
-                }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold"
-              >
-                {viewLayout === 'GRAPH' ? <List className="w-3.5 h-3.5" /> : <Layers className="w-3.5 h-3.5" />}
-                <span>
-                  {viewLayout === 'GRAPH'
-                    ? t(language, 'nav.timelineView')
-                    : t(language, 'nav.graphView')}
-                </span>
-              </button>
-              <PWAInstallButton language={language} theme={theme} />
-            </div>
-
-            <div className="flex items-center gap-1">
-              {(['PT', 'EN', 'ES', 'FR'] as const).map((code) => (
-                <button
-                  key={code}
-                  onClick={() => handleToggleLanguage(code)}
-                  className={`px-2 py-1 rounded border text-[11px] font-bold ${
-                    language === code ? 'bg-blue-600 text-white border-blue-600' : 'opacity-60'
-                  }`}
-                >
-                  {code}
-                </button>
-              ))}
-              <button
-                onClick={handleToggleTheme}
-                className="p-1.5 ml-1 rounded border text-amber-400"
-              >
-                {theme === 'dark' ? (
-                  <Sun className="w-3.5 h-3.5" />
-                ) : (
-                  <Moon className="w-3.5 h-3.5 text-slate-700" />
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </header>
+      </div>    </>
   );
 };

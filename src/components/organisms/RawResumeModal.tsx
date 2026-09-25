@@ -223,13 +223,15 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
             theme === 'dark' ? 'bg-zinc-900/90 border-zinc-800' : 'bg-slate-100/90 border-slate-200'
           }`}
         >
-          {/* SELETOR DE IDIOMA */}
+          {/* SELETOR DE IDIOMA: ZERO-INSET FLUSH SEGMENTED CONTROL */}
           <div className="flex items-center min-w-0">
             <div
               role="tablist"
               aria-label="Language selector"
-              className={`grid grid-cols-4 w-36 sm:w-48 h-9 p-1 rounded-lg border text-xs font-mono shadow-2xs shrink-0 ${
-                theme === 'dark' ? 'bg-zinc-950 border-zinc-800' : 'bg-white border-slate-300'
+              className={`grid grid-cols-4 w-40 sm:w-48 h-9 p-0 rounded-lg border overflow-hidden text-xs font-mono shrink-0 divide-x ${
+                theme === 'dark'
+                  ? 'bg-zinc-950 border-zinc-800 divide-zinc-800'
+                  : 'bg-slate-100 border-slate-200 divide-slate-200'
               }`}
             >
               {(['PT', 'EN', 'ES', 'FR'] as const).map((langCode) => {
@@ -245,12 +247,12 @@ ${PROFILE_DATA.education.map((e) => `- **${isPT ? e.degreePT : e.degree}**, ${e.
                         playSound('click', soundEnabled);
                       }
                     }}
-                    className={`w-full h-full rounded-md text-[11px] font-bold transition-all flex items-center justify-center focus:outline-hidden ${
+                    className={`w-full h-full text-[11px] font-mono font-bold transition-colors flex items-center justify-center cursor-pointer focus:outline-hidden ${
                       isActive
-                        ? 'bg-blue-600 text-white shadow-2xs'
+                        ? 'bg-blue-600 text-white'
                         : theme === 'dark'
-                        ? 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900/60'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                        ? 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900/50'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
                     }`}
                   >
                     {langCode}

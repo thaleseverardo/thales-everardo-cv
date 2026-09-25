@@ -1,36 +1,74 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#10b981" />
-      <stop offset="100%" stop-color="#06b6d4" />
-    </linearGradient>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#09090b" />
-      <stop offset="100%" stop-color="#18181b" />
-    </linearGradient>
-  </defs>
-  <!-- Background with rounded corners -->
-  <rect width="512" height="512" rx="100" fill="url(#bg)" stroke="#27272a" stroke-width="8" />
-  
-  <!-- Circuit Grid Lines -->
-  <path d="M96 256 H200 M312 256 H416 M256 96 V200 M256 312 V416" stroke="#27272a" stroke-width="6" stroke-dasharray="12 12" />
-  <path d="M140 140 L220 220 M372 140 L292 220 M140 372 L220 292 M372 372 L292 292" stroke="#3f3f46" stroke-width="4" />
-  
-  <!-- Central Architecture Node Core -->
-  <circle cx="256" cy="256" r="64" fill="#18181b" stroke="url(#grad)" stroke-width="12" />
-  
-  <!-- Core Monogram TR -->
-  <text x="256" y="274" font-family="system-ui, -apple-system, sans-serif" font-size="46" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="-1">TE</text>
-  
-  <!-- Satellite Orbiting Nodes -->
-  <circle cx="96" cy="256" r="22" fill="#10b981" />
-  <circle cx="416" cy="256" r="22" fill="#06b6d4" />
-  <circle cx="256" cy="96" r="22" fill="#f59e0b" />
-  <circle cx="256" cy="416" r="22" fill="#10b981" />
-  
-  <!-- Little Inner Dots -->
-  <circle cx="96" cy="256" r="8" fill="#09090b" />
-  <circle cx="416" cy="256" r="8" fill="#09090b" />
-  <circle cx="256" cy="96" r="8" fill="#09090b" />
-  <circle cx="256" cy="416" r="8" fill="#09090b" />
-</svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="200mm"
+   height="200.00002mm"
+   viewBox="0 0 200 200.00002"
+   version="1.1"
+   id="svg1"
+   xml:space="preserve"
+   sodipodi:docname="logo.svg"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showguides="true"
+     inkscape:zoom="0.5411932"
+     inkscape:cx="546.93961"
+     inkscape:cy="81.301834"
+     inkscape:window-width="1646"
+     inkscape:window-height="1217"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1"><inkscape:page
+       x="0"
+       y="0"
+       width="200"
+       height="200.00002"
+       id="page2"
+       margin="0"
+       bleed="0" /></sodipodi:namedview><defs
+     id="defs1"><inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,5.9175347,0,1 @ F,0,0,1,0,9.5423913,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,5.8795246,0,1 @ F,0,0,1,0,2.7538373,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,2.8351569,0,1 @ F,0,0,1,0,5.6169222,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1"
+       radius="0"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" /></defs><g
+     id="g6"
+     style="fill:#2072e7;fill-opacity:1"><circle
+       style="display:inline;fill:#2072e7;fill-opacity:1;stroke-width:0.333574"
+       id="path1"
+       cx="100"
+       cy="100"
+       r="100" /></g><g
+     id="g5"
+     style="mix-blend-mode:normal;fill:#f2f2f2"><path
+       d="m 43.159633,38.937756 c -3.680278,-6e-5 -6.663748,2.98341 -6.663688,6.663688 v 15.982378 c -7.5e-5,3.384933 3.181074,5.868614 6.464896,5.047465 L 84.489342,56.248746 a 4.6202266,4.6202266 37.981608 0 1 5.740838,4.482268 l 0,90.781066 a 9.5423913,9.5423913 45 0 0 9.542391,9.54239 h 0.325969 l 56.77231,0.0126 c 3.66332,6.9e-4 6.6334,-2.96882 6.6334,-6.63214 v -16.04926 c 2e-5,-3.36942 -3.16638,-5.8418 -6.43523,-5.02475 l -41.59501,10.3982 a 4.5906534,4.5906534 37.982237 0 1 -5.70399,-4.4536 v -30.55168 a 2.2484531,2.2484531 140.76905 0 1 2.69819,-2.20302 L 129.36395,110 c 4.01924,-1e-4 4.71044,-4.40997 4.71044,-9.52922 v -4.650845 c 0,-5.007492 -0.69146,-7.819792 -4.71044,-7.819935 l -16.81607,3.432913 a 2.3148489,2.3148489 39.230951 0 1 -2.77786,-2.26807 V 60.430401 a 4.3816231,4.3816231 142.04308 0 1 5.44803,-4.249871 l 41.58338,10.434349 c 3.30398,0.82909 6.50676,-1.66945 6.50655,-5.075864 V 45.645621 c -1.6e-4,-3.70483 -3.00366,-6.708052 -6.70849,-6.707865 z"
+       style="display:inline;fill:#f2f2f2;stroke-width:0.316107"
+       id="path9"
+       inkscape:path-effect="#path-effect1"
+       inkscape:original-d="m 43.159633,38.937756 c -3.680278,-6e-5 -6.663748,2.98341 -6.663688,6.663688 v 15.982378 c -7.5e-5,3.384933 3.181074,5.868614 6.464896,5.047465 L 90.23018,54.813479 V 161.05447 h 9.86836 l 56.77231,0.0126 c 3.66332,6.9e-4 6.6334,-2.96882 6.6334,-6.63214 v -16.04926 c 2e-5,-3.36942 -3.16638,-5.8418 -6.43523,-5.02475 l -47.299,11.82412 V 106 l 19.59393,4 c 4.01924,-1e-4 4.71044,-4.40997 4.71044,-9.52922 v -4.650845 c 0,-5.007492 -0.69146,-7.819792 -4.71044,-7.819935 l -19.59393,4 V 54.813479 l 47.03141,11.8014 c 3.30398,0.82909 6.50676,-1.66945 6.50655,-5.075864 V 45.645621 c -1.6e-4,-3.70483 -3.00366,-6.708052 -6.70849,-6.707865 z"
+       sodipodi:nodetypes="ccccccccscccccsscccccccc" /></g></svg>

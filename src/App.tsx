@@ -28,7 +28,7 @@ function applyThemeDOM(theme: AppTheme) {
 }
 import { CURRICULUM_NODES } from './data/curriculumData';
 import { getStoredPreferences, updateStoredPreferences } from './utils/storageUtils';
-import { detectLocalLanguage, resolveCountryToLanguage, BCP47_TAGS } from './utils/geoLanguageUtils';
+import { detectLocalLanguage, BCP47_TAGS } from './utils/geoLanguageUtils';
 
 function getInitialTheme(): AppTheme {
   if (typeof window === 'undefined') return 'light';
@@ -72,33 +72,6 @@ export default function App() {
   const [isCLIOpen, setIsCLIOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
-
-  // Verificação em segundo plano por IP com AbortController
-  useEffect(() => {
-    const controller = new AbortController();
-
-    try {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get('geo') || params.get('country') || params.get('lang')) return;
-
-      const prefs = getStoredPreferences();
-      if (prefs.language) return;
-
-      fetch('https://api.country.is/', { signal: controller.signal })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data && data.country) {
-            const detected = resolveCountryToLanguage(data.country);
-            setSystemState((prev) => 
-              prev.language !== detected ? { ...prev, language: detected } : prev
-            );
-          }
-        })
-        .catch(() => {});
-    } catch (e) {}
-
-    return () => controller.abort();
-  }, []);
 
   const updateState = useCallback((updates: Partial<SystemState>) => {
     setSystemState((prev) => {
