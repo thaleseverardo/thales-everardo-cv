@@ -831,13 +831,18 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         {/* PONTE DE HIT-TEST INVISÍVEL (IMPEDE QUE O MOUSE PERCA O HOVER NO VÃO ENTRE OS BOTÕES) */}
         <div className="absolute -top-16 -left-16 w-38 h-38 pointer-events-none group-hover:pointer-events-auto rounded-tl-full" />
 
-        {/* SATÉLITE 1: E-MAIL (TOPO-DIREITA DO ARCO) */}
+        {/* SATÉLITE 1: E-MAIL (PROTEGIDO POR AUTH) */}
         <button
           type="button"
           onClick={() => {
             setRadialOpen(false);
-            onOpenContact();
-            play('click');
+            if (isAuthenticated) {
+              window.location.href = "mailto:thales.everardo@gmail.com";
+              play('click');
+            } else {
+              onOpenContact();
+              play('alert');
+            }
           }}
           aria-label="E-mail"
           className={`absolute -top-14 left-9 w-11 h-11 rounded-full border shadow-xl flex items-center justify-center cursor-pointer transition-all duration-200 ease-out group/sat ${
@@ -852,11 +857,11 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         >
           <Mail className="w-5 h-5 opacity-80" />
           <span className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-zinc-900 text-zinc-100 border border-zinc-800 shadow-md opacity-0 group-hover/sat:opacity-100 pointer-events-none whitespace-nowrap transition-opacity">
-            E-mail
+            {isAuthenticated ? "E-mail" : "🔒 E-mail"}
           </span>
         </button>
 
-        {/* SATÉLITE 2: LINKEDIN (TOPO-ESQUERDA DO ARCO) */}
+        {/* SATÉLITE 2: LINKEDIN (100% PÚBLICO - SEM BARREIRA) */}
         <a
           href="https://br.linkedin.com/in/thaleseareis"
           target="_blank"
@@ -882,12 +887,18 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           </span>
         </a>
 
-        {/* SATÉLITE 3: TELEFONE (MEIO-ESQUERDA DO ARCO) */}
-        <a
-          href="tel:+5511962969508"
+        {/* SATÉLITE 3: TELEFONE (PROTEGIDO POR AUTH) */}
+        <button
+          type="button"
           onClick={() => {
             setRadialOpen(false);
-            play('click');
+            if (isAuthenticated) {
+              window.location.href = "tel:+5511962969508";
+              play('click');
+            } else {
+              onOpenContact();
+              play('alert');
+            }
           }}
           aria-label={language === 'PT' ? 'Ligar' : 'Phone'}
           className={`absolute -top-3.5 -left-12.5 w-11 h-11 rounded-full border shadow-xl flex items-center justify-center cursor-pointer transition-all duration-200 delay-100 ease-out group/sat ${
@@ -902,18 +913,22 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         >
           <Phone className="w-5 h-5 text-amber-500" />
           <span className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-zinc-900 text-zinc-100 border border-zinc-800 shadow-md opacity-0 group-hover/sat:opacity-100 pointer-events-none whitespace-nowrap transition-opacity">
-            {language === 'PT' ? 'Ligar' : language === 'ES' ? 'Llamar' : language === 'FR' ? 'Appeler' : 'Call'}
+            {isAuthenticated ? (language === 'PT' ? 'Ligar' : language === 'ES' ? 'Llamar' : language === 'FR' ? 'Appeler' : 'Call') : "🔒 " + (language === 'PT' ? 'Ligar' : 'Call')}
           </span>
-        </a>
+        </button>
 
-        {/* SATÉLITE 4: WHATSAPP (BASE-ESQUERDA DO ARCO) */}
-        <a
-          href="https://wa.me/5511962969508"
-          target="_blank"
-          rel="noopener noreferrer"
+        {/* SATÉLITE 4: WHATSAPP (PROTEGIDO POR AUTH) */}
+        <button
+          type="button"
           onClick={() => {
             setRadialOpen(false);
-            play('click');
+            if (isAuthenticated) {
+              window.open("https://wa.me/5511962969508", "_blank", "noopener,noreferrer");
+              play('click');
+            } else {
+              onOpenContact();
+              play('alert');
+            }
           }}
           aria-label="WhatsApp"
           className={`absolute top-9 -left-14 w-11 h-11 rounded-full border shadow-xl flex items-center justify-center cursor-pointer transition-all duration-200 delay-150 ease-out group/sat ${
@@ -928,9 +943,9 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         >
           <MessageCircle className="w-5 h-5 text-emerald-500" />
           <span className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-zinc-900 text-zinc-100 border border-zinc-800 shadow-md opacity-0 group-hover/sat:opacity-100 pointer-events-none whitespace-nowrap transition-opacity">
-            WhatsApp
+            {isAuthenticated ? "WhatsApp" : "🔒 WhatsApp"}
           </span>
-        </a>
+        </button>
 
         {/* ESFERA PRINCIPAL AZUL RADIAL (MINIMALISTA: HANDSHAKE + CONTATO) */}
         <button

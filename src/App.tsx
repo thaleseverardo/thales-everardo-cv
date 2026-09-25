@@ -9,8 +9,8 @@ import { ControlPanel } from './components/organisms/ControlPanel';
 import { SystemCanvas } from './components/templates/SystemCanvas';
 import { ExecutiveTimelineView } from './components/templates/ExecutiveTimelineView';
 import { NodeInspector } from './components/organisms/NodeInspector';
-const HandshakeModal = React.lazy(() =>
-  import('./components/organisms/HandshakeModal').then((m) => ({ default: m.HandshakeModal }))
+const ContactAuthModal = React.lazy(() =>
+  import('./components/organisms/ContactAuthModal').then((m) => ({ default: m.ContactAuthModal }))
 );
 const RawResumeModal = React.lazy(() =>
   import('./components/organisms/RawResumeModal').then((m) => ({ default: m.RawResumeModal }))
@@ -174,13 +174,9 @@ export default function App() {
 
       {isContactOpen && (
         <React.Suspense fallback={null}>
-          <HandshakeModal
+          <ContactAuthModal
             isOpen={isContactOpen}
             onClose={() => setIsContactOpen(false)}
-            onOpenResume={() => {
-              setIsContactOpen(false);
-              setIsResumeOpen(true);
-            }}
             soundEnabled={systemState.soundEnabled}
             language={systemState.language}
             theme={systemState.theme}

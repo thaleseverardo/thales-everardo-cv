@@ -6,6 +6,8 @@ import {
   signOut,
   onAuthStateChanged,
   User,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
 } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
@@ -106,6 +108,26 @@ export async function signInWithGoogle(): Promise<AuthUser> {
     }
     throw error;
   }
+}
+
+export async function signInWithEmail(email: string, pass: string): Promise<AuthUser> {
+  if (!auth) throw new Error("Firebase Auth não configurado");
+  const res = await signInWithEmailAndPassword(auth, email, pass);
+  const user = mapFirebaseUser(res.user);
+  if (!user) throw new Error("Falha ao autenticar");
+  currentUser = user;
+  listeners.forEach((cb) => cb(currentUser));
+  return user;
+}
+
+export async function signUpWithEmail(email: string, pass: string): Promise<AuthUser> {
+  if (!auth) throw new Error("Firebase Auth não configurado");
+  const res = await createUserWithEmailAndPassword(auth, email, pass);
+  const user = mapFirebaseUser(res.user);
+  if (!user) throw new Error("Falha ao registrar");
+  currentUser = user;
+  listeners.forEach((cb) => cb(currentUser));
+  return user;
 }
 
 export async function signOutUser(): Promise<void> {
