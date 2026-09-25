@@ -2,6 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
+  <!-- Página Canônica Principal -->
   <url>
     <loc>https://thaleseverardo.github.io/thales-everardo-cv/</loc>
     <lastmod>2025-02-01</lastmod>
@@ -15,4 +16,39 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thaleseverardo.github.io/thales-everardo-cv/" />
   </url>
 
+  <!-- LLM & Gemini Context Manifests -->
+  <url>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/llms.txt</loc>
+    <lastmod>2025-02-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/llms-full.txt</loc>
+    <lastmod>2025-02-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Plaintext & Markdown Dossiês (PT, EN, ES, FR) -->
+  <url>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/resumes/Thales_Everardo_CV_PT.md</loc>
+    <lastmod>2025-02-01</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/resumes/Thales_Everardo_CV_EN.md</loc>
+    <lastmod>2025-02-01</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/resumes/Thales_Everardo_CV_ES.md</loc>
+    <lastmod>2025-02-01</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/resumes/Thales_Everardo_CV_FR.md</loc>
+    <lastmod>2025-02-01</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>

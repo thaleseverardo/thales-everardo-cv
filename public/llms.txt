@@ -1,0 +1,25 @@
+# Thales Everardo — Staff Software Engineer & Systems Architect
+
+> Interactive Systems Architecture & Observability Portfolio: https://thaleseverardo.github.io/thales-everardo-cv/
+
+## Professional Overview
+Systems Architect and Staff Software Engineer with over 10 years of production experience specializing in high-throughput data engineering, distributed microservices, fault-tolerant computing, and event-driven architectures (EDA). Expert in eliminating mission-critical latencies in enterprise transactional environments under strict ACID compliance.
+
+- Location: São Paulo, Brazil (Open to Global Remote, Hybrid SP, and International Relocation)
+- GitHub: https://github.com/thaleseverardo
+- LinkedIn: https://linkedin.com/in/thaleseverardo
+- Primary Stack: C#, .NET Core, T-SQL, SQL Server, Sybase, Kafka, RabbitMQ, Python, TypeScript, Docker, Kubernetes, Linux Architecture
+
+## Core Production Engineering Milestones
+1. Consórcio Magalu (05/2024 - Present): Partitioned asynchronous purge of 11TB legacy transaction logs on SQL Server without lock escalations or production downtime during fiscal reconciliations.
+2. Grupo GPS (06/2023 - 05/2024): Slashed financial computation pipeline latency from 7 days down to 20 minutes (-99.8% latency reduction) with full consistency through clustered table partitioning, deep query tuning, and async parallelization in C#.
+3. Ambar / Construtech (07/2021 - 06/2023): Real-time synchronization of catalogs and inventories across 5 distribution centers with zero order loss using GS1 standard messaging and Transactional Outbox pattern backed by RabbitMQ.
+4. Summerhill / Eco Wave (11/2019 - 06/2021): Geographic heuristic route optimization engine for field technicians with offline-first synchronization, lowering operational travel costs by 22%.
+5. Military Police of São Paulo State (02/2014 - 11/2019): High-availability automated failover architecture for emergency 911/190 dispatch centers with 99.99% uptime, active-active relational clustering, and dynamic SIP/VoIP carrier failover.
+
+## Full Context & Multi-Language Plaintext Resumes
+- Complete AI Dossier: https://thaleseverardo.github.io/thales-everardo-cv/llms-full.txt
+- English Resume (Markdown): https://thaleseverardo.github.io/thales-everardo-cv/resumes/Thales_Everardo_CV_EN.md
+- Portuguese Resume (Markdown): https://thaleseverardo.github.io/thales-everardo-cv/resumes/Thales_Everardo_CV_PT.md
+- Spanish Resume (Markdown): https://thaleseverardo.github.io/thales-everardo-cv/resumes/Thales_Everardo_CV_ES.md
+- French Resume (Markdown): https://thaleseverardo.github.io/thales-everardo-cv/resumes/Thales_Everardo_CV_FR.md

@@ -1,0 +1,49 @@
+# COMPREHENSIVE ARCHITECTURAL & ENGINEERING DOSSIER: THALES EVERARDO
+
+## EXECUTIVE PROFILE
+- Name: Thales Everardo Albuquerque Reis
+- Role: Staff Software Engineer & Systems Architect
+- Canonical Domain: https://thaleseverardo.github.io/thales-everardo-cv/
+- Target Roles: Staff Software Engineer, Principal Systems Architect, Tech Lead, Distributed Systems Specialist
+- Engagement Models: Global Remote (US/EU/LATAM), Hybrid (São Paulo, Brazil), International Relocation
+- Education:
+  - Postgraduate Degree in Distributed Systems & Software Architecture, FIAP
+  - Bachelor of Science in Information Technology & Systems, FATEC
+
+## DETAILED TECHNICAL CASE STUDIES
+
+### 1. Consórcio Magalu | Senior Software Engineer / Systems Architect (05/2024 - Present)
+- Architectural Problem: 11TB legacy transactional log saturation in Microsoft SQL Server causing lock escalations, threat of transaction log exhaustion, and risk of business outage during fiscal reconciliation windows.
+- Engineering Solution: Designed a partitioned asynchronous purging pipeline governed by log buffer pressure monitoring and decoupled batch windows. Sliced operations into idempotent, dynamically sized chunks executed during off-peak hours.
+- Business ROI: Zero production locks, 100% uptime maintained, complete elimination of downtime risk in fiscal closures.
+- Technologies: C#, .NET Core, SQL Server, Sybase, Apache Kafka, Docker, Kubernetes.
+
+### 2. Grupo GPS | Senior Software Engineer (06/2023 - 05/2024)
+- Architectural Problem: Payroll and accounting computation pipeline taking 7 days to run across multi-tenant enterprise entities, blocking fiscal reporting and delaying settlements.
+- Engineering Solution: Comprehensive execution plan analysis, index tuning, clustered historical table partitioning, and async multithreaded parallel processing in C# with transactional consistency.
+- Business ROI: Reduced processing latency from 7 days (10,080 minutes) to 20 minutes (-99.8% reduction), enabling same-day settlement and eliminating operational overtime.
+- Technologies: C#, T-SQL, SQL Server, Index Tuning, ASP.NET Core, Database Partitioning.
+
+### 3. Ambar / Construtech | Specialist Software Engineer (07/2021 - 06/2023)
+- Architectural Problem: Disconnected enterprise ERP and POS systems causing inventory desynchronization and lost orders across 5 regional distribution centers.
+- Engineering Solution: Enterprise messaging architecture using the GS1 standard messaging broker, combined with the Transactional Outbox pattern backed by RabbitMQ and local fallback persistence with idempotent processing.
+- Business ROI: Real-time catalog and stock synchronization across all 5 distribution centers with 0% order loss and sub-second inventory updates.
+- Technologies: C#, RabbitMQ, SQL Server, GS1 Architecture, Microservices, Event-Driven Architecture.
+
+### 4. Summerhill / Eco Wave | Software Engineer (11/2019 - 06/2021) - Toronto, Canada
+- Architectural Problem: High operational travel cost and technician downtime during energy field audits across widespread geographic areas with unstable connectivity.
+- Engineering Solution: Developed a heuristic route optimization engine paired with an offline-first SQLite cache and resilient bidirectional background synchronization.
+- Business ROI: 22% reduction in field operational travel costs, automated audit dispatch, and zero data loss in disconnected rural environments.
+- Technologies: Python, TypeScript, Node.js, SQLite, GeoJSON, REST APIs.
+
+### 5. Military Police of São Paulo State | Systems & Infrastructure Engineer (02/2014 - 11/2019)
+- Architectural Problem: Critical 911/190 emergency dispatch centers requiring continuous availability without single points of failure.
+- Engineering Solution: Active-active relational database clustering with automated failover and dynamic SIP/VoIP carrier routing.
+- Business ROI: 99.99% system availability, sub-second failover for emergency call dispatchers, zero dropped emergency calls.
+- Technologies: Linux Server Administration, Active Directory, Network Architecture, SIP/VoIP, Shell Script, Python.
+
+## ARCHITECTURAL PARADIGMS & COMPETENCIES
+- Architecture: Event-Driven Architecture (EDA), Domain-Driven Design (DDD), Transactional Outbox, CQRS, Circuit Breaker, Active-Active Failover, Microservices, Disaster Recovery (DR/BCP).
+- Database & Storage: Microsoft SQL Server, Sybase, Oracle, ACID Compliance, Query Optimization, Clustered Index Tuning, Table Partitioning, Transaction Log Management.
+- Languages: C#, SQL (T-SQL, PL/SQL), Python, TypeScript, JavaScript, Bash, Go.
+- DevOps & Cloud: Docker, Kubernetes, Linux System Internals, Windows Server, CI/CD, PWA, Observability.

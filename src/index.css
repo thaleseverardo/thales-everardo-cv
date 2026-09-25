@@ -4,6 +4,8 @@
 
 :root {
   color-scheme: light dark;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-sans: "Plus Jakarta Sans", sans-serif;
 }
 
 html.dark {
@@ -12,4 +14,219 @@ html.dark {
 
 html.light {
   color-scheme: light;
+}
+
+/* ==========================================================================
+   PLATFORM & MOBILE RESILIENCE (iOS Safari & Accessibility WCAG AAA)
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ==========================================================================
+   DESIGN SYSTEM AAA CANONICAL CLASSES
+   ========================================================================== */
+
+/* Compensação óptica para JetBrains Mono alinhada a ícones SVG */
+.opt-mono {
+  transform: translateY(1px);
+  line-height: 1;
+}
+
+/* Segmented Control Flush (Zero-Inset) */
+.segmented-control {
+  display: inline-flex;
+  align-items: stretch;
+  padding: 0;
+  height: 2.25rem; /* 36px (h-9) */
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #e2e8f0;
+  background-color: #f1f5f9;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+}
+
+:where(.dark, .dark *) .segmented-control {
+  border-color: #27272a;
+  background-color: #18181b;
+}
+
+.segmented-btn {
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding-left: 0.875rem;
+  padding-right: 0.875rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #64748b;
+  background-color: transparent;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  outline: none;
+}
+
+.segmented-btn:hover {
+  color: #0f172a;
+  background-color: rgba(226, 232, 240, 0.5);
+}
+
+:where(.dark, .dark *) .segmented-btn {
+  color: #a1a1aa;
+}
+
+:where(.dark, .dark *) .segmented-btn:hover {
+  color: #f4f4f5;
+  background-color: rgba(39, 39, 42, 0.5);
+}
+
+.segmented-btn-active {
+  font-weight: 600;
+  color: #2563eb;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+:where(.dark, .dark *) .segmented-btn-active {
+  color: #67e8f9;
+  background-color: #27272a;
+}
+
+/* Par Estético do Header */
+.header-btn-secondary {
+  height: 2.25rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-radius: 0.5rem;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #cbd5e1;
+  background-color: #ffffff;
+  color: #1e293b;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header-btn-secondary:hover {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+}
+
+:where(.dark, .dark *) .header-btn-secondary {
+  border-color: #3f3f46;
+  background-color: #18181b;
+  color: #e4e4e7;
+}
+
+:where(.dark, .dark *) .header-btn-secondary:hover {
+  background-color: #27272a;
+  border-color: #52525b;
+}
+
+.header-btn-primary {
+  height: 2.25rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  border-radius: 0.5rem;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header-btn-primary:hover {
+  background-color: #1d4ed8;
+}
+
+/* Campo de Busca da Toolbar */
+.toolbar-search-field {
+  width: 100%;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #e2e8f0;
+  background-color: #ffffff;
+  color: #0f172a;
+  padding-left: 2.25rem;
+  padding-right: 1.75rem;
+  outline: none;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toolbar-search-field:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px #2563eb;
+}
+
+:where(.dark, .dark *) .toolbar-search-field {
+  border-color: #27272a;
+  background-color: #18181b;
+  color: #f4f4f5;
+}
+
+:where(.dark, .dark *) .toolbar-search-field:focus {
+  border-color: #06b6d4;
+  box-shadow: 0 0 0 1px #06b6d4;
+}
+
+/* Tooltip Customizado Flutuante */
+.tooltip-bubble {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.25rem 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  border-radius: 0.375rem;
+  background-color: #09090b;
+  color: #f4f4f5;
+  border: 1px solid #27272a;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 50;
+}
+
+:where(.dark, .dark *) .tooltip-bubble {
+  background-color: #18181b;
+  color: #e4e4e7;
+  border-color: #3f3f46;
+}
+
+.group:hover .tooltip-bubble {
+  opacity: 1;
 }

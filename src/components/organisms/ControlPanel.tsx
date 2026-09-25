@@ -217,30 +217,30 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           <div className="flex items-center justify-end gap-2.5 shrink-0">
             {/* BOTÃO CURRÍCULO (SECUNDÁRIO) */}
             <button
+              type="button"
               onClick={() => {
                 onOpenResume();
                 play('click');
               }}
-              className={`h-9 px-4 rounded-lg border font-mono font-bold text-xs flex items-center gap-2 transition-all shadow-xs shrink-0 cursor-pointer focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 ${
-                theme === 'dark'
-                  ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-700 text-zinc-200'
-                  : 'bg-white hover:bg-slate-50 border-slate-300 text-slate-800'
-              }`}
+              className="header-btn-secondary"
+              aria-label={t(language, 'nav.cvButton')}
             >
               <FileText className="w-3.5 h-3.5 opacity-70 shrink-0" />
-              <span>{t(language, 'nav.cvButton')}</span>
+              <span className="opt-mono">{t(language, 'nav.cvButton')}</span>
             </button>
 
             {/* BOTÃO CONTATAR (PRIMÁRIO AZUL VIBRANTE) */}
             <button
+              type="button"
               onClick={() => {
                 onOpenContact();
                 play('click');
               }}
-              className="h-9 px-5 rounded-lg font-mono font-bold text-xs uppercase flex items-center gap-2 text-white bg-blue-600 hover:bg-blue-500 shadow-xs transition-colors shrink-0 cursor-pointer focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500"
+              className="header-btn-primary"
+              aria-label={t(language, 'nav.contactButton')}
             >
               <Mail className="w-3.5 h-3.5 shrink-0" />
-              <span>{t(language, 'nav.contactButton')}</span>
+              <span className="opt-mono">{t(language, 'nav.contactButton')}</span>
             </button>
           </div>
         </div>
@@ -449,82 +449,50 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
       <div className="hidden md:flex w-full px-5 sm:px-8 pt-4 pb-2 z-30 relative pointer-events-none">
         <div className="w-full flex items-center justify-between gap-3 pointer-events-auto">
           {/* SELETOR DE MODO: ZERO-INSET COM COMPENSAÇÃO ÓPTICA */}
-          <div
-            className={`inline-flex items-stretch p-0 h-9 rounded-lg border text-xs font-mono shrink-0 overflow-hidden shadow-2xs ${
-              theme === 'dark'
-                ? 'bg-zinc-900 border-zinc-800'
-                : 'bg-slate-100 border-slate-200'
-            }`}
-          >
+          <div className="segmented-control divide-x divide-slate-200 dark:divide-zinc-800" role="tablist">
             <button
+              type="button"
+              role="tab"
+              aria-selected={viewLayout === 'GRAPH'}
               onClick={() => handleToggleViewLayout('GRAPH')}
-              className={`flex items-center gap-1.5 h-full px-3.5 transition-colors text-xs cursor-pointer focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 ${
-                viewLayout === 'GRAPH'
-                  ? theme === 'dark'
-                    ? 'bg-zinc-800 text-cyan-300 font-semibold border-r border-zinc-700'
-                    : 'bg-white text-blue-600 font-semibold border-r border-slate-200'
-                  : theme === 'dark'
-                  ? 'text-zinc-400 hover:text-zinc-200'
-                  : 'text-slate-500 hover:text-slate-700'
-              }`}
-              title={t(language, 'nav.graphView')}
+              className={`segmented-btn ${viewLayout === 'GRAPH' ? 'segmented-btn-active' : ''}`}
+              aria-label={t(language, 'nav.graphView')}
             >
-              <Layers className={`w-3.5 h-3.5 shrink-0 ${viewLayout === 'GRAPH' ? (theme === 'dark' ? 'text-cyan-400' : 'text-blue-600') : 'opacity-60'}`} />
-              <span className="translate-y-[1px] leading-none">{t(language, 'nav.graphView')}</span>
+              <Layers className={`w-3.5 h-3.5 shrink-0 ${viewLayout === 'GRAPH' ? 'text-blue-600 dark:text-cyan-400' : 'opacity-60'}`} />
+              <span className="opt-mono">{t(language, 'nav.graphView')}</span>
             </button>
             <button
+              type="button"
+              role="tab"
+              aria-selected={viewLayout === 'TIMELINE'}
               onClick={() => handleToggleViewLayout('TIMELINE')}
-              className={`flex items-center gap-1.5 h-full px-3.5 transition-colors text-xs cursor-pointer focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 ${
-                viewLayout === 'TIMELINE'
-                  ? theme === 'dark'
-                    ? 'bg-zinc-800 text-cyan-300 font-semibold border-l border-zinc-700'
-                    : 'bg-white text-blue-600 font-semibold border-l border-slate-200'
-                  : theme === 'dark'
-                  ? 'text-zinc-400 hover:text-zinc-200'
-                  : 'text-slate-500 hover:text-slate-700'
-              }`}
-              title={t(language, 'nav.timelineView')}
+              className={`segmented-btn ${viewLayout === 'TIMELINE' ? 'segmented-btn-active' : ''}`}
+              aria-label={t(language, 'nav.timelineView')}
             >
-              <List className={`w-3.5 h-3.5 shrink-0 ${viewLayout === 'TIMELINE' ? (theme === 'dark' ? 'text-cyan-400' : 'text-blue-600') : 'opacity-60'}`} />
-              <span className="translate-y-[1px] leading-none">{t(language, 'nav.timelineView')}</span>
+              <List className={`w-3.5 h-3.5 shrink-0 ${viewLayout === 'TIMELINE' ? 'text-blue-600 dark:text-cyan-400' : 'opacity-60'}`} />
+              <span className="opt-mono">{t(language, 'nav.timelineView')}</span>
             </button>
           </div>
 
           {/* BARRA DE CATEGORIAS: ZERO-INSET FLUSH PILLS COM COMPENSAÇÃO ÓPTICA */}
-          <div
-            role="tablist"
-            className={`inline-flex items-stretch p-0 h-9 rounded-lg border text-xs font-mono shrink-0 overflow-hidden shadow-2xs ${
-              theme === 'dark'
-                ? 'bg-zinc-900 border-zinc-800'
-                : 'bg-slate-100 border-slate-200'
-            }`}
-          >
-            {allLenses.map((lensKey, idx) => {
+          <div role="tablist" className="segmented-control divide-x divide-slate-200 dark:divide-zinc-800">
+            {allLenses.map((lensKey) => {
               const lens = PROFILE_LENSES_CONFIG[lensKey];
               const isActive = profileLens === lensKey;
-              const isFirst = idx === 0;
-              const isLast = idx === allLenses.length - 1;
 
               return (
                 <button
                   key={lensKey}
+                  type="button"
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => handleSelectLens(lensKey)}
-                  className={`h-full px-3.5 whitespace-nowrap text-xs flex items-center justify-center transition-colors cursor-pointer focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 ${
-                    isActive
-                      ? theme === 'dark'
-                        ? `bg-zinc-800 text-cyan-300 font-semibold ${!isFirst ? 'border-l border-zinc-700' : ''} ${!isLast ? 'border-r border-zinc-700' : ''}`
-                        : `bg-white text-blue-600 font-semibold ${!isFirst ? 'border-l border-slate-200' : ''} ${!isLast ? 'border-r border-slate-200' : ''}`
-                      : theme === 'dark'
-                      ? 'text-zinc-400 hover:text-zinc-200 font-normal hover:bg-zinc-800/40'
-                      : 'text-slate-600 hover:text-slate-900 font-normal hover:bg-slate-200/50'
-                  }`}
+                  className={`segmented-btn ${isActive ? 'segmented-btn-active' : ''}`}
                 >
-                  <span className="translate-y-[1px] leading-none hidden xl:inline">
+                  <span className="opt-mono hidden xl:inline">
                     {language === 'PT' ? lens.labelPT : lens.labelEN}
                   </span>
-                  <span className="translate-y-[1px] leading-none xl:hidden">
+                  <span className="opt-mono xl:hidden">
                     {language === 'PT' ? lens.shortLabelPT : lens.shortLabelEN}
                   </span>
                 </button>
@@ -533,23 +501,22 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           </div>
 
           {/* CAMPO DE BUSCA: ALINHAMENTO ÓPTICO DE BASELINE COM A LUPA */}
-          <div className="relative flex-1 min-w-44 focus-within:ring-1 focus-within:ring-blue-500 rounded-lg transition-all shadow-xs">
+          <div className="relative flex-1 min-w-44 shadow-2xs">
             <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-zinc-500 pointer-events-none" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => updateState({ searchTerm: e.target.value })}
               placeholder={t(language, 'nav.filterPlaceholder')}
-              className={`w-full pl-9 pr-7 h-9 rounded-lg text-xs font-mono border focus:outline-hidden transition-all pt-0.5 leading-none ${
-                theme === 'dark'
-                  ? 'bg-zinc-900 border-zinc-800 text-zinc-100 focus:border-cyan-500 placeholder:text-zinc-500'
-                  : 'bg-white border-slate-200 text-slate-900 focus:border-blue-500 placeholder:text-slate-400'
-              }`}
+              className="toolbar-search-field"
+              aria-label={t(language, 'nav.filterPlaceholder')}
             />
             {searchTerm && (
               <button
+                type="button"
                 onClick={() => updateState({ searchTerm: '' })}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 dark:text-zinc-500 dark:hover:text-zinc-200 cursor-pointer"
+                aria-label="Limpar busca"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -559,6 +526,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           {/* WIDGET DE PREFERÊNCIAS: ALINHAMENTO ÓPTICO [ 🌙/☀️ • PT • ⚙️ ] */}
           <div className="relative shrink-0" ref={settingsMenuRef}>
             <button
+              type="button"
               aria-label={t(language, 'nav.preferences')}
               aria-haspopup="true"
               aria-expanded={settingsOpen}
@@ -566,7 +534,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                 setSettingsOpen((prev) => !prev);
                 play('click');
               }}
-              className={`h-9 px-3 rounded-lg border transition-all shrink-0 font-mono text-xs flex items-center gap-2 shadow-xs cursor-pointer focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 ${
+              className={`h-9 px-3 rounded-lg border transition-all shrink-0 font-mono text-xs flex items-center gap-2 shadow-2xs cursor-pointer focus:outline-hidden focus-visible:ring-1 focus-visible:ring-blue-500 ${
                 settingsOpen
                   ? theme === 'dark'
                     ? 'bg-zinc-800 border-cyan-500/50 text-cyan-300 shadow-md'
@@ -575,7 +543,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                   ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-800 text-zinc-300 hover:border-zinc-700'
                   : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700 hover:border-slate-300'
               }`}
-              title={t(language, 'nav.preferences')}
             >
               {/* LUA / SOL */}
               {theme === 'dark' ? (
@@ -583,10 +550,10 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               ) : (
                 <Moon className="w-3.5 h-3.5 text-slate-700 shrink-0" />
               )}
-              <span className="opacity-30 translate-y-[1px] leading-none">•</span>
+              <span className="opacity-30 opt-mono">•</span>
               {/* IDIOMA */}
-              <span className="font-bold text-[11px] opacity-90 translate-y-[1px] leading-none">{language}</span>
-              <span className="opacity-30 translate-y-[1px] leading-none">•</span>
+              <span className="font-bold text-[11px] opacity-90 opt-mono">{language}</span>
+              <span className="opacity-30 opt-mono">•</span>
               {/* ENGRENAGEM */}
               <Settings className="w-3.5 h-3.5 opacity-80 shrink-0" />
             </button>
