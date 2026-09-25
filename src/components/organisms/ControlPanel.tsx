@@ -88,7 +88,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   }, []);
 
   useEffect(() => {
-    const handleRadialClickOutside = (event: MouseEvent) => {
+    const handleRadialClickOutside = (event: MouseEvent | TouchEvent) => {
       if (radialMenuRef.current && !radialMenuRef.current.contains(event.target as Node)) {
         setRadialOpen(false);
       }
