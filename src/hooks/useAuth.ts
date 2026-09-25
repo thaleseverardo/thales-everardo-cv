@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   AuthUser,
   ContactData,
@@ -28,12 +28,24 @@ export function useAuth() {
     return () => unsubscribe();
   }, []);
 
+  const handleSignOut = useCallback(async () => {
+    // 1. Zera o estado React imediatamente (UI responde no mesmo milissegundo)
+    setUser(null);
+    setContact(null);
+    // 2. Executa a limpeza da sessão no Firebase em segundo plano
+    try {
+      await signOutUser();
+    } catch (e) {
+      console.warn('Aviso durante encerramento de sessão:', e);
+    }
+  }, []);
+
   return {
     user,
     isAuthenticated: !!user,
     isLoading,
     contact,
     signInWithGoogle,
-    signOut: signOutUser,
+    signOut: handleSignOut,
   };
 }

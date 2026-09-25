@@ -131,31 +131,40 @@ export async function signUpWithEmail(email: string, pass: string): Promise<Auth
 }
 
 export async function signOutUser(): Promise<void> {
-  if (auth) {
-    await signOut(auth);
+  try {
+    if (auth) {
+      await signOut(auth);
+    }
+  } catch (err) {
+    console.warn("Aviso ao encerrar sessão Firebase:", err);
   }
   currentUser = null;
-  listeners.forEach((cb) => cb(null));
+  listeners.forEach((cb) => {
+    try {
+      cb(null);
+    } catch {}
+  });
 }
 
 export async function fetchProtectedContact(user: AuthUser | null): Promise<ContactData | null> {
   if (!user || !db) return null;
 
   try {
-    const snap = await getDoc(doc(db, 'portfolio', 'contacts'));
+    const snap = await getDoc(doc(db, "portfolio", "contacts"));
     if (snap.exists()) {
       const data = snap.data();
-      return {
-        email: data.email || 'thales.everardo@gmail.com',
-        phone: data.phone || '+55 11 96296 9508',
-      };
+      if (data && data.email && data.phone) {
+        return {
+          email: String(data.email).trim(),
+          phone: String(data.phone).trim(),
+        };
+      }
+    } else {
+      console.warn("Documento portfolio/contacts não localizado no Firestore.");
     }
   } catch (error) {
-    console.warn('Documento no Firestore não encontrado, usando entrega canônica autorizada:', error);
+    console.error("Erro ao buscar contatos protegidos no Firestore:", error);
   }
 
-  return {
-    email: 'thales.everardo@gmail.com',
-    phone: '+55 11 96296 9508',
-  };
+  return null;
 }
