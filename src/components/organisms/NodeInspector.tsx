@@ -299,7 +299,7 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
               onOpenContact();
               play('click');
             }}
-            className="px-4 py-1.5 rounded text-white text-xs font-mono font-bold bg-blue-600 hover:bg-blue-500 transition-colors shadow-xs"
+            className="header-btn-primary h-8! px-3! text-xs"
           >
             {t(language, 'inspector.connect')}
           </button>
