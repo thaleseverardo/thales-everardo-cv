@@ -59,8 +59,11 @@ if (typeof window !== 'undefined') {
   } catch {}
 }
 
+let authListenerInitialized = false;
+
 function initAuthListener() {
-  if (auth) {
+  if (auth && !authListenerInitialized) {
+    authListenerInitialized = true;
     onAuthStateChanged(auth, (user) => {
       currentUser = mapFirebaseUser(user);
       listeners.forEach((cb) => cb(currentUser));
@@ -68,15 +71,8 @@ function initAuthListener() {
   }
 }
 
-if (typeof window !== "undefined") {
-  if ("requestIdleCallback" in window) {
-    (window as any).requestIdleCallback(() => initAuthListener(), { timeout: 2000 });
-  } else {
-    setTimeout(initAuthListener, 1200);
-  }
-}
-
 export function subscribeToAuth(callback: AuthListener): () => void {
+  initAuthListener();
   listeners.add(callback);
   callback(currentUser);
   return () => listeners.delete(callback);

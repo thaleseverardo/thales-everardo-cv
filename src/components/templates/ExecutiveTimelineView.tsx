@@ -158,7 +158,7 @@ export const ExecutiveTimelineView: React.FC<ExecutiveTimelineViewProps> = ({
                       </span>
                     ))}
                     {node.technologies.length > 5 && (
-                      <span className="text-[11px] font-mono dark:text-zinc-400 text-slate-500 font-semibold">
+                      <span className="text-[11px] font-mono text-slate-600 dark:text-zinc-300 font-semibold">
                         +{node.technologies.length - 5}
                       </span>
                     )}

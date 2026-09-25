@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
+        injectRegister: 'script-defer',
         includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon.svg', 'robots.txt', 'sitemap.xml', 'llms.txt', 'llms-full.txt'],
         manifest: {
           id: '/',

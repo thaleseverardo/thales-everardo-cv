@@ -24,9 +24,7 @@ import { PWAInstallButton } from '../molecules/PWAInstallButton';
 import { t } from '../../i18n/translations';
 import { Button } from '../atoms/Button';
 
-import thalesAvatarInline from '../../assets/images/thales_avatar_250x250.png?inline';
-
-const THALES_AVATAR_BASE64: string = thalesAvatarInline;
+import thalesAvatar from '../../assets/images/thales_avatar_250x250.png';
 
 interface ControlPanelProps {
   systemState: SystemState;
@@ -189,8 +187,10 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           >
             <div className="relative w-13 h-13 rounded-full overflow-hidden border-2 border-slate-300 dark:border-zinc-700 shrink-0 shadow-xs">
               <img
-                src={THALES_AVATAR_BASE64}
+                src={thalesAvatar}
                 alt="Thales Everardo"
+                width={52}
+                height={52}
                 className="w-full h-full object-cover object-top"
                 loading="eager"
               />
@@ -250,8 +250,10 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           <div className="flex items-center gap-3 min-w-0">
             <div className="relative w-11 h-11 rounded-full overflow-hidden border-2 border-slate-300 dark:border-zinc-700 shrink-0 shadow-xs">
               <img
-                src={THALES_AVATAR_BASE64}
+                src={thalesAvatar}
                 alt="Thales Everardo"
+                width={44}
+                height={44}
                 className="w-full h-full object-cover object-top"
                 loading="eager"
               />

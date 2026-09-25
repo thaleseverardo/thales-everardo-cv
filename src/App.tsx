@@ -9,9 +9,15 @@ import { ControlPanel } from './components/organisms/ControlPanel';
 import { SystemCanvas } from './components/templates/SystemCanvas';
 import { ExecutiveTimelineView } from './components/templates/ExecutiveTimelineView';
 import { NodeInspector } from './components/organisms/NodeInspector';
-import { CLIOverlay } from './components/organisms/CLIOverlay';
-import { HandshakeModal } from './components/organisms/HandshakeModal';
-import { RawResumeModal } from './components/organisms/RawResumeModal';
+const CLIOverlay = React.lazy(() =>
+  import('./components/organisms/CLIOverlay').then((m) => ({ default: m.CLIOverlay }))
+);
+const HandshakeModal = React.lazy(() =>
+  import('./components/organisms/HandshakeModal').then((m) => ({ default: m.HandshakeModal }))
+);
+const RawResumeModal = React.lazy(() =>
+  import('./components/organisms/RawResumeModal').then((m) => ({ default: m.RawResumeModal }))
+);
 import { FooterBar } from './components/organisms/FooterBar';
 import { OfflineIndicator } from './components/atoms/OfflineIndicator';
 import { PWAInstallPrompt } from './components/organisms/PWAInstallPrompt';
@@ -176,40 +182,52 @@ export default function App() {
         }}
       />
 
-      <CLIOverlay
-        isOpen={isCLIOpen}
-        onClose={() => setIsCLIOpen(false)}
-        systemState={systemState}
-        updateState={updateState}
-        onOpenContact={() => {
-          setIsCLIOpen(false);
-          setIsContactOpen(true);
-        }}
-        onOpenResume={() => {
-          setIsCLIOpen(false);
-          setIsResumeOpen(true);
-        }}
-      />
+      {isCLIOpen && (
+        <React.Suspense fallback={null}>
+          <CLIOverlay
+            isOpen={isCLIOpen}
+            onClose={() => setIsCLIOpen(false)}
+            systemState={systemState}
+            updateState={updateState}
+            onOpenContact={() => {
+              setIsCLIOpen(false);
+              setIsContactOpen(true);
+            }}
+            onOpenResume={() => {
+              setIsCLIOpen(false);
+              setIsResumeOpen(true);
+            }}
+          />
+        </React.Suspense>
+      )}
 
-      <HandshakeModal
-        isOpen={isContactOpen}
-        onClose={() => setIsContactOpen(false)}
-        onOpenResume={() => {
-          setIsContactOpen(false);
-          setIsResumeOpen(true);
-        }}
-        soundEnabled={systemState.soundEnabled}
-        language={systemState.language}
-        theme={systemState.theme}
-      />
+      {isContactOpen && (
+        <React.Suspense fallback={null}>
+          <HandshakeModal
+            isOpen={isContactOpen}
+            onClose={() => setIsContactOpen(false)}
+            onOpenResume={() => {
+              setIsContactOpen(false);
+              setIsResumeOpen(true);
+            }}
+            soundEnabled={systemState.soundEnabled}
+            language={systemState.language}
+            theme={systemState.theme}
+          />
+        </React.Suspense>
+      )}
 
-      <RawResumeModal
-        isOpen={isResumeOpen}
-        onClose={() => setIsResumeOpen(false)}
-        soundEnabled={systemState.soundEnabled}
-        language={systemState.language}
-        theme={systemState.theme}
-      />
+      {isResumeOpen && (
+        <React.Suspense fallback={null}>
+          <RawResumeModal
+            isOpen={isResumeOpen}
+            onClose={() => setIsResumeOpen(false)}
+            soundEnabled={systemState.soundEnabled}
+            language={systemState.language}
+            theme={systemState.theme}
+          />
+        </React.Suspense>
+      )}
 
       <FooterBar
         systemState={systemState}
