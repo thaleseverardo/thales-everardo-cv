@@ -269,6 +269,9 @@ export const SystemCanvas: React.FC<SystemCanvasProps> = ({
         className="absolute inset-0 z-10 pointer-events-none"
         style={{ minHeight: `${containerSize.height}px` }}
       >
+        <h2 className="sr-only">
+          {isPT ? "Mapa de Arquitetura de Subsistemas Distribuídos" : "Distributed Architecture Subsystems Map"}
+        </h2>
         {CURRICULUM_NODES.map((node) => {
           const coords = nodeCoordinates[node.id];
           if (!coords) return null;
@@ -282,7 +285,7 @@ export const SystemCanvas: React.FC<SystemCanvasProps> = ({
           const metricHighlight = trans ? trans.metricHighlight : node.metricHighlight;
 
           return (
-            <article
+            <div
               key={node.id}
               role="button"
               tabIndex={0}
@@ -359,7 +362,7 @@ export const SystemCanvas: React.FC<SystemCanvasProps> = ({
                   </span>
                 </div>
               </div>
-            </article>
+            </div>
           );
         })}
       </div>
