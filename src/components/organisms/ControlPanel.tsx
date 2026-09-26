@@ -22,6 +22,7 @@ import {
   Volume2,
   VolumeX,
   DownloadCloud,
+  Check,
   CheckCircle2,
   LogIn,
   User,
@@ -332,17 +333,17 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               <span className="opt-mono">{t(language, 'nav.cvButton')}</span>
             </button>
 
-            {/* GATILHO DO MENU UNIFICADO (DESKTOP // SEMPRE ÍCONE SETTINGS) */}
+            {/* GATILHO DO MENU UNIFICADO (DESKTOP // GHOST ACTION SEM BORDA) */}
             <button
               type="button"
               onClick={() => {
                 setSettingsOpen((prev) => !prev);
                 play('click');
               }}
-              className={`h-9 px-3 rounded-lg border text-xs font-sans font-medium flex items-center gap-2 transition-all cursor-pointer shadow-2xs ${
+              className={`h-9 px-3 rounded-lg text-xs font-sans font-medium flex items-center gap-2 transition-colors cursor-pointer ${
                 settingsOpen
-                  ? 'bg-slate-100 dark:bg-zinc-800 border-slate-300 dark:border-zinc-700 text-slate-900 dark:text-zinc-100'
-                  : 'bg-white dark:bg-zinc-900 border-slate-200 dark:border-zinc-800 text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800/60'
+                  ? 'bg-slate-200/70 dark:bg-zinc-800 text-slate-900 dark:text-zinc-100'
+                  : 'text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800/60 hover:text-slate-900 dark:hover:text-zinc-100'
               }`}
               aria-expanded={settingsOpen}
               aria-label={t(language, 'nav.preferences')}
@@ -396,17 +397,17 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               <span className="opt-mono">{t(language, 'nav.cvButton')}</span>
             </button>
 
-            {/* GATILHO DO MENU UNIFICADO (MOBILE // SEMPRE ÍCONE SETTINGS) */}
+            {/* GATILHO DO MENU UNIFICADO (MOBILE // GHOST ACTION SEM BORDA) */}
             <button
               type="button"
               onClick={() => {
                 setSettingsOpen((prev) => !prev);
                 play('click');
               }}
-              className={`p-2 rounded-lg border h-9 w-9 flex items-center justify-center cursor-pointer shadow-2xs transition-all active:scale-95 ${
-                theme === 'dark'
-                  ? 'bg-zinc-900 border-zinc-800 text-zinc-200 hover:text-white'
-                  : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-slate-900'
+              className={`h-9 w-9 rounded-lg flex items-center justify-center cursor-pointer transition-colors active:scale-95 ${
+                settingsOpen
+                  ? 'bg-slate-200/70 dark:bg-zinc-800 text-slate-900 dark:text-zinc-100'
+                  : 'text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800/60 hover:text-slate-900 dark:hover:text-zinc-100'
               }`}
               aria-label={t(language, 'nav.preferences')}
             >
@@ -433,7 +434,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               'inset-0 w-full h-[100dvh] rounded-none border-none p-0 overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-200'
             } ${
               /* Desktop: Dropdown flutuante ancorado no topo */
-              'md:inset-auto md:top-20 md:right-8 md:w-80 md:h-auto md:rounded-2xl md:border md:p-3 md:shadow-2xl md:shadow-black/70 md:animate-in md:fade-in md:zoom-in-95'
+              'md:inset-auto md:top-20 md:right-8 md:w-[350px] md:h-auto md:rounded-3xl md:border md:p-3.5 md:shadow-2xl md:shadow-black/80 md:animate-in md:fade-in md:zoom-in-95'
             } ${
               theme === 'dark'
                 ? 'bg-zinc-950 md:bg-zinc-900 md:border-zinc-800 text-zinc-100'
@@ -562,9 +563,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                       <span className="text-blue-600 dark:text-cyan-400 font-medium">
                         {LOCALIZED_LANGUAGE_NAMES[language][language]}
                       </span>
-                      <span className="text-[10px] font-mono opacity-60 uppercase px-1.5 py-0.5 rounded bg-slate-100 dark:bg-zinc-800">
-                        {language}
-                      </span>
                       <ChevronDown
                         className={`w-3.5 h-3.5 opacity-60 transition-transform duration-200 ${
                           langAccordionOpen ? 'rotate-180' : ''
@@ -593,15 +591,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                             }`}
                           >
                             <span className="tracking-tight">{label}</span>
-                            <span
-                              className={`text-[10px] font-mono uppercase px-1.5 py-0.5 rounded-md ${
-                                isSelected
-                                  ? 'bg-white/20 text-white'
-                                  : 'bg-slate-200 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400'
-                              }`}
-                            >
-                              {langCode}
-                            </span>
+                            {isSelected && <Check className="w-3.5 h-3.5 text-white shrink-0" />}
                           </button>
                         );
                       })}

@@ -61,6 +61,7 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -109,6 +110,15 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
     e.preventDefault();
     if (!email || !password) return;
 
+    // Validação de confirmação de senha apenas no cadastro quando a senha estiver oculta
+    if (mode === 'signup' && !showPassword) {
+      if (password !== confirmPassword) {
+        setErrorMsg(t(language, 'auth.errorPasswordMismatch'));
+        play('alert');
+        return;
+      }
+    }
+
     setLoading(true);
     setErrorMsg(null);
 
@@ -146,176 +156,206 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 bg-black/65 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150 font-sans"
+      className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-0 sm:p-4 overflow-y-auto font-sans animate-in fade-in duration-150"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       <div
-        className={`w-full max-w-[400px] rounded-2xl shadow-2xl overflow-hidden border transition-all ${
+        className={`w-full min-h-[100dvh] sm:min-h-0 sm:h-auto sm:max-w-[420px] rounded-none sm:rounded-3xl shadow-none sm:shadow-2xl flex flex-col justify-center overflow-y-auto border-0 sm:border transition-all relative ${
           theme === 'dark'
-            ? 'bg-zinc-900 border-zinc-800 text-zinc-100 shadow-black/80'
+            ? 'bg-zinc-950 sm:bg-zinc-900 border-zinc-800 text-zinc-100 shadow-black/80'
             : 'bg-white border-slate-200 text-slate-900 shadow-slate-300/40'
         }`}
       >
-        {/* CABEÇALHO COM AVATAR INSTITUCIONAL */}
-        <div className="relative pt-6 px-6 pb-1">
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 dark:text-zinc-500 dark:hover:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
-            aria-label={t(language, 'auth.close')}
-          >
-            <X className="w-4 h-4" />
-          </button>
+        {/* BOTÃO FECHAR FIXO NO TOPO DIREITO */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 w-9 h-9 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-700 dark:text-zinc-500 dark:hover:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800/80 transition-colors cursor-pointer active:scale-95 z-20"
+          aria-label={t(language, 'auth.close')}
+        >
+          <X className="w-5 h-5 sm:w-4 sm:h-4" />
+        </button>
 
+        {/* CONTEÚDO INTEGRADO E CENTRALIZADO NO MOBILE */}
+        <div className="w-full max-w-sm mx-auto p-6 sm:p-8 my-auto flex flex-col justify-center">
+          {/* CABEÇALHO COM AVATAR */}
           <div className="flex flex-col items-center text-center">
-            <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-slate-200 dark:border-zinc-700 shadow-xs mb-3">
+            <div className="relative w-14 h-14 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-slate-200 dark:border-zinc-700 shadow-xs mb-3">
               <img
                 src={thalesAvatar}
                 alt="Thales Everardo"
-                width={48}
-                height={48}
+                width={56}
+                height={56}
                 className="w-full h-full object-cover object-top"
               />
             </div>
-            <h2 className="text-lg font-bold tracking-tight text-slate-900 dark:text-zinc-100">
+            <h2 className="text-xl sm:text-lg font-bold tracking-tight text-slate-900 dark:text-zinc-100">
               {t(language, 'auth.modalTitle')}
             </h2>
             <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1 max-w-xs leading-relaxed">
               {t(language, 'auth.modalSubtitle')}
             </p>
           </div>
-        </div>
 
-        {/* CORPO DO FORMULÁRIO */}
-        <div className="p-6 pt-3 space-y-4">
-          {errorMsg && (
-            <div className="p-3 rounded-xl border border-rose-500/25 bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs flex items-start gap-2.5">
-              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-              <span className="leading-snug">{errorMsg}</span>
-            </div>
-          )}
-
-          {/* BOTÕES SOCIAIS DE 1 CLIQUE (GOOGLE & GITHUB) */}
-          <div className="space-y-2">
-            <button
-              type="button"
-              onClick={handleGoogleLogin}
-              className={`w-full h-10.5 px-4 rounded-xl border font-medium text-xs sm:text-sm transition-all flex items-center justify-center gap-3 cursor-pointer shadow-2xs ${
-                theme === 'dark'
-                  ? 'bg-zinc-800/90 hover:bg-zinc-800 border-zinc-700 text-zinc-100 hover:border-zinc-600'
-                  : 'bg-white hover:bg-slate-50 border-slate-300 text-slate-700 hover:border-slate-400'
-              }`}
-            >
-              <GoogleLogo />
-              <span>{t(language, 'auth.continueWithGoogle')}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={handleGithubLogin}
-              className={`w-full h-10.5 px-4 rounded-xl border font-medium text-xs sm:text-sm transition-all flex items-center justify-center gap-3 cursor-pointer shadow-2xs ${
-                theme === 'dark'
-                  ? 'bg-zinc-800/90 hover:bg-zinc-800 border-zinc-700 text-zinc-100 hover:border-zinc-600'
-                  : 'bg-white hover:bg-slate-50 border-slate-300 text-slate-700 hover:border-slate-400'
-              }`}
-            >
-              <GithubLogo />
-              <span>{t(language, 'auth.continueWithGithub')}</span>
-            </button>
-          </div>
-
-          {/* DIVISOR DISCRETO */}
-          <div className="relative flex items-center justify-center my-3">
-            <div className="w-full border-t border-slate-200 dark:border-zinc-800" />
-            <span
-              className={`absolute px-3 text-[11px] font-medium ${
-                theme === 'dark' ? 'bg-zinc-900 text-zinc-500' : 'bg-white text-slate-400'
-              }`}
-            >
-              {t(language, 'auth.orEmailPassword')}
-            </span>
-          </div>
-
-          {/* FORMULÁRIO DE E-MAIL E SENHA */}
-          <form onSubmit={handleEmailAuth} className="space-y-3">
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-zinc-300 mb-1">
-                {t(language, 'auth.emailLabel')}
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder={t(language, 'auth.emailPlaceholder')}
-                required
-                className={`w-full h-10 px-3.5 rounded-xl border text-sm transition-all focus:outline-hidden ${
-                  theme === 'dark'
-                    ? 'bg-zinc-950 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                    : 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20'
-                }`}
-              />
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-xs font-semibold text-slate-700 dark:text-zinc-300">
-                  {t(language, 'auth.passwordLabel')}
-                </label>
-                {mode === 'signup' && (
-                  <span className="text-[10px] text-slate-400 dark:text-zinc-500">
-                    {t(language, 'auth.passwordHint')}
-                  </span>
-                )}
+          {/* CORPO DO FORMULÁRIO */}
+          <div className="mt-6 space-y-4">
+            {errorMsg && (
+              <div className="p-3.5 rounded-xl border border-rose-500/25 bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs flex items-start gap-2.5 animate-in fade-in duration-150">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span className="leading-snug">{errorMsg}</span>
               </div>
-              <div className="relative">
+            )}
+
+            {/* BOTÕES SOCIAIS DE 1 CLIQUE (GOOGLE & GITHUB) */}
+            <div className="space-y-2.5">
+              <button
+                type="button"
+                onClick={handleGoogleLogin}
+                className={`w-full h-11 px-4 rounded-xl border font-medium text-xs sm:text-sm transition-all flex items-center justify-center gap-3 cursor-pointer shadow-2xs active:scale-[0.98] ${
+                  theme === 'dark'
+                    ? 'bg-zinc-900/90 hover:bg-zinc-800/90 border-zinc-800 hover:border-zinc-700 text-zinc-100 shadow-sm'
+                    : 'bg-white hover:bg-slate-50 border-slate-300 text-slate-700 hover:border-slate-400'
+                }`}
+              >
+                <GoogleLogo />
+                <span>{t(language, 'auth.continueWithGoogle')}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleGithubLogin}
+                className={`w-full h-11 px-4 rounded-xl border font-medium text-xs sm:text-sm transition-all flex items-center justify-center gap-3 cursor-pointer shadow-2xs active:scale-[0.98] ${
+                  theme === 'dark'
+                    ? 'bg-zinc-900/90 hover:bg-zinc-800/90 border-zinc-800 hover:border-zinc-700 text-zinc-100 shadow-sm'
+                    : 'bg-white hover:bg-slate-50 border-slate-300 text-slate-700 hover:border-slate-400'
+                }`}
+              >
+                <GithubLogo />
+                <span>{t(language, 'auth.continueWithGithub')}</span>
+              </button>
+            </div>
+
+            {/* DIVISOR DISCRETO */}
+            <div className="relative flex items-center justify-center my-3.5">
+              <div className="w-full border-t border-slate-200 dark:border-zinc-800" />
+              <span
+                className={`absolute px-3 text-[11px] font-medium ${
+                  theme === 'dark' ? 'bg-zinc-950 sm:bg-zinc-900 text-zinc-500' : 'bg-white text-slate-400'
+                }`}
+              >
+                {t(language, 'auth.orEmailPassword')}
+              </span>
+            </div>
+
+            {/* FORMULÁRIO DE E-MAIL E SENHA */}
+            <form onSubmit={handleEmailAuth} className="space-y-3.5">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-zinc-300 mb-1.5">
+                  {t(language, 'auth.emailLabel')}
+                </label>
                 <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder={t(language, 'auth.passwordPlaceholder')}
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={t(language, 'auth.emailPlaceholder')}
                   required
-                  minLength={6}
-                  className={`w-full h-10 pl-3.5 pr-10 rounded-xl border text-sm transition-all focus:outline-hidden ${
+                  className={`w-full h-11 px-3.5 rounded-xl border text-sm transition-all focus:outline-hidden ${
                     theme === 'dark'
-                      ? 'bg-zinc-950 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                      : 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20'
+                      ? 'bg-zinc-900/80 hover:bg-zinc-900 border-zinc-800 hover:border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/15 focus:bg-zinc-950 shadow-inner'
+                      : 'bg-slate-50 hover:bg-white border-slate-300/90 hover:border-slate-400 text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:ring-4 focus:ring-blue-600/15 focus:bg-white shadow-2xs'
                   }`}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-zinc-500 dark:hover:text-zinc-300 cursor-pointer"
-                  tabIndex={-1}
-                  aria-label={showPassword ? t(language, 'auth.hidePassword') : t(language, 'auth.showPassword')}
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
               </div>
+
+              {/* CAMPO SENHA PRINCIPAL */}
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-zinc-300">
+                    {t(language, 'auth.passwordLabel')}
+                  </label>
+                  {mode === 'signup' && (
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 border border-slate-200 dark:border-zinc-700/60">
+                      {t(language, 'auth.passwordHint')}
+                    </span>
+                  )}
+                </div>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder={t(language, 'auth.passwordPlaceholder')}
+                    required
+                    minLength={6}
+                    className={`w-full h-11 pl-3.5 pr-11 rounded-xl border text-sm transition-all focus:outline-hidden ${
+                      theme === 'dark'
+                        ? 'bg-zinc-900/80 hover:bg-zinc-900 border-zinc-800 hover:border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/15 focus:bg-zinc-950 shadow-inner'
+                        : 'bg-slate-50 hover:bg-white border-slate-300/90 hover:border-slate-400 text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:ring-4 focus:ring-blue-600/15 focus:bg-white shadow-2xs'
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:text-zinc-500 dark:hover:text-zinc-200 hover:bg-slate-200/50 dark:hover:bg-zinc-800 transition-colors cursor-pointer focus:outline-none"
+                    tabIndex={-1}
+                    aria-label={showPassword ? t(language, 'auth.hidePassword') : t(language, 'auth.showPassword')}
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* CAMPO DE CONFIRMAÇÃO DE SENHA (APENAS CADASTRO COM SENHA OCULTA) */}
+              {mode === 'signup' && !showPassword && (
+                <div className="animate-in fade-in slide-in-from-top-1.5 duration-200">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-zinc-300 mb-1.5">
+                    {t(language, 'auth.confirmPasswordLabel')}
+                  </label>
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder={t(language, 'auth.confirmPasswordPlaceholder')}
+                    required
+                    minLength={6}
+                    className={`w-full h-11 px-3.5 rounded-xl border text-sm transition-all focus:outline-hidden ${
+                      theme === 'dark'
+                        ? 'bg-zinc-900/80 hover:bg-zinc-900 border-zinc-800 hover:border-zinc-700 text-zinc-100 placeholder:text-zinc-500 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/15 focus:bg-zinc-950 shadow-inner'
+                        : 'bg-slate-50 hover:bg-white border-slate-300/90 hover:border-slate-400 text-slate-900 placeholder:text-slate-400 focus:border-blue-600 focus:ring-4 focus:ring-blue-600/15 focus:bg-white shadow-2xs'
+                    }`}
+                  />
+                </div>
+              )}
+
+              {/* BOTÃO PRIMÁRIO COM GRADIENTE, ANEL ESPECULAR E SOMBRA */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full h-11 rounded-xl bg-gradient-to-b from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white font-semibold text-sm transition-all shadow-lg shadow-blue-900/25 ring-1 ring-inset ring-white/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-2 active:scale-[0.98]"
+              >
+                {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+                <span>{mode === 'signin' ? t(language, 'auth.signIn') : t(language, 'auth.signUp')}</span>
+              </button>
+            </form>
+
+            {/* ALTERNADOR DE MODO (PERGUNTA EM CINZA + AÇÃO EM DESTAQUE) */}
+            <div className="text-center pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setMode((m) => (m === 'signin' ? 'signup' : 'signin'));
+                  setErrorMsg(null);
+                  setConfirmPassword('');
+                }}
+                className="text-xs font-medium text-slate-500 dark:text-zinc-400 transition-colors cursor-pointer inline-flex items-center gap-1 hover:text-slate-700 dark:hover:text-zinc-200"
+              >
+                <span>{mode === 'signin' ? t(language, 'auth.noAccount').split('?')[0] + '?' : t(language, 'auth.haveAccount').split('?')[0] + '?'}</span>
+                <span className="font-semibold text-blue-600 dark:text-cyan-400 hover:underline">
+                  {mode === 'signin' ? t(language, 'auth.noAccount').split('?')[1] : t(language, 'auth.haveAccount').split('?')[1]}
+                </span>
+              </button>
             </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full h-11 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-1"
-            >
-              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              <span>{mode === 'signin' ? t(language, 'auth.signIn') : t(language, 'auth.signUp')}</span>
-            </button>
-          </form>
-
-          {/* ALTERNADOR DE MODO (ENTRAR / CRIAR CONTA) */}
-          <div className="text-center pt-2">
-            <button
-              type="button"
-              onClick={() => {
-                setMode((m) => (m === 'signin' ? 'signup' : 'signin'));
-                setErrorMsg(null);
-              }}
-              className="text-xs font-medium text-slate-500 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 transition-colors cursor-pointer"
-            >
-              {mode === 'signin' ? t(language, 'auth.noAccount') : t(language, 'auth.haveAccount')}
-            </button>
           </div>
         </div>
       </div>
