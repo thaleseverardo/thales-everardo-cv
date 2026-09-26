@@ -1,7 +1,7 @@
 # Thales Everardo
 **Engenheiro de Software Staff & Arquiteto de Sistemas**
 
-Contact: Protected via Portfolio Auth Gate | São Paulo, Brazil| São Paulo - SP, Brasil
+Contact: Protected via Portfolio Auth Gate | São Paulo, SP - Brasil
 GitHub: https://github.com/thaleseverardo | LinkedIn: https://linkedin.com/in/thaleseverardo
 
 ---

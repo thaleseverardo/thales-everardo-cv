@@ -34,13 +34,7 @@ export const FooterBar: React.FC<FooterBarProps> = ({ systemState }) => {
         </span>
         <span className="opacity-30 hidden sm:inline">•</span>
         <span className="text-[11px] opacity-60 hidden sm:inline">
-          {language === 'PT'
-            ? 'Engenharia de Sistemas Distribuídos'
-            : language === 'ES'
-            ? 'Ingeniería de Sistemas Distribuidos'
-            : language === 'FR'
-            ? 'Ingénierie des Systèmes Distribués'
-            : 'Distributed Systems Engineering'}
+{t(language, 'footer.subtitle')}
         </span>
       </div>
 

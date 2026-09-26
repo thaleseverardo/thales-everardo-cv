@@ -4,6 +4,7 @@ import {
   ContactData,
   subscribeToAuth,
   signInWithGoogle,
+  signInWithGithub,
   signOutUser,
   fetchProtectedContact,
 } from '../services/firebaseAuth';
@@ -29,10 +30,8 @@ export function useAuth() {
   }, []);
 
   const handleSignOut = useCallback(async () => {
-    // 1. Zera o estado React imediatamente (UI responde no mesmo milissegundo)
     setUser(null);
     setContact(null);
-    // 2. Executa a limpeza da sessão no Firebase em segundo plano
     try {
       await signOutUser();
     } catch (e) {
@@ -46,6 +45,7 @@ export function useAuth() {
     isLoading,
     contact,
     signInWithGoogle,
+    signInWithGithub,
     signOut: handleSignOut,
   };
 }

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
+  ArrowLeft,
   FileText,
   Mail,
   MessageSquare,
@@ -17,6 +18,7 @@ import {
   RotateCcw,
   Settings,
   Globe,
+  ChevronDown,
   Volume2,
   VolumeX,
   DownloadCloud,
@@ -25,6 +27,8 @@ import {
   User,
   LogOut,
   Smartphone,
+  MonitorSmartphone,
+  ChevronRight,
   Share,
   PlusSquare,
 } from 'lucide-react';
@@ -44,12 +48,77 @@ interface ControlPanelProps {
   onOpenResume: () => void;
 }
 
+const LOCALIZED_LANGUAGE_NAMES: Record<AppLanguage, Record<AppLanguage, string>> = {
+  PT: { PT: 'Português', EN: 'Inglês', ES: 'Espanhol', FR: 'Francês' },
+  EN: { PT: 'Portuguese', EN: 'English', ES: 'Spanish', FR: 'French' },
+  ES: { PT: 'Portugués', EN: 'Inglés', ES: 'Español', FR: 'Francés' },
+  FR: { PT: 'Portugais', EN: 'Anglais', ES: 'Espagnol', FR: 'Français' },
+};
+
+const GuestAvatarToken: React.FC<{ sizeClass?: string }> = ({ sizeClass = 'w-11 h-11' }) => (
+  <div
+    className={`${sizeClass} rounded-2xl flex items-center justify-center shrink-0 relative overflow-hidden transition-all duration-300 ${
+      'bg-gradient-to-b from-slate-100 to-slate-200/90 border border-slate-300/80 shadow-xs dark:from-zinc-800/90 dark:via-zinc-850 dark:to-zinc-950 dark:border-white/10 dark:shadow-inner'
+    }`}
+  >
+    {/* Linha de reflexo especular no topo */}
+    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+    <svg className="w-5 h-5 text-slate-500 dark:text-zinc-400 drop-shadow-xs" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M12 12a4 4 0 100-8 4 4 0 000 8z"
+        fill="currentColor"
+        fillOpacity="0.18"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+      <path
+        d="M4 20c0-3.3 2.7-6 6-6h4c3.3 0 6 2.7 6 6"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  </div>
+);
+
+const UserAvatar: React.FC<{
+  photoURL?: string | null;
+  name?: string | null;
+  email?: string | null;
+  sizeClass?: string;
+  textSizeClass?: string;
+}> = ({ photoURL, name, email, sizeClass = 'w-5 h-5', textSizeClass = 'text-[10px]' }) => {
+  const [hasError, setHasError] = useState(false);
+  const initial = (name || email || 'U')[0].toUpperCase();
+
+  if (photoURL && !hasError) {
+    return (
+      <img
+        src={photoURL}
+        alt=""
+        referrerPolicy="no-referrer"
+        onError={() => setHasError(true)}
+        className={`${sizeClass} rounded-full object-cover border border-slate-200 dark:border-zinc-700 shrink-0`}
+      />
+    );
+  }
+
+  return (
+    <div
+      className={`${sizeClass} rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-500 text-white font-sans font-bold ${textSizeClass} flex items-center justify-center shrink-0 border border-white/20 shadow-md shadow-blue-900/30 tracking-tight`}
+    >
+      {initial}
+    </div>
+  );
+};
+
 export const ControlPanel: React.FC<ControlPanelProps> = ({
   systemState,
   updateState,
   onOpenContact,
   onOpenResume,
 }) => {
+  const [langAccordionOpen, setLangAccordionOpen] = useState(false);
   const {
     failureInjected,
     soundEnabled,
@@ -65,7 +134,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
 
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [showIOSGuide, setShowIOSGuide] = useState(false);
+  const [showInstallGuide, setShowInstallGuide] = useState(false);
   const [radialOpen, setRadialOpen] = useState(false);
   const radialMenuRef = useRef<HTMLDivElement>(null);
   const settingsMenuRef = useRef<HTMLDivElement>(null);
@@ -263,7 +332,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               <span className="opt-mono">{t(language, 'nav.cvButton')}</span>
             </button>
 
-            {/* GATILHO DO MENU UNIFICADO (DESKTOP) */}
+            {/* GATILHO DO MENU UNIFICADO (DESKTOP // SEMPRE ÍCONE SETTINGS) */}
             <button
               type="button"
               onClick={() => {
@@ -278,23 +347,8 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               aria-expanded={settingsOpen}
               aria-label={t(language, 'nav.preferences')}
             >
-              {isAuthenticated ? (
-                user?.photoURL ? (
-                  <img
-                    src={user.photoURL}
-                    alt=""
-                    className="w-5 h-5 rounded-full object-cover border border-slate-200 dark:border-zinc-700"
-                  />
-                ) : (
-                  <div className="w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-[10px] flex items-center justify-center">
-                    {userInitial}
-                  </div>
-                )
-              ) : (
-                <Globe className="w-3.5 h-3.5 opacity-70" />
-              )}
+              <Settings className="w-4 h-4 opacity-75" />
               <span className="font-mono text-[11px] font-bold">{language}</span>
-              <Settings className="w-3.5 h-3.5 opacity-60" />
             </button>
           </div>
         </div>
@@ -302,12 +356,12 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         {/* HEADER MOBILE */}
         <div className="w-full px-4 h-16 flex md:hidden items-center justify-between">
           <div className="flex items-center gap-3 min-w-0 pr-2">
-            <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-slate-300 dark:border-zinc-700 shrink-0 shadow-xs">
+            <div className="relative w-[50px] h-[50px] rounded-full overflow-hidden border-2 border-slate-300 dark:border-zinc-700 shrink-0 shadow-xs">
               <img
                 src={thalesAvatar}
                 alt="Thales Everardo"
-                width={40}
-                height={40}
+                width={50}
+                height={50}
                 className="w-full h-full object-cover object-top"
                 loading="eager"
               />
@@ -342,35 +396,21 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               <span className="opt-mono">{t(language, 'nav.cvButton')}</span>
             </button>
 
-            {/* GATILHO DO MENU UNIFICADO (MOBILE) */}
+            {/* GATILHO DO MENU UNIFICADO (MOBILE // SEMPRE ÍCONE SETTINGS) */}
             <button
               type="button"
               onClick={() => {
                 setSettingsOpen((prev) => !prev);
                 play('click');
               }}
-              className={`p-2 rounded-lg border h-9 w-9 flex items-center justify-center cursor-pointer ${
+              className={`p-2 rounded-lg border h-9 w-9 flex items-center justify-center cursor-pointer shadow-2xs transition-all active:scale-95 ${
                 theme === 'dark'
-                  ? 'bg-zinc-900 border-zinc-800 text-zinc-200'
-                  : 'bg-slate-100 border-slate-300 text-slate-700'
+                  ? 'bg-zinc-900 border-zinc-800 text-zinc-200 hover:text-white'
+                  : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-slate-900'
               }`}
               aria-label={t(language, 'nav.preferences')}
             >
-              {isAuthenticated ? (
-                user?.photoURL ? (
-                  <img
-                    src={user.photoURL}
-                    alt=""
-                    className="w-5 h-5 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-[10px] flex items-center justify-center">
-                    {userInitial}
-                  </div>
-                )
-              ) : (
-                <Settings className="w-4 h-4" />
-              )}
+              <Settings className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -379,9 +419,9 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
       {/* 2. MENU UNIFICADO (DROPDOWN NO DESKTOP / BOTTOM SHEET NATIVO NO MOBILE) */}
       {settingsOpen && (
         <>
-          {/* BACKDROP SUTIL */}
+          {/* BACKDROP SUTIL (APENAS DESKTOP) */}
           <div
-            className="fixed inset-0 z-45 bg-black/40 backdrop-blur-2xs transition-opacity"
+            className="hidden md:block fixed inset-0 z-45 bg-black/40 backdrop-blur-2xs transition-opacity"
             onClick={() => setSettingsOpen(false)}
             aria-hidden="true"
           />
@@ -389,45 +429,67 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           <div
             ref={settingsPopoverRef}
             className={`fixed md:absolute z-50 transition-all font-sans ${
-              /* Mobile: Bottom Sheet que sobe do rodapé */
-              'inset-x-0 bottom-0 max-h-[85vh] rounded-t-3xl border-t p-5 pb-8 shadow-2xl overflow-y-auto animate-in slide-in-from-bottom duration-200'
+              /* Mobile: Página Completa Nativa com Safe Area */
+              'inset-0 w-full h-[100dvh] rounded-none border-none p-0 overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-200'
             } ${
-              /* Desktop: Dropdown ancorado no topo-direito */
-              'md:inset-auto md:top-20 md:right-8 md:w-80 md:rounded-2xl md:border md:p-3 md:pb-3 md:shadow-2xl md:animate-in md:fade-in md:zoom-in-95'
+              /* Desktop: Dropdown flutuante ancorado no topo */
+              'md:inset-auto md:top-20 md:right-8 md:w-80 md:h-auto md:rounded-2xl md:border md:p-3 md:shadow-2xl md:shadow-black/70 md:animate-in md:fade-in md:zoom-in-95'
             } ${
               theme === 'dark'
-                ? 'bg-zinc-900 border-zinc-800 text-zinc-100 shadow-black/80'
-                : 'bg-white border-slate-200 text-slate-900 shadow-slate-300/40'
+                ? 'bg-zinc-950 md:bg-zinc-900 md:border-zinc-800 text-zinc-100'
+                : 'bg-slate-100 md:bg-white md:border-slate-200 text-slate-900'
             }`}
           >
-            {/* INDICADOR DE TOQUE NO MOBILE (DRAG HANDLE) */}
-            <div className="md:hidden w-10 h-1 bg-slate-300 dark:bg-zinc-700 rounded-full mx-auto mb-4" />
+            {/* CABEÇALHO NATIVO DA PÁGINA (EXCLUSIVO MOBILE) */}
+            <div
+              className={`md:hidden sticky top-0 z-20 h-14 px-4 border-b flex items-center justify-between backdrop-blur-md shrink-0 select-none ${
+                theme === 'dark' ? 'bg-zinc-950/95 border-zinc-800 text-zinc-100' : 'bg-white/95 border-slate-200 text-slate-900 shadow-2xs'
+              }`}
+            >
+              <button
+                type="button"
+                onClick={() => setSettingsOpen(false)}
+                className={`h-9 w-9 rounded-xl border flex items-center justify-center transition-all cursor-pointer shadow-2xs active:scale-95 ${
+                  theme === 'dark'
+                    ? 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:text-white'
+                    : 'bg-slate-50 border-slate-200 text-slate-700 hover:text-slate-900'
+                }`}
+                aria-label="Voltar"
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </button>
 
-            {/* SEÇÃO 1: PERFIL / CONTA */}
-            <div className="mb-2">
+              <h2 className="font-sans font-bold text-sm tracking-tight">
+                {t(language, 'nav.preferences')}
+              </h2>
+
+              <div className="w-9" /> {/* Espaçador simétrico */}
+            </div>
+
+            {/* CONTEÚDO EM CARTÕES AGRUPADOS (SEM CONTAINERS DUPLOS) */}
+            <div className="p-4 md:p-0 space-y-3 pb-[max(2.5rem,calc(1.5rem+env(safe-area-inset-bottom,0px)))] md:pb-0">
+              {/* CARD 1: PERFIL / CONTA (CARTÃO ÚNICO MAIOR E ELEGANTE) */}
               {isAuthenticated ? (
                 <div
-                  className={`flex items-center justify-between p-2.5 rounded-xl border ${
-                    theme === 'dark' ? 'bg-zinc-950/60 border-zinc-800' : 'bg-slate-50 border-slate-200'
+                  className={`flex items-center justify-between p-3.5 sm:p-4 rounded-2xl border transition-all ${
+                    theme === 'dark'
+                      ? 'bg-zinc-900/90 border-zinc-800 text-zinc-100 shadow-sm'
+                      : 'bg-white border-slate-200 text-slate-900 shadow-xs'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                    {user?.photoURL ? (
-                      <img
-                        src={user.photoURL}
-                        alt=""
-                        className="w-8 h-8 rounded-full object-cover border border-slate-200 dark:border-zinc-700"
-                      />
-                    ) : (
-                      <div className="w-8 h-8 rounded-full bg-blue-600/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 font-bold text-xs flex items-center justify-center shrink-0">
-                        {userInitial}
-                      </div>
-                    )}
+                  <div className="flex items-center gap-3.5 min-w-0 pr-2">
+                    <UserAvatar
+                      photoURL={user?.photoURL}
+                      name={user?.displayName}
+                      email={user?.email}
+                      sizeClass="w-11 h-11"
+                      textSizeClass="text-sm font-bold"
+                    />
                     <div className="min-w-0">
-                      <div className="text-xs font-semibold truncate leading-tight">
-                        {user?.displayName || (user?.email ? user.email.split('@')[0] : 'Conta')}
+                      <div className="text-sm font-semibold truncate leading-snug">
+                        {user?.displayName || (user?.email ? user.email.split('@')[0] : t(language, 'nav.account'))}
                       </div>
-                      <div className="text-[11px] text-slate-500 dark:text-zinc-400 truncate mt-0.5">
+                      <div className="text-xs text-slate-500 dark:text-zinc-400 truncate mt-0.5">
                         {user?.email || ''}
                       </div>
                     </div>
@@ -442,7 +504,8 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                       play('click');
                     }}
                     aria-label={t(language, 'nav.signOut')}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 dark:text-zinc-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-200/60 dark:hover:bg-zinc-800/80 transition-colors shrink-0 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-rose-500/40"
+                    className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-400 dark:text-zinc-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors shrink-0 cursor-pointer focus:outline-none"
+                    title={t(language, 'nav.signOut')}
                   >
                     <LogOut className="w-4 h-4" />
                   </button>
@@ -455,154 +518,229 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                     onOpenContact();
                     play('click');
                   }}
-                  className={`w-full flex items-center p-2.5 rounded-xl border transition-all cursor-pointer ${
+                  className={`w-full flex items-center p-3.5 sm:p-4 rounded-2xl border transition-all cursor-pointer ${
                     theme === 'dark'
-                      ? 'bg-zinc-950/60 hover:bg-zinc-800 border-zinc-800 text-zinc-100 hover:border-zinc-700'
-                      : 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-800 hover:border-slate-300'
+                      ? 'bg-zinc-900/90 hover:bg-zinc-800 border-zinc-800 text-zinc-100 hover:border-zinc-700 shadow-sm'
+                      : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-800 hover:border-slate-300 shadow-xs'
                   }`}
                 >
-                  <div className="flex items-center gap-3 text-left">
-                    <div className="w-8 h-8 rounded-full bg-blue-600/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/20">
-                      <User className="w-4 h-4" />
-                    </div>
+                  <div className="flex items-center gap-3.5 text-left">
+                    <GuestAvatarToken sizeClass="w-11 h-11" />
                     <div>
-                      <div className="text-xs font-semibold leading-tight text-slate-900 dark:text-zinc-100">
+                      <div className="text-sm font-semibold leading-snug text-slate-900 dark:text-zinc-100">
                         {t(language, 'auth.signIn')}
                       </div>
-                      <div className="text-[11px] text-slate-500 dark:text-zinc-400 mt-0.5">
+                      <div className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">
                         {t(language, 'nav.unlockContactsHint')}
                       </div>
                     </div>
                   </div>
                 </button>
               )}
-            </div>
 
-            {/* SEÇÃO 2: IDIOMA EM LINHA ÚNICA (SEM CARDS GIGANTES) */}
-            <div className="flex items-center justify-between py-2 px-1 border-t border-slate-100 dark:border-zinc-800/80">
-              <span className="text-xs font-medium text-slate-600 dark:text-zinc-400">
-                {t(language, 'nav.language')}
-              </span>
-              <div className="grid grid-cols-4 h-7 w-44 rounded-lg border overflow-hidden p-0 bg-slate-100 dark:bg-zinc-950 border-slate-200 dark:border-zinc-800 divide-x divide-slate-200 dark:divide-zinc-800">
-                {(['PT', 'EN', 'ES', 'FR'] as const).map((langCode) => (
-                  <button
-                    key={langCode}
-                    onClick={() => handleToggleLanguage(langCode)}
-                    className={`h-full text-[11px] font-mono font-bold transition-colors flex items-center justify-center cursor-pointer ${
-                      language === langCode
-                        ? 'bg-blue-600 text-white'
-                        : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100'
-                    }`}
-                  >
-                    {langCode}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* SEÇÃO 3: APARÊNCIA EM LINHA ÚNICA */}
-            <div className="flex items-center justify-between py-2 px-1 border-t border-slate-100 dark:border-zinc-800/80">
-              <span className="text-xs font-medium text-slate-600 dark:text-zinc-400">
-                {t(language, 'nav.theme')}
-              </span>
-              <div className="grid grid-cols-2 h-7 w-36 rounded-lg border overflow-hidden p-0 bg-slate-100 dark:bg-zinc-950 border-slate-200 dark:border-zinc-800 divide-x divide-slate-200 dark:divide-zinc-800">
-                <button
-                  onClick={() => {
-                    if (theme !== 'light') handleToggleTheme();
-                  }}
-                  className={`h-full text-xs font-sans font-medium flex items-center justify-center gap-1 transition-colors cursor-pointer ${
-                    theme === 'light'
-                      ? 'bg-white text-blue-600 font-bold shadow-2xs'
-                      : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100'
-                  }`}
-                >
-                  <Sun className="w-3 h-3 text-amber-500" />
-                  <span className="text-[11px]">{t(language, 'nav.themeLight')}</span>
-                </button>
-                <button
-                  onClick={() => {
-                    if (theme !== 'dark') handleToggleTheme();
-                  }}
-                  className={`h-full text-xs font-sans font-medium flex items-center justify-center gap-1 transition-colors cursor-pointer ${
-                    theme === 'dark'
-                      ? 'bg-zinc-800 text-cyan-300 font-bold shadow-2xs'
-                      : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100'
-                  }`}
-                >
-                  <Moon className="w-3 h-3 text-cyan-400" />
-                  <span className="text-[11px]">{t(language, 'nav.themeDark')}</span>
-                </button>
-              </div>
-            </div>
-
-            {/* SEÇÃO 4: EFEITOS SONOROS */}
-            <div className="flex items-center justify-between py-2 px-1 border-t border-slate-100 dark:border-zinc-800/80">
-              <span className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-zinc-400">
-                {soundEnabled ? (
-                  <Volume2 className="w-3.5 h-3.5 text-emerald-500" />
-                ) : (
-                  <VolumeX className="w-3.5 h-3.5 opacity-40" />
-                )}
-                <span>{t(language, 'nav.audioFx')}</span>
-              </span>
-
-              <button
-                type="button"
-                role="switch"
-                aria-checked={soundEnabled}
-                onClick={handleToggleSound}
-                className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full p-0.5 transition-colors duration-200 ease-in-out focus:outline-hidden ${
-                  soundEnabled ? 'bg-blue-600 dark:bg-emerald-500' : 'bg-slate-300 dark:bg-zinc-700'
+              {/* CARD 2: PREFERÊNCIAS DO SISTEMA (IDIOMA, APARÊNCIA, ÁUDIO) */}
+              <div
+                className={`p-3.5 rounded-2xl border space-y-1 ${
+                  theme === 'dark'
+                    ? 'bg-zinc-900/90 border-zinc-800 text-zinc-100 shadow-sm'
+                    : 'bg-white border-slate-200 text-slate-900 shadow-xs'
                 }`}
               >
-                <span
-                  className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out ${
-                    soundEnabled ? 'translate-x-4' : 'translate-x-0'
-                  }`}
-                />
-              </button>
-            </div>
+                {/* SEÇÃO: IDIOMA EM FORMATO SANFONA */}
+                <div className="border-t first:border-t-0 md:first:border-t border-slate-100 dark:border-zinc-800/80 py-1">
+                  <button
+                    type="button"
+                    onClick={() => setLangAccordionOpen((prev) => !prev)}
+                    className="w-full flex items-center justify-between py-2 px-1 rounded-lg hover:bg-slate-50 dark:hover:bg-zinc-800/50 transition-colors cursor-pointer select-none"
+                    aria-expanded={langAccordionOpen}
+                  >
+                    <span className="text-xs font-medium text-slate-600 dark:text-zinc-400">
+                      {t(language, 'nav.language')}
+                    </span>
 
-            {/* SEÇÃO 5: INSTALAR APLICATIVO (PWA) */}
-            <div className="pt-2 border-t border-slate-100 dark:border-zinc-800/80">
+                    <span className="flex items-center gap-1.5 font-sans text-xs font-semibold text-slate-800 dark:text-zinc-200">
+                      <span className="text-blue-600 dark:text-cyan-400 font-medium">
+                        {LOCALIZED_LANGUAGE_NAMES[language][language]}
+                      </span>
+                      <span className="text-[10px] font-mono opacity-60 uppercase px-1.5 py-0.5 rounded bg-slate-100 dark:bg-zinc-800">
+                        {language}
+                      </span>
+                      <ChevronDown
+                        className={`w-3.5 h-3.5 opacity-60 transition-transform duration-200 ${
+                          langAccordionOpen ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </span>
+                  </button>
+
+                  {/* CONTEÚDO EXPANSÍVEL DA SANFONA */}
+                  {langAccordionOpen && (
+                    <div className="mt-1 mb-2 p-1.5 rounded-xl border border-slate-200/90 dark:border-white/10 bg-slate-50 dark:bg-zinc-950/80 space-y-0.5 animate-in fade-in slide-in-from-top-2 duration-150 font-sans">
+                      {(['PT', 'EN', 'ES', 'FR'] as const).map((langCode) => {
+                        const isSelected = language === langCode;
+                        const label = LOCALIZED_LANGUAGE_NAMES[language][langCode];
+                        return (
+                          <button
+                            key={langCode}
+                            onClick={() => {
+                              handleToggleLanguage(langCode);
+                              setLangAccordionOpen(false);
+                            }}
+                            className={`w-full text-left px-3 py-2 rounded-lg text-xs font-medium transition-all flex items-center justify-between cursor-pointer ${
+                              isSelected
+                                ? 'bg-blue-600 text-white font-semibold shadow-xs'
+                                : 'text-slate-700 dark:text-zinc-300 hover:bg-slate-200/60 dark:hover:bg-zinc-800/70'
+                            }`}
+                          >
+                            <span className="tracking-tight">{label}</span>
+                            <span
+                              className={`text-[10px] font-mono uppercase px-1.5 py-0.5 rounded-md ${
+                                isSelected
+                                  ? 'bg-white/20 text-white'
+                                  : 'bg-slate-200 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400'
+                              }`}
+                            >
+                              {langCode}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                {/* SEÇÃO: APARÊNCIA COM CELESTIAL SWITCH */}
+                <div className="flex items-center justify-between py-2.5 px-1 border-t border-slate-100 dark:border-zinc-800/80">
+                  <span className="text-xs font-medium text-slate-600 dark:text-zinc-400">
+                    {t(language, 'nav.theme')}
+                  </span>
+
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={theme === 'dark'}
+                    onClick={handleToggleTheme}
+                    className={`relative inline-flex h-7 w-14 shrink-0 cursor-pointer items-center rounded-full p-0.5 border transition-colors duration-300 focus:outline-hidden ${
+                      theme === 'dark'
+                        ? 'bg-zinc-950 border-zinc-800 shadow-inner'
+                        : 'bg-slate-200/80 border-slate-300 shadow-inner'
+                    }`}
+                    aria-label={theme === 'dark' ? t(language, 'nav.themeDark') : t(language, 'nav.themeLight')}
+                  >
+                    <Sun className="w-3.5 h-3.5 text-amber-500/70 absolute left-1.5 pointer-events-none" />
+                    <Moon className="w-3.5 h-3.5 text-cyan-400/70 absolute right-1.5 pointer-events-none" />
+
+                    <span
+                      className={`pointer-events-none flex items-center justify-center h-6 w-6 transform rounded-full shadow-md transition-transform duration-300 ease-in-out z-10 ${
+                        theme === 'dark'
+                          ? 'translate-x-7 bg-zinc-900 text-cyan-300 border border-zinc-700/80'
+                          : 'translate-x-0 bg-white text-amber-500 border border-slate-200'
+                      }`}
+                    >
+                      {theme === 'dark' ? (
+                        <Moon className="w-3 h-3 fill-current" />
+                      ) : (
+                        <Sun className="w-3 h-3 fill-current" />
+                      )}
+                    </span>
+                  </button>
+                </div>
+
+                {/* SEÇÃO: EFEITOS SONOROS COM DUAL-ICON SWITCH */}
+                <div className="flex items-center justify-between py-2.5 px-1 border-t border-slate-100 dark:border-zinc-800/80">
+                  <span className="text-xs font-medium text-slate-600 dark:text-zinc-400">
+                    {t(language, 'nav.audioFx')}
+                  </span>
+
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={soundEnabled}
+                    onClick={handleToggleSound}
+                    className={`relative inline-flex h-7 w-14 shrink-0 cursor-pointer items-center rounded-full p-0.5 border transition-colors duration-300 focus:outline-hidden ${
+                      theme === 'dark'
+                        ? 'bg-zinc-950 border-zinc-800 shadow-inner'
+                        : 'bg-slate-200/80 border-slate-300 shadow-inner'
+                    }`}
+                    aria-label={t(language, 'nav.audioFx')}
+                  >
+                    <VolumeX className="w-3.5 h-3.5 text-rose-500/60 dark:text-rose-400/60 absolute left-1.5 pointer-events-none" />
+                    <Volume2 className="w-3.5 h-3.5 text-emerald-500/70 absolute right-1.5 pointer-events-none" />
+
+                    <span
+                      className={`pointer-events-none flex items-center justify-center h-6 w-6 transform rounded-full shadow-md transition-transform duration-300 ease-in-out z-10 ${
+                        soundEnabled
+                          ? theme === 'dark'
+                            ? 'translate-x-7 bg-zinc-900 text-emerald-400 border border-zinc-700/80'
+                            : 'translate-x-7 bg-white text-emerald-600 border border-slate-200'
+                          : theme === 'dark'
+                          ? 'translate-x-0 bg-zinc-900 text-rose-400 border border-zinc-700/80'
+                          : 'translate-x-0 bg-white text-rose-600 border border-slate-200'
+                      }`}
+                    >
+                      {soundEnabled ? (
+                        <Volume2 className="w-3 h-3 fill-current" />
+                      ) : (
+                        <VolumeX className="w-3 h-3 fill-current" />
+                      )}
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              {/* CARD 3: APLICATIVO STANDALONE / PWA (AJUSTE FINO PADRÃO APP STORE) */}
               <button
                 type="button"
                 disabled={isInstalled}
                 onClick={async () => {
                   if (isInstalled) return;
-                  if (isIOS) {
-                    setShowIOSGuide(true);
-                    return;
+                  if (isInstallable && !isIOS) {
+                    const ok = await install();
+                    if (ok) return;
                   }
-                  if (isInstallable) {
-                    await install();
-                  } else {
-                    window.alert(t(language, 'pwa.manualNotice'));
-                  }
+                  setShowInstallGuide(true);
                 }}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl border text-xs transition-colors cursor-pointer ${
+                className={`w-full flex items-center justify-between p-3.5 sm:p-4 rounded-2xl border transition-all cursor-pointer group ${
                   isInstalled
-                    ? 'opacity-60 cursor-default bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
+                    ? 'opacity-85 cursor-default bg-zinc-900/60 border-zinc-800/80 text-zinc-200'
                     : theme === 'dark'
-                    ? 'bg-zinc-950/60 hover:bg-zinc-800/60 text-zinc-300 border-zinc-800'
-                    : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
+                    ? 'bg-zinc-900/90 hover:bg-zinc-800/90 border-zinc-800 text-zinc-200 hover:border-zinc-700 shadow-sm'
+                    : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-800 hover:border-slate-300 shadow-xs'
                 }`}
               >
-                <span className="flex items-center gap-2">
+                <div className="flex items-center gap-3.5 text-left min-w-0 pr-2">
+                  {/* ÍCONE DO APP SQUIRCLE ESTILO IOS/MACOS (FUNDO AZUL INTEGRADO) */}
+                  <div className="w-11 h-11 rounded-2xl overflow-hidden shrink-0 shadow-md shadow-blue-600/20 ring-1 ring-black/10 dark:ring-white/15 bg-[#2072e7] flex items-center justify-center">
+                    <img
+                      src={`${import.meta.env.BASE_URL}icon.svg`}
+                      alt="App Icon"
+                      width={44}
+                      height={44}
+                      className="w-full h-full object-cover scale-110"
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-semibold text-slate-900 dark:text-zinc-100 truncate leading-snug">
+                      {isInstalled ? t(language, 'nav.appInstalled') : t(language, 'pwa.installActionTitle')}
+                    </div>
+                    <div className="text-xs text-slate-500 dark:text-zinc-400 truncate mt-0.5">
+                      {isInstalled ? t(language, 'pwa.cardSubtitleInstalled') : t(language, 'pwa.cardSubtitle')}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="shrink-0">
                   {isInstalled ? (
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                  ) : isIOS ? (
-                    <Smartphone className="w-3.5 h-3.5 text-emerald-500" />
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      <span>{t(language, 'pwa.statusBadgeInstalled')}</span>
+                    </span>
                   ) : (
-                    <DownloadCloud className="w-3.5 h-3.5 text-emerald-500" />
+                    <span className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-sm transition-all group-hover:scale-105 active:scale-95">
+                      {t(language, 'pwa.statusBadge')}
+                    </span>
                   )}
-                  <span className="font-medium text-[11px]">
-                    {isInstalled ? t(language, 'nav.appInstalled') : t(language, 'nav.installApp')}
-                  </span>
-                </span>
-                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-200/80 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400">
-                  {isInstalled ? 'OFFLINE' : 'PWA'}
-                </span>
+                </div>
               </button>
             </div>
           </div>
@@ -654,7 +792,15 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                   className={`segmented-btn ${isActive ? 'segmented-btn-active' : ''}`}
                 >
                   <span className="opt-mono">
-                    {language === 'PT' ? lens.shortLabelPT : lens.shortLabelEN}
+                    {lensKey === 'ALL'
+                      ? t(language, 'lens.all')
+                      : lensKey === 'ARCHITECTURE'
+                      ? t(language, 'lens.architecture')
+                      : lensKey === 'DATA'
+                      ? t(language, 'lens.data')
+                      : lensKey === 'SOFTWARE_ENG'
+                      ? t(language, 'lens.software')
+                      : t(language, 'lens.database')}
                   </span>
                 </button>
               );
@@ -677,7 +823,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                 type="button"
                 onClick={() => updateState({ searchTerm: '' })}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 dark:text-zinc-500 dark:hover:text-zinc-200 cursor-pointer"
-                aria-label="Limpar busca"
+                aria-label={t(language, "nav.clearSearch")}
               >
                 <X className="w-3 h-3" />
               </button>
@@ -721,7 +867,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               : 'opacity-0 scale-50 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto delay-150 group-hover:delay-0'
           } ${
             theme === 'dark'
-              ? 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-500 hover:scale-110 shadow-black/80'
+              ? 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-700 hover:scale-110 shadow-md shadow-black/50'
               : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300 hover:scale-110 shadow-slate-400/30'
           }`}
         >
@@ -747,7 +893,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               : 'opacity-0 scale-50 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto delay-150 group-hover:delay-50'
           } ${
             theme === 'dark'
-              ? 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:text-blue-400 hover:border-blue-500/50 hover:scale-110 shadow-black/80'
+              ? 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:text-blue-400 hover:border-blue-500/50 hover:scale-110 shadow-md shadow-black/50'
               : 'bg-white border-slate-200 text-slate-700 hover:text-blue-600 hover:border-blue-400 hover:scale-110 shadow-slate-400/30'
           }`}
         >
@@ -778,7 +924,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               : 'opacity-0 scale-50 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto delay-150 group-hover:delay-100'
           } ${
             theme === 'dark'
-              ? 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:text-amber-400 hover:border-amber-500/50 hover:scale-110 shadow-black/80'
+              ? 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:text-amber-400 hover:border-amber-500/50 hover:scale-110 shadow-md shadow-black/50'
               : 'bg-white border-slate-200 text-slate-700 hover:text-amber-600 hover:border-amber-400 hover:scale-110 shadow-slate-400/30'
           }`}
         >
@@ -809,7 +955,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               : 'opacity-0 scale-50 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto delay-150 group-hover:delay-150'
           } ${
             theme === 'dark'
-              ? 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:text-emerald-400 hover:border-emerald-500/50 hover:scale-110 shadow-black/80'
+              ? 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:text-emerald-400 hover:border-emerald-500/50 hover:scale-110 shadow-md shadow-black/50'
               : 'bg-white border-slate-200 text-slate-700 hover:text-emerald-600 hover:border-emerald-400 hover:scale-110 shadow-slate-400/30'
           }`}
         >
@@ -826,10 +972,10 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             setRadialOpen((prev) => !prev);
             play('click');
           }}
-          className={`relative w-20 h-20 rounded-full text-white shadow-2xl transition-all cursor-pointer border-2 flex flex-col items-center justify-center select-none ${
+          className={`relative w-19 h-19 sm:w-20 sm:h-20 rounded-full text-white shadow-xl shadow-black/50 hover:shadow-2xl hover:shadow-black/60 transition-all cursor-pointer border flex flex-col items-center justify-center select-none ${
             radialOpen
-              ? 'bg-blue-500 border-white ring-4 ring-blue-500/30 scale-105 shadow-blue-500/50'
-              : 'bg-blue-600 hover:bg-blue-500 border-blue-400/40 hover:scale-105 active:scale-95 shadow-blue-600/40 hover:shadow-blue-500/50'
+              ? 'bg-blue-700 border-white/80 ring-2 ring-blue-500/40 scale-105'
+              : 'bg-blue-600 hover:bg-blue-500 border-blue-400/30 hover:scale-105 active:scale-95'
           }`}
           aria-expanded={radialOpen}
           aria-label={language === 'PT' ? 'Contato' : language === 'ES' ? 'Contacto' : 'Contact'}
@@ -841,9 +987,9 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         </button>
       </div>
 
-      {/* GUIA PWA IOS */}
-      {showIOSGuide && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 font-sans">
+      {/* MODAL IN-APP DE INSTALAÇÃO DO PWA (SEM ALERT DO NAVEGADOR) */}
+      {showInstallGuide && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 font-sans animate-in fade-in duration-150">
           <div
             className={`w-full max-w-sm rounded-2xl p-5 shadow-2xl border ${
               theme === 'dark'
@@ -853,31 +999,47 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           >
             <div className="flex items-center justify-between pb-3 border-b dark:border-zinc-800 border-slate-200">
               <h3 className="text-sm font-bold flex items-center gap-2">
-                <Smartphone className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
-                <span>{t(language, 'pwa.iosTitle')}</span>
+                <DownloadCloud className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
+                <span>{isIOS ? t(language, 'pwa.iosTitle') : t(language, 'pwa.guideTitle')}</span>
               </h3>
               <button
-                onClick={() => setShowIOSGuide(false)}
-                className="p-1 rounded-lg hover:bg-zinc-800/40 text-zinc-400"
+                onClick={() => setShowInstallGuide(false)}
+                className="p-1 rounded-lg hover:bg-zinc-800/40 text-zinc-400 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <div className="mt-4 space-y-3 text-xs">
-              <div className="flex items-start gap-3 p-3 rounded-xl dark:bg-zinc-900/60 dark:border-zinc-800 bg-slate-50 border border-slate-200">
-                <Share className="w-4 h-4 text-blue-600 dark:text-cyan-400 shrink-0 mt-0.5" />
-                <div>{t(language, 'pwa.iosStep1')}</div>
-              </div>
+              {isIOS ? (
+                <>
+                  <div className="flex items-start gap-3 p-3 rounded-xl dark:bg-zinc-900/60 dark:border-zinc-800 bg-slate-50 border border-slate-200">
+                    <Share className="w-4 h-4 text-blue-600 dark:text-cyan-400 shrink-0 mt-0.5" />
+                    <div>{t(language, 'pwa.iosStep1')}</div>
+                  </div>
 
-              <div className="flex items-start gap-3 p-3 rounded-xl dark:bg-zinc-900/60 dark:border-zinc-800 bg-slate-50 border border-slate-200">
-                <PlusSquare className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                <div>{t(language, 'pwa.iosStep2')}</div>
-              </div>
+                  <div className="flex items-start gap-3 p-3 rounded-xl dark:bg-zinc-900/60 dark:border-zinc-800 bg-slate-50 border border-slate-200">
+                    <PlusSquare className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                    <div>{t(language, 'pwa.iosStep2')}</div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-start gap-3 p-3 rounded-xl dark:bg-zinc-900/60 dark:border-zinc-800 bg-slate-50 border border-slate-200">
+                    <DownloadCloud className="w-4 h-4 text-blue-600 dark:text-cyan-400 shrink-0 mt-0.5" />
+                    <div>{t(language, 'pwa.guideDesktopStep')}</div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3 rounded-xl dark:bg-zinc-900/60 dark:border-zinc-800 bg-slate-50 border border-slate-200">
+                    <Smartphone className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                    <div>{t(language, 'pwa.guideMobileStep')}</div>
+                  </div>
+                </>
+              )}
             </div>
 
             <button
-              onClick={() => setShowIOSGuide(false)}
+              onClick={() => setShowInstallGuide(false)}
               className="mt-5 w-full rounded-xl bg-blue-600 py-2.5 text-xs font-semibold text-white hover:bg-blue-500 transition-colors cursor-pointer"
             >
               {t(language, 'pwa.iosGotIt')}

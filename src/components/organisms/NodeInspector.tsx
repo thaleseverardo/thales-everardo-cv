@@ -99,21 +99,21 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
             <button
               onClick={() => onSelectNode(prevNode.id)}
               className="p-1.5 rounded hover:bg-zinc-800/40 text-zinc-400"
-              title="Previous"
+              title={t(language, 'inspector.prevNode')}
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={() => onSelectNode(nextNode.id)}
               className="p-1.5 rounded hover:bg-zinc-800/40 text-zinc-400"
-              title="Next"
+              title={t(language, 'inspector.nextNode')}
             >
               <ChevronRight className="w-4 h-4" />
             </button>
             <button
               onClick={onClose}
               className="p-1.5 rounded ml-2 hover:bg-zinc-800/40 text-zinc-400 hover:text-white"
-              title="Close (Esc)"
+              title={t(language, 'inspector.closeEsc')}
             >
               <X className="w-5 h-5" />
             </button>

@@ -58,7 +58,7 @@ export const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ language, th
         setVisible(false);
       }
     } else {
-      window.alert(t(language, 'pwa.manualNotice'));
+      setShowIOSGuide(true);
     }
   };
 

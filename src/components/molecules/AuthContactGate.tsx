@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Copy, Check, Mail, Phone, Lock, ShieldCheck, LogOut } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { AppLanguage, AppTheme } from '../../types';
+import { t } from '../../i18n/translations';
 
 interface AuthContactGateProps {
   language: AppLanguage;
@@ -9,10 +10,9 @@ interface AuthContactGateProps {
 }
 
 export const AuthContactGate: React.FC<AuthContactGateProps> = ({ language, theme }) => {
-  const { isAuthenticated, user, contact, signInWithGoogle, signOut } = useAuth();
+  const { isAuthenticated, contact, signInWithGoogle, signOut } = useAuth();
   const [copiedField, setCopiedField] = useState<'email' | 'phone' | null>(null);
 
-  const isPT = language === 'PT';
   const email = contact?.email || '';
   const phone = contact?.phone || '';
 
@@ -37,7 +37,7 @@ export const AuthContactGate: React.FC<AuthContactGateProps> = ({ language, them
             <div className="min-w-0">
               <div className="text-[10px] font-mono uppercase font-bold tracking-wider flex items-center gap-1.5 opacity-60">
                 <Mail className="w-3 h-3" />
-                <span>{isPT ? 'E-mail Direto' : 'Direct Email'}</span>
+                <span>{t(language, 'gate.directEmail')}</span>
               </div>
               <div className="text-xs font-mono tracking-widest mt-1 opacity-50 flex items-center gap-1.5">
                 <Lock className="w-3 h-3 text-amber-500 shrink-0" />
@@ -45,7 +45,7 @@ export const AuthContactGate: React.FC<AuthContactGateProps> = ({ language, them
               </div>
             </div>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 font-bold shrink-0">
-              {isPT ? 'Protegido' : 'Protected'}
+              {t(language, 'gate.protected')}
             </span>
           </div>
 
@@ -59,7 +59,7 @@ export const AuthContactGate: React.FC<AuthContactGateProps> = ({ language, them
             <div className="min-w-0">
               <div className="text-[10px] font-mono uppercase font-bold tracking-wider flex items-center gap-1.5 opacity-60">
                 <Phone className="w-3 h-3" />
-                <span>{isPT ? 'Telefone / WhatsApp' : 'Phone / WhatsApp'}</span>
+                <span>{t(language, 'gate.phoneWhatsApp')}</span>
               </div>
               <div className="text-xs font-mono tracking-widest mt-1 opacity-50 flex items-center gap-1.5">
                 <Lock className="w-3 h-3 text-amber-500 shrink-0" />
@@ -67,7 +67,7 @@ export const AuthContactGate: React.FC<AuthContactGateProps> = ({ language, them
               </div>
             </div>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 font-bold shrink-0">
-              {isPT ? 'Protegido' : 'Protected'}
+              {t(language, 'gate.protected')}
             </span>
           </div>
         </div>
@@ -82,12 +82,10 @@ export const AuthContactGate: React.FC<AuthContactGateProps> = ({ language, them
           <div className="space-y-0.5 text-xs">
             <div className="font-mono font-bold flex items-center gap-1.5 text-zinc-900 dark:text-zinc-100">
               <ShieldCheck className="w-4 h-4 text-emerald-500" />
-              <span>{isPT ? 'Proteção ativa contra robôs e spammers' : 'Anti-bot verification active'}</span>
+              <span>{t(language, 'gate.antiBotTitle')}</span>
             </div>
             <p className="text-[11px] opacity-70 font-sans">
-              {isPT
-                ? 'Toque para verificar e liberar os contatos diretos.'
-                : 'Tap to verify and unlock verified direct contacts.'}
+              {t(language, 'gate.antiBotDesc')}
             </p>
           </div>
 
@@ -97,7 +95,7 @@ export const AuthContactGate: React.FC<AuthContactGateProps> = ({ language, them
             className="h-9 px-4 rounded-lg text-xs font-mono font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-xs transition-colors shrink-0 flex items-center justify-center gap-2 cursor-pointer"
           >
             <ShieldCheck className="w-4 h-4" />
-            <span>{isPT ? 'Desbloquear Contatos' : 'Unlock Contacts'}</span>
+            <span>{t(language, 'gate.unlockContacts')}</span>
           </button>
         </div>
       </div>
@@ -118,7 +116,7 @@ export const AuthContactGate: React.FC<AuthContactGateProps> = ({ language, them
           <div className="min-w-0 pr-2">
             <div className="text-[10px] font-mono opacity-50 uppercase font-bold tracking-wider flex items-center gap-1.5">
               <Mail className="w-3 h-3 text-blue-600 dark:text-cyan-400" />
-              <span>{isPT ? 'E-mail Direto' : 'Direct Email'}</span>
+              <span>{t(language, 'gate.directEmail')}</span>
             </div>
             <a
               href={`mailto:${email}`}
@@ -135,7 +133,7 @@ export const AuthContactGate: React.FC<AuthContactGateProps> = ({ language, them
                 ? 'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-200'
                 : 'bg-white hover:bg-slate-100 border-slate-300 text-slate-800 shadow-2xs'
             }`}
-            title={isPT ? 'Copiar e-mail' : 'Copy email'}
+            title={t(language, 'gate.copyEmail')}
           >
             {copiedField === 'email' ? (
               <Check className="w-3.5 h-3.5 text-emerald-500" />
@@ -156,7 +154,7 @@ export const AuthContactGate: React.FC<AuthContactGateProps> = ({ language, them
           <div className="min-w-0 pr-2">
             <div className="text-[10px] font-mono opacity-50 uppercase font-bold tracking-wider flex items-center gap-1.5">
               <Phone className="w-3 h-3 text-emerald-500" />
-              <span>{isPT ? 'Telefone / WhatsApp' : 'Phone / WhatsApp'}</span>
+              <span>{t(language, 'gate.phoneWhatsApp')}</span>
             </div>
             <a
               href={`https://wa.me/${phone.replace(/[^0-9]/g, '')}`}
@@ -175,7 +173,7 @@ export const AuthContactGate: React.FC<AuthContactGateProps> = ({ language, them
                 ? 'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-200'
                 : 'bg-white hover:bg-slate-100 border-slate-300 text-slate-800 shadow-2xs'
             }`}
-            title={isPT ? 'Copiar telefone' : 'Copy phone'}
+            title={t(language, 'gate.copyPhone')}
           >
             {copiedField === 'phone' ? (
               <Check className="w-3.5 h-3.5 text-emerald-500" />
@@ -188,7 +186,7 @@ export const AuthContactGate: React.FC<AuthContactGateProps> = ({ language, them
 
       <div className="flex items-center justify-between px-1 text-[11px] font-mono opacity-60 pt-1">
         <span className="truncate">
-          {isPT ? 'Acesso Verificado' : 'Verified Session'}
+          {t(language, 'gate.verifiedSession')}
         </span>
         <button
           type="button"
@@ -196,7 +194,7 @@ export const AuthContactGate: React.FC<AuthContactGateProps> = ({ language, them
           className="hover:underline text-rose-500 flex items-center gap-1 shrink-0 ml-2 cursor-pointer"
         >
           <LogOut className="w-3 h-3" />
-          <span>{isPT ? 'Bloquear' : 'Lock'}</span>
+          <span>{t(language, 'gate.lockContacts')}</span>
         </button>
       </div>
     </div>

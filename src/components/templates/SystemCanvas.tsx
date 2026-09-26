@@ -11,6 +11,7 @@ import { SystemState, NodeVisualShape } from '../../types';
 import { CURRICULUM_NODES } from '../../data/curriculumData';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
 import { isNodeActiveInFilter } from '../../utils/filterUtils';
+import { t, getNodeContent } from '../../i18n/translations';
 
 interface SystemCanvasProps {
   systemState: SystemState;
@@ -248,18 +249,16 @@ export const SystemCanvas: React.FC<SystemCanvasProps> = ({
             }`}
           >
             <p className="font-mono text-sm font-bold">
-              {isPT ? 'Nenhum subsistema correspondente.' : 'No subsystems matching current filters.'}
+              {t(language, 'canvas.emptyTitle')}
             </p>
             <p className="text-xs opacity-75 mt-1 font-sans">
-              {isPT
-                ? `Nenhum nó foi encontrado para "${searchTerm}".`
-                : `No architectural node matched "${searchTerm}".`}
+              {t(language, 'canvas.emptyDesc')}
             </p>
             <button
               onClick={() => updateState({ searchTerm: '', profileLens: 'ALL', selectedTag: null })}
               className="mt-4 px-3.5 py-1.5 rounded-md font-mono text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white transition-colors"
             >
-              {isPT ? 'Limpar Filtros' : 'Reset Filters'}
+              {t(language, 'canvas.resetFilters')}
             </button>
           </div>
         </div>
@@ -270,7 +269,7 @@ export const SystemCanvas: React.FC<SystemCanvasProps> = ({
         style={{ minHeight: `${containerSize.height}px` }}
       >
         <h2 className="sr-only">
-          {isPT ? "Mapa de Arquitetura de Subsistemas Distribuídos" : "Distributed Architecture Subsystems Map"}
+          {t(language, 'canvas.mapSrOnly')}
         </h2>
         {CURRICULUM_NODES.map((node) => {
           const coords = nodeCoordinates[node.id];
@@ -278,11 +277,10 @@ export const SystemCanvas: React.FC<SystemCanvasProps> = ({
 
           const isMatching = isNodeActiveInFilter(node, profileLens, searchTerm, selectedTag, language);
           const isSelected = activeNodeId === node.id;
-          const trans = isPT ? node.pt : null;
-
-          const shortTitle = trans ? trans.shortTitle : node.shortTitle;
-          const role = trans ? trans.role : node.role;
-          const metricHighlight = trans ? trans.metricHighlight : node.metricHighlight;
+          const content = getNodeContent(node, language);
+          const shortTitle = content.shortTitle;
+          const role = content.role;
+          const metricHighlight = content.metricHighlight;
 
           return (
             <div
@@ -290,7 +288,7 @@ export const SystemCanvas: React.FC<SystemCanvasProps> = ({
               role="button"
               tabIndex={0}
               aria-haspopup="dialog"
-              aria-label={`${shortTitle}, ${node.company}. ${metricHighlight}. ${isPT ? "Pressione Enter para inspecionar." : "Press Enter to inspect."}`}
+              aria-label={`${shortTitle}, ${node.company}. ${metricHighlight}. ${t(language, "canvas.inspectPressEnter")}`}
               style={{
                 left: `${coords.x}px`,
                 top: `${coords.y}px`,
@@ -356,7 +354,7 @@ export const SystemCanvas: React.FC<SystemCanvasProps> = ({
                     {node.technologies.slice(0, 2).join(' · ')}
                   </span>
                   <span className="font-bold flex items-center gap-1 text-blue-600 dark:text-cyan-400 shrink-0">
-                    <span>{isPT ? 'DETALHES' : 'INSPECT'}</span>
+                    <span>{t(language, 'canvas.inspect')}</span>
                     <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                   </span>
                 </div>

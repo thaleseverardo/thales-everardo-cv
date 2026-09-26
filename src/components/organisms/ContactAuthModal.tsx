@@ -37,6 +37,16 @@ const GoogleLogo = () => (
   </svg>
 );
 
+const GithubLogo = () => (
+  <svg className="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+    />
+  </svg>
+);
+
 export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
   isOpen,
   onClose,
@@ -45,7 +55,7 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
   theme,
   soundEnabled,
 }) => {
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, signInWithGithub } = useAuth();
   const { play } = useSoundEffects(soundEnabled);
 
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
@@ -67,7 +77,30 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
     } catch (err: unknown) {
       const error = err as { code?: string; message?: string };
       if (error?.code === 'auth/popup-closed-by-user') return;
-      setErrorMsg('Falha ao autenticar com o Google. Tente novamente.');
+      if (error?.code === 'auth/account-exists-with-different-credential') {
+        setErrorMsg(t(language, 'auth.errorAccountExists'));
+      } else {
+        setErrorMsg(t(language, 'auth.errorGoogle'));
+      }
+      play('alert');
+    }
+  };
+
+  const handleGithubLogin = async () => {
+    try {
+      setErrorMsg(null);
+      await signInWithGithub();
+      play('success');
+      onSuccess?.();
+      onClose();
+    } catch (err: unknown) {
+      const error = err as { code?: string; message?: string };
+      if (error?.code === 'auth/popup-closed-by-user') return;
+      if (error?.code === 'auth/account-exists-with-different-credential') {
+        setErrorMsg(t(language, 'auth.errorAccountExists'));
+      } else {
+        setErrorMsg(t(language, 'auth.errorGeneric'));
+      }
       play('alert');
     }
   };
@@ -91,17 +124,17 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
     } catch (err: unknown) {
       const error = err as { code?: string; message?: string };
       if (error?.code === 'auth/wrong-password' || error?.code === 'auth/invalid-credential') {
-        setErrorMsg('E-mail ou senha incorretos.');
+        setErrorMsg(t(language, 'auth.errorWrongPassword'));
       } else if (error?.code === 'auth/user-not-found') {
-        setErrorMsg('Conta não encontrada. Crie sua conta abaixo.');
+        setErrorMsg(t(language, 'auth.errorUserNotFound'));
       } else if (error?.code === 'auth/email-already-in-use') {
-        setErrorMsg('Este e-mail já está cadastrado. Alterne para Entrar.');
+        setErrorMsg(t(language, 'auth.errorEmailInUse'));
       } else if (error?.code === 'auth/weak-password') {
-        setErrorMsg('A senha precisa ter no mínimo 6 caracteres com letras e números.');
+        setErrorMsg(t(language, 'auth.errorWeakPassword'));
       } else if (error?.code === 'auth/invalid-email') {
-        setErrorMsg('Por favor, informe um endereço de e-mail válido.');
+        setErrorMsg(t(language, 'auth.errorInvalidEmail'));
       } else {
-        setErrorMsg(error?.message || 'Não foi possível concluir a autenticação.');
+        setErrorMsg(t(language, 'auth.errorGeneric'));
       }
       play('alert');
     } finally {
@@ -130,7 +163,7 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
           <button
             onClick={onClose}
             className="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 dark:text-zinc-500 dark:hover:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
-            aria-label="Fechar"
+            aria-label={t(language, 'auth.close')}
           >
             <X className="w-4 h-4" />
           </button>
@@ -163,19 +196,34 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
             </div>
           )}
 
-          {/* BOTÃO GOOGLE OFICIAL */}
-          <button
-            type="button"
-            onClick={handleGoogleLogin}
-            className={`w-full h-11 px-4 rounded-xl border font-medium text-xs sm:text-sm transition-all flex items-center justify-center gap-3 cursor-pointer shadow-2xs ${
-              theme === 'dark'
-                ? 'bg-zinc-800/90 hover:bg-zinc-800 border-zinc-700 text-zinc-100 hover:border-zinc-600'
-                : 'bg-white hover:bg-slate-50 border-slate-300 text-slate-700 hover:border-slate-400'
-            }`}
-          >
-            <GoogleLogo />
-            <span>{t(language, 'auth.continueWithGoogle')}</span>
-          </button>
+          {/* BOTÕES SOCIAIS DE 1 CLIQUE (GOOGLE & GITHUB) */}
+          <div className="space-y-2">
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              className={`w-full h-10.5 px-4 rounded-xl border font-medium text-xs sm:text-sm transition-all flex items-center justify-center gap-3 cursor-pointer shadow-2xs ${
+                theme === 'dark'
+                  ? 'bg-zinc-800/90 hover:bg-zinc-800 border-zinc-700 text-zinc-100 hover:border-zinc-600'
+                  : 'bg-white hover:bg-slate-50 border-slate-300 text-slate-700 hover:border-slate-400'
+              }`}
+            >
+              <GoogleLogo />
+              <span>{t(language, 'auth.continueWithGoogle')}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleGithubLogin}
+              className={`w-full h-10.5 px-4 rounded-xl border font-medium text-xs sm:text-sm transition-all flex items-center justify-center gap-3 cursor-pointer shadow-2xs ${
+                theme === 'dark'
+                  ? 'bg-zinc-800/90 hover:bg-zinc-800 border-zinc-700 text-zinc-100 hover:border-zinc-600'
+                  : 'bg-white hover:bg-slate-50 border-slate-300 text-slate-700 hover:border-slate-400'
+              }`}
+            >
+              <GithubLogo />
+              <span>{t(language, 'auth.continueWithGithub')}</span>
+            </button>
+          </div>
 
           {/* DIVISOR DISCRETO */}
           <div className="relative flex items-center justify-center my-3">
@@ -185,11 +233,11 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
                 theme === 'dark' ? 'bg-zinc-900 text-zinc-500' : 'bg-white text-slate-400'
               }`}
             >
-              {t(language, 'auth.orEmail')}
+              {t(language, 'auth.orEmailPassword')}
             </span>
           </div>
 
-          {/* FORMULÁRIO DE EMAIL / SENHA */}
+          {/* FORMULÁRIO DE E-MAIL E SENHA */}
           <form onSubmit={handleEmailAuth} className="space-y-3">
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-zinc-300 mb-1">
@@ -239,7 +287,7 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-zinc-500 dark:hover:text-zinc-300 cursor-pointer"
                   tabIndex={-1}
-                  aria-label={showPassword ? 'Ocultar senha' : 'Ver senha'}
+                  aria-label={showPassword ? t(language, 'auth.hidePassword') : t(language, 'auth.showPassword')}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -256,7 +304,7 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
             </button>
           </form>
 
-          {/* ALTERNADOR DE MODO */}
+          {/* ALTERNADOR DE MODO (ENTRAR / CRIAR CONTA) */}
           <div className="text-center pt-2">
             <button
               type="button"

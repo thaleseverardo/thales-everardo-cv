@@ -98,7 +98,7 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({ language, th
   return (
     <button
       onClick={() => {
-        window.alert(t(language, 'pwa.manualNotice'));
+        setShowIOSGuide(true);
       }}
       className={`hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-md font-mono text-xs font-semibold transition-all ${
         theme === 'dark'

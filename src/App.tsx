@@ -31,6 +31,7 @@ function applyThemeDOM(theme: AppTheme) {
 import { CURRICULUM_NODES } from './data/curriculumData';
 import { getStoredPreferences, updateStoredPreferences } from './utils/storageUtils';
 import { detectLocalLanguage, BCP47_TAGS } from './utils/geoLanguageUtils';
+import { t } from './i18n/translations';
 
 function getInitialTheme(): AppTheme {
   if (typeof window === 'undefined') return 'light';
@@ -126,7 +127,7 @@ export default function App() {
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:font-mono focus:text-xs focus:rounded-md focus:shadow-xl focus:outline-hidden"
       >
-        {systemState.language === 'PT' ? 'Pular para o conteúdo principal' : systemState.language === 'ES' ? 'Saltar al contenido principal' : systemState.language === 'FR' ? 'Passer au contenu principal' : 'Skip to main content'}
+        {t(systemState.language, 'nav.skipContent')}
       </a>
 
       <OfflineIndicator language={systemState.language} theme={systemState.theme} />

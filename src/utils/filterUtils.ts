@@ -1,4 +1,5 @@
 import { ArchitectureNode, ProfileLens, AppLanguage } from '../types';
+import { getNodeContent } from '../i18n/translations';
 
 /**
  * Normalizes text for case-insensitive, diacritic-agnostic searching.
@@ -41,14 +42,12 @@ export function isNodeMatchingSearch(
 ): boolean {
   if (!searchQuery || !searchQuery.trim()) return true;
   const q = normalizeSearchString(searchQuery);
-  const isPT = language === 'PT';
-
-  const trans = isPT ? node.pt : null;
-  const title = normalizeSearchString(trans?.shortTitle || node.shortTitle);
-  const role = normalizeSearchString(trans?.role || node.role);
+  const content = getNodeContent(node, language);
+  const title = normalizeSearchString(content.shortTitle);
+  const role = normalizeSearchString(content.role);
   const company = normalizeSearchString(node.company);
-  const feat = normalizeSearchString(trans?.engineeringFeat || node.engineeringFeat);
-  const bValue = normalizeSearchString(trans?.businessValue || node.businessValue);
+  const feat = normalizeSearchString(content.engineeringFeat);
+  const bValue = normalizeSearchString(content.businessValue);
   const layer = normalizeSearchString(node.layer);
   const techs = node.technologies.map((t) => normalizeSearchString(t)).join(' ');
 
