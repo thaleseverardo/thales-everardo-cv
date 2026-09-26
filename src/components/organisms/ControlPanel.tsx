@@ -678,7 +678,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                 </div>
               </div>
 
-              {/* CARD 3: APLICATIVO STANDALONE / PWA (AJUSTE FINO PADRÃO APP STORE) */}
+              {/* CARD 3: APLICATIVO STANDALONE / PWA (AJUSTE FINO COMERCIAL AAA) */}
               <button
                 type="button"
                 disabled={isInstalled}
@@ -692,15 +692,17 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                 }}
                 className={`w-full flex items-center justify-between p-3.5 sm:p-4 rounded-2xl border transition-all cursor-pointer group ${
                   isInstalled
-                    ? 'opacity-85 cursor-default bg-zinc-900/60 border-zinc-800/80 text-zinc-200'
+                    ? theme === 'dark'
+                      ? 'opacity-90 cursor-default bg-zinc-900/90 border-zinc-800 text-zinc-100 shadow-sm'
+                      : 'opacity-95 cursor-default bg-white border-slate-200 text-slate-900 shadow-xs'
                     : theme === 'dark'
-                    ? 'bg-zinc-900/90 hover:bg-zinc-800/90 border-zinc-800 text-zinc-200 hover:border-zinc-700 shadow-sm'
-                    : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-800 hover:border-slate-300 shadow-xs'
+                    ? 'bg-zinc-900/90 hover:bg-zinc-800/90 border-zinc-800 text-zinc-100 hover:border-zinc-700 shadow-sm'
+                    : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-900 hover:border-slate-300 shadow-xs'
                 }`}
               >
                 <div className="flex items-center gap-3.5 text-left min-w-0 pr-2">
-                  {/* ÍCONE DO APP SQUIRCLE ESTILO IOS/MACOS (FUNDO AZUL INTEGRADO) */}
-                  <div className="w-11 h-11 rounded-2xl overflow-hidden shrink-0 shadow-md shadow-blue-600/20 ring-1 ring-black/10 dark:ring-white/15 bg-[#2072e7] flex items-center justify-center">
+                  {/* ÍCONE SQUIRCLE DO APP (AZUL NATIVO #2072e7) */}
+                  <div className="w-11 h-11 rounded-2xl overflow-hidden shrink-0 shadow-md shadow-blue-600/15 ring-1 ring-black/5 dark:ring-white/15 bg-[#2072e7] flex items-center justify-center">
                     <img
                       src={`${import.meta.env.BASE_URL}icon.svg`}
                       alt="App Icon"
@@ -721,8 +723,8 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
 
                 <div className="shrink-0">
                   {isInstalled ? (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/25">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                       <span>{t(language, 'pwa.statusBadgeInstalled')}</span>
                     </span>
                   ) : (

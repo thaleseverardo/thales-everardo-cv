@@ -24,7 +24,7 @@ export const TRANSLATIONS = {
     'nav.verifiedSession': 'Sessão verificada',
     'nav.unlockContactsHint': 'Libera e-mail e telefone para contato direto',
     'nav.installApp': 'Instalar aplicativo',
-    'nav.appInstalled': 'PWA Instalado (Offline)',
+    'nav.appInstalled': 'Aplicativo Instalado',
     'nav.skipContent': 'Pular para o conteúdo principal',
     'nav.clearSearch': 'Limpar busca',
 
@@ -224,7 +224,7 @@ export const TRANSLATIONS = {
     'nav.verifiedSession': 'Signed In',
     'nav.unlockContactsHint': 'Unlocks direct email and phone number',
     'nav.installApp': 'Install application',
-    'nav.appInstalled': 'PWA Installed (Offline)',
+    'nav.appInstalled': 'Application Installed',
     'nav.skipContent': 'Skip to main content',
     'nav.clearSearch': 'Clear search',
 
@@ -415,7 +415,7 @@ export const TRANSLATIONS = {
     'nav.verifiedSession': 'Sesión verificada',
     'nav.unlockContactsHint': 'Desbloquea correo y teléfono de contacto directo',
     'nav.installApp': 'Instalar aplicación',
-    'nav.appInstalled': 'PWA Instalada (Offline)',
+    'nav.appInstalled': 'Aplicación Instalada',
     'nav.skipContent': 'Saltar al contenido principal',
     'nav.clearSearch': 'Limpiar búsqueda',
 
@@ -606,7 +606,7 @@ export const TRANSLATIONS = {
     'nav.verifiedSession': 'Session vérifiée',
     'nav.unlockContactsHint': 'Débloque e-mail et numéro de téléphone direct',
     'nav.installApp': "Installer l'application",
-    'nav.appInstalled': 'PWA Installée (Offline)',
+    'nav.appInstalled': 'Application Installée',
     'nav.skipContent': 'Passer au contenu principal',
     'nav.clearSearch': 'Effacer la recherche',
 
