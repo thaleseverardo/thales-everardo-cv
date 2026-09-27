@@ -68,7 +68,6 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
     });
   };
 
-  // No desktop, clicar fora da barra fecha o overlay de forma fluida
   useEffect(() => {
     if (isCollapsed) return;
 
@@ -89,9 +88,6 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
 
   const handleNavItemClick = (id: ViewLayout) => {
     onSelectView(id);
-
-    // No mobile (< 768px), recolhe o menu para liberar o espaço na tela
-    // No desktop (>= 768px), PERMANECE ABERTO, respeitando a experiência do usuário!
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
       setIsCollapsed(true);
     }
@@ -99,7 +95,6 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
 
   return (
     <>
-      {/* BACKDROP ESCURECIDO EXCLUSIVO PARA O MOBILE */}
       {!isCollapsed && (
         <div
           className="md:hidden fixed inset-0 z-35 bg-black/50 backdrop-blur-2xs transition-opacity animate-in fade-in duration-150"
@@ -108,22 +103,46 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
         />
       )}
 
-      {/* BARRA LATERAL FIXADA NO VIEWPORT */}
+      {/* SIDEBAR NATIVA DE ALTA PRECISÃO - SEM OVERFLOW, SEM BORDAS AZUIS E SEM VAZAMENTO DE SCROLLBAR */}
       <aside
         ref={sidebarRef}
         aria-label="Navegação de Vistas"
-        className={`fixed left-0 top-16 md:top-18 bottom-12 select-none transition-all duration-200 ease-in-out flex flex-col justify-between print:hidden border-r z-40 overflow-hidden ${
+        className={`relative shrink-0 h-full select-none transition-all duration-200 ease-in-out flex flex-col print:hidden border-r z-30 overflow-hidden ${
           isCollapsed
             ? 'w-14 sm:w-16 shadow-none'
-            : 'w-60 sm:w-64 shadow-2xl shadow-black/80'
+            : 'w-60 sm:w-64 shadow-xl'
         } ${
           theme === 'dark'
-            ? 'bg-[#09090b]/95 border-zinc-800/80 text-zinc-100 backdrop-blur-xl'
-            : 'bg-white/95 border-slate-200 text-slate-900 backdrop-blur-xl'
+            ? 'bg-[#09090b] border-zinc-800/80 text-zinc-100'
+            : 'bg-white border-slate-200 text-slate-900'
         }`}
       >
-        {/* NAVEGAÇÃO DE ÍCONES SUPERIOR */}
-        <div className="p-2 sm:p-2.5 space-y-2 pt-3.5">
+        {/* TOPO: TOGGLE MINIMALISTA INTEGRADO (SEM BORDAS AZUIS OU ANÉIS VAZADOS) */}
+        <div className="h-12 px-2.5 border-b border-slate-100 dark:border-zinc-800/60 flex items-center justify-between shrink-0">
+          {!isCollapsed && (
+            <span className="px-2 text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-400 dark:text-zinc-500 truncate">
+              {t(language, 'nav.tools')}
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={toggleCollapse}
+            className={`flex items-center justify-center rounded-lg transition-colors cursor-pointer text-slate-400 hover:text-slate-700 dark:text-zinc-500 dark:hover:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800/60 focus:outline-none ${
+              isCollapsed ? 'w-9 h-9 mx-auto' : 'w-7 h-7 ml-auto'
+            }`}
+            title={isCollapsed ? t(language, 'sidebar.expand') : t(language, 'sidebar.collapse')}
+            aria-label={isCollapsed ? t(language, 'sidebar.expand') : t(language, 'sidebar.collapse')}
+          >
+            {isCollapsed ? (
+              <ChevronRight className="w-4 h-4 shrink-0" />
+            ) : (
+              <ChevronLeft className="w-4 h-4 shrink-0" />
+            )}
+          </button>
+        </div>
+
+        {/* NAVEGAÇÃO DE ÍCONES (COM OVERFLOW-X BLOQUEADO - EXTINÇÃO DO SCROLLBAR ◄ ▬ ►) */}
+        <div className="p-2 sm:p-2.5 space-y-1.5 pt-3 flex-1 overflow-y-auto overflow-x-hidden">
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
             const isActive = viewLayout === item.id;
@@ -136,7 +155,8 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
                 type="button"
                 onClick={() => handleNavItemClick(item.id)}
                 aria-current={isActive ? 'page' : undefined}
-                className={`relative group flex items-center transition-all duration-150 cursor-pointer font-sans outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:focus-visible:ring-cyan-400 ${
+                title={isCollapsed ? `${label} — ${desc}` : undefined}
+                className={`relative group flex items-center transition-all duration-150 cursor-pointer font-sans outline-none focus:outline-none ${
                   isCollapsed
                     ? 'w-10 h-10 sm:w-11 sm:h-11 mx-auto rounded-xl justify-center'
                     : 'w-full h-11 px-3 rounded-xl gap-3 text-left'
@@ -150,7 +170,6 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
                     : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100/70 border border-transparent'
                 }`}
               >
-                {/* ÍCONE */}
                 <div className="shrink-0 flex items-center justify-center">
                   <Icon
                     className={`w-5 h-5 transition-colors ${
@@ -163,7 +182,6 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
                   />
                 </div>
 
-                {/* RÓTULO + SUBTÍTULO (EXPANDIDO) */}
                 {!isCollapsed && (
                   <div className="min-w-0 flex-1 truncate">
                     <div
@@ -182,49 +200,9 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
                     </div>
                   </div>
                 )}
-
-                {/* TOOLTIP QUANDO RECOLHIDO (DESKTOP) */}
-                {isCollapsed && (
-                  <span
-                    style={{ left: 'calc(100% + 10px)', top: '50%', transform: 'translateY(-50%)', bottom: 'auto' }}
-                    className="tooltip-bubble hidden sm:block z-50 font-sans"
-                  >
-                    {label}
-                  </span>
-                )}
               </button>
             );
           })}
-        </div>
-
-        {/* CONTAINER DO BOTÃO INFERIOR (PERFEITAMENTE CENTRADO NO EIXO DA BARRA) */}
-        <div className="p-2 sm:p-2.5 border-t border-slate-200/80 dark:border-zinc-800/80 shrink-0 bg-inherit">
-          <button
-            type="button"
-            onClick={toggleCollapse}
-            className={`flex items-center transition-colors cursor-pointer outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 dark:focus-visible:ring-cyan-400/50 ${
-              isCollapsed
-                ? 'w-10 h-10 sm:w-11 sm:h-11 mx-auto rounded-xl justify-center'
-                : 'w-full h-10 px-3 rounded-xl justify-between'
-            } ${
-              theme === 'dark'
-                ? 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-850/60 border border-transparent hover:border-zinc-700/50'
-                : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100/70 border border-transparent hover:border-slate-300/60'
-            }`}
-            title={isCollapsed ? t(language, 'sidebar.expand') : t(language, 'sidebar.collapse')}
-            aria-label={isCollapsed ? t(language, 'sidebar.expand') : t(language, 'sidebar.collapse')}
-          >
-            {!isCollapsed && (
-              <span className="text-[11px] font-mono opacity-75 truncate select-none">
-                {t(language, 'sidebar.collapse')}
-              </span>
-            )}
-            {isCollapsed ? (
-              <ChevronRight className="w-4 h-4 shrink-0 opacity-70 group-hover:opacity-100" />
-            ) : (
-              <ChevronLeft className="w-4 h-4 shrink-0 opacity-70 group-hover:opacity-100" />
-            )}
-          </button>
         </div>
       </aside>
     </>

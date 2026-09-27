@@ -2,6 +2,20 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ==========================================================================
+   SELEÇÃO DE TEXTO CANÔNICA AAA (NÍTIDA, SEM CORES PASTEL ILEGÍVEIS)
+   ========================================================================== */
+::selection {
+  background-color: rgba(37, 99, 235, 0.16) !important;
+  color: inherit !important;
+}
+
+:where(.dark, .dark *) ::selection {
+  background-color: rgba(56, 189, 248, 0.25) !important;
+  color: inherit !important;
+}
+
+
 :root {
   color-scheme: light dark;
   --font-mono: "JetBrains Mono", monospace;
@@ -16,6 +30,11 @@ html.dark {
 
 html.light {
   color-scheme: light;
+}
+
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 @media screen and (max-width: 768px) {
@@ -228,18 +247,16 @@ html.light {
   box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
 }
 
-/* Focus Rings Universais Acessíveis (WCAG 2.4.7) */
-button:focus-visible,
-a:focus-visible,
-input:focus-visible {
+/* Focus Rings Acessíveis Não-Invasivos (Apenas Navegação via Teclado) */
+input:focus-visible,
+textarea:focus-visible {
   outline: 2px solid #2563eb !important;
-  outline-offset: 2px !important;
+  outline-offset: 1px !important;
 }
 
-:where(.dark, .dark *) button:focus-visible,
-:where(.dark, .dark *) a:focus-visible,
-:where(.dark, .dark *) input:focus-visible {
-  outline-color: #38bdf8 !important;
+:where(.dark, .dark *) input:focus-visible,
+:where(.dark, .dark *) textarea:focus-visible {
+  outline-color: #06b6d4 !important;
 }
 
 /* Tooltip Customizado Flutuante */

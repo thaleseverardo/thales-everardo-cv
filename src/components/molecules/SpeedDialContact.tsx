@@ -83,11 +83,7 @@ export const SpeedDialContact: React.FC<SpeedDialContactProps> = ({
 
       <div
         ref={containerRef}
-        style={{
-          transform: `translateY(-${footerOverlap}px)`,
-          transition: 'transform 75ms ease-out',
-        }}
-        className="fixed bottom-[max(1.25rem,calc(1.25rem+env(safe-area-inset-bottom,0px)))] right-5 sm:bottom-8 sm:right-8 z-[49] select-none group"
+        className="fixed bottom-[max(1.5rem,calc(1.5rem+env(safe-area-inset-bottom,0px)))] right-5 sm:bottom-8 sm:right-8 z-[49] select-none group"
       >
         <div className="absolute -top-16 -left-16 w-38 h-38 pointer-events-none group-hover:pointer-events-auto rounded-tl-full" />
 

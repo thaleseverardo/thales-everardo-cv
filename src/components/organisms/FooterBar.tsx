@@ -22,10 +22,10 @@ export const FooterBar: React.FC<FooterBarProps> = ({ systemState, onOpenPrivacy
 
   return (
     <footer
-      className={`border-t sticky bottom-0 z-30 h-12 py-2 px-4 sm:px-8 select-none transition-colors backdrop-blur-md flex items-center justify-between gap-4 text-xs ${
+      className={`border-t relative z-20 h-12 py-2 pl-4 sm:pl-8 pr-24 sm:pr-28 select-none transition-colors backdrop-blur-md flex items-center justify-between gap-4 text-xs w-full ${
         theme === 'dark'
           ? 'bg-[#09090b]/90 border-zinc-800/80 text-zinc-400'
-          : 'bg-white/90 border-slate-200 text-slate-600 shadow-2xs'
+          : 'bg-white/90 border-slate-200 text-slate-600'
       }`}
     >
       {/* IDENTIDADE INSTITUCIONAL (RESPONSIVA SEM TRUNCAMENTO NO MOBILE) */}

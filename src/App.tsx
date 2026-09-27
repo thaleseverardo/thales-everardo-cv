@@ -1,15 +1,15 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { SystemState, AppTheme } from './types';
 import { ControlPanel } from './components/organisms/ControlPanel';
+import { ViewFilterToolbar } from './components/molecules/ViewFilterToolbar';
 import { SidebarNavigation } from './components/organisms/SidebarNavigation';
 import { NodeInspector } from './components/organisms/NodeInspector';
 import { FooterBar } from './components/organisms/FooterBar';
 import { OfflineIndicator } from './components/atoms/OfflineIndicator';
+import { CURRICULUM_NODES } from './data/curriculumData';
+import { getStoredPreferences, updateStoredPreferences } from './utils/storageUtils';
+import { detectLocalLanguage, BCP47_TAGS } from './utils/geoLanguageUtils';
+import { t } from './i18n/translations';
 
 const SystemCanvas = lazy(() =>
   import('./components/templates/SystemCanvas').then((m) => ({ default: m.SystemCanvas }))
@@ -27,6 +27,28 @@ const PrivacyPolicyModal = lazy(() =>
   import('./components/organisms/PrivacyPolicyModal').then((m) => ({ default: m.PrivacyPolicyModal }))
 );
 
+function applyThemeDOM(theme: AppTheme) {
+  if (typeof document === 'undefined') return;
+  const root = document.documentElement;
+  if (theme === 'dark') {
+    root.classList.add('dark');
+    root.classList.remove('light');
+  } else {
+    root.classList.remove('dark');
+    root.classList.add('light');
+  }
+}
+
+function getInitialTheme(): AppTheme {
+  if (typeof window === 'undefined') return 'light';
+  try {
+    const prefs = getStoredPreferences();
+    if (prefs.theme === 'dark' || prefs.theme === 'light') return prefs.theme;
+    if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) return 'dark';
+  } catch {}
+  return 'light';
+}
+
 const ViewFallbackSkeleton: React.FC<{ theme: AppTheme }> = ({ theme }) => (
   <div
     className={`w-full h-full flex-1 flex flex-col items-center justify-center p-8 animate-pulse ${
@@ -40,35 +62,6 @@ const ViewFallbackSkeleton: React.FC<{ theme: AppTheme }> = ({ theme }) => (
   </div>
 );
 
-function applyThemeDOM(theme: AppTheme) {
-  if (typeof document === 'undefined') return;
-  if (theme === 'dark') {
-    document.documentElement.classList.add('dark');
-    document.documentElement.classList.remove('light');
-  } else {
-    document.documentElement.classList.remove('dark');
-    document.documentElement.classList.add('light');
-  }
-}
-import { CURRICULUM_NODES } from './data/curriculumData';
-import { getStoredPreferences, updateStoredPreferences } from './utils/storageUtils';
-import { detectLocalLanguage, BCP47_TAGS } from './utils/geoLanguageUtils';
-import { t } from './i18n/translations';
-
-function getInitialTheme(): AppTheme {
-  if (typeof window === 'undefined') return 'light';
-  try {
-    const prefs = getStoredPreferences();
-    if (prefs.theme === 'dark' || prefs.theme === 'light') {
-      return prefs.theme;
-    }
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
-  } catch (e) {}
-  return 'light';
-}
-
 export default function App() {
   const [systemState, setSystemState] = useState<SystemState>(() => {
     const isMobileScreen = typeof window !== 'undefined' && window.innerWidth < 768;
@@ -81,7 +74,7 @@ export default function App() {
       isSyncActive: true,
       activeNodeId: null,
       systemHealth: 'HEALTHY',
-      language: detectLocalLanguage(), // PT para lusófonos, ES para hispanófonos, FR para francófonos, EN padrão
+      language: detectLocalLanguage(),
       theme: getInitialTheme(),
       profileLens: 'ALL',
       viewLayout: isMobileScreen ? 'TIMELINE' : 'GRAPH',
@@ -97,21 +90,15 @@ export default function App() {
   const updateState = useCallback((updates: Partial<SystemState>) => {
     setSystemState((prev) => {
       const next = { ...prev, ...updates };
-
-      if (updates.language) {
-        updateStoredPreferences({ language: updates.language });
-      }
-
+      if (updates.language) updateStoredPreferences({ language: updates.language });
       if (updates.theme) {
         updateStoredPreferences({ theme: updates.theme });
         applyThemeDOM(updates.theme);
       }
-
       return next;
     });
   }, []);
 
-  // Sincroniza a tag BCP 47 no HTML (pt-BR, es-ES, fr-FR, en-US)
   useEffect(() => {
     if (typeof document !== 'undefined') {
       document.documentElement.lang = BCP47_TAGS[systemState.language] || 'en-US';
@@ -122,22 +109,21 @@ export default function App() {
     applyThemeDOM(systemState.theme);
   }, [systemState.theme]);
 
-  // Global Keyboard Shortcuts (Ctrl+K para CLI, ESC para modais)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (isContactOpen) setIsContactOpen(false);
+        else if (isPrivacyOpen) setIsPrivacyOpen(false);
         else if (systemState.activeNodeId) updateState({ activeNodeId: null });
       }
     };
-
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isContactOpen, systemState.activeNodeId, updateState]);
+  }, [isContactOpen, isPrivacyOpen, systemState.activeNodeId, updateState]);
 
   return (
     <div
-      className={`min-h-[100dvh] flex flex-col font-sans selection:bg-cyan-500/25 selection:text-cyan-300 antialiased transition-colors ${
+      className={`h-dvh w-full flex flex-col font-sans  antialiased overflow-hidden transition-colors ${
         systemState.theme === 'dark' ? 'bg-[#09090b] text-zinc-100' : 'bg-slate-50 text-slate-900'
       }`}
     >
@@ -150,14 +136,17 @@ export default function App() {
 
       <OfflineIndicator language={systemState.language} theme={systemState.theme} />
 
-      <ControlPanel
-        systemState={systemState}
-        updateState={updateState}
-        onOpenContact={() => setIsContactOpen(true)}
-      />
+      {/* HEADER FIXO DO APP SHELL */}
+      <div className="shrink-0 z-40">
+        <ControlPanel
+          systemState={systemState}
+          updateState={updateState}
+          onOpenContact={() => setIsContactOpen(true)}
+        />
+      </div>
 
-      {/* ÁREA MESTRE: MENU LATERAL COM OVERLAY + CONTEÚDO */}
-      <div className="flex-1 flex relative">
+      {/* ÁREA CENTRAL DO APP SHELL: SIDEBAR À ESQUERDA + PAINEL COM SCROLL PRÓPRIO À DIREITA */}
+      <div className="flex-1 flex min-h-0 w-full overflow-hidden relative">
         <SidebarNavigation
           viewLayout={systemState.viewLayout}
           onSelectView={(layout) => updateState({ viewLayout: layout })}
@@ -165,39 +154,63 @@ export default function App() {
           theme={systemState.theme}
         />
 
-        <main
-          id="main-content"
-          tabIndex={-1}
-          className="flex-1 w-full min-w-0 pl-14 sm:pl-16 relative flex flex-col focus:outline-hidden"
+        {/* CONTAINER COM SCROLL INTERNO DEDICADO (SEM NENHUM SCROLL HORIZONTAL DA JANELA) */}
+        <div
+          id="main-scroll-container"
+          className={`flex-1 min-w-0 h-full flex flex-col relative ${
+            systemState.viewLayout === 'GRAPH'
+              ? 'overflow-hidden'
+              : 'overflow-y-auto overflow-x-hidden'
+          }`}
         >
-          <Suspense fallback={<ViewFallbackSkeleton theme={systemState.theme} />}>
-            {systemState.viewLayout === 'GRAPH' ? (
-              <SystemCanvas
-                systemState={systemState}
-                updateState={updateState}
-                onSelectNode={(nodeId) => updateState({ activeNodeId: nodeId })}
-              />
-            ) : systemState.viewLayout === 'TIMELINE' ? (
-              <ExecutiveTimelineView
-                nodes={CURRICULUM_NODES}
-                onSelectNode={(nodeId) => updateState({ activeNodeId: nodeId })}
-                language={systemState.language}
-                theme={systemState.theme}
-                profileLens={systemState.profileLens}
-                searchTerm={systemState.searchTerm}
-                selectedTag={systemState.selectedTag}
-                onClearFilter={() => updateState({ searchTerm: '', profileLens: 'ALL', selectedTag: null })}
-              />
-            ) : (
-              <ResumeView
-                language={systemState.language}
-                theme={systemState.theme}
-                onOpenContact={() => setIsContactOpen(true)}
-                onOpenPrivacy={() => setIsPrivacyOpen(true)}
-              />
-            )}
-          </Suspense>
-        </main>
+          {/* BARRA DE FILTROS NA ÁREA AZUL (À DIREITA DA SIDEBAR, NUNCA INVADINDO A ÁREA VERDE) */}
+          {systemState.viewLayout !== 'RESUME' && (
+            <ViewFilterToolbar
+              systemState={systemState}
+              updateState={updateState}
+            />
+          )}
+
+          <main
+            id="main-content"
+            tabIndex={-1}
+            className="flex-1 min-w-0 flex flex-col focus:outline-hidden"
+          >
+            <Suspense fallback={<ViewFallbackSkeleton theme={systemState.theme} />}>
+              {systemState.viewLayout === 'GRAPH' ? (
+                <SystemCanvas
+                  systemState={systemState}
+                  updateState={updateState}
+                  onSelectNode={(nodeId) => updateState({ activeNodeId: nodeId })}
+                />
+              ) : systemState.viewLayout === 'TIMELINE' ? (
+                <ExecutiveTimelineView
+                  nodes={CURRICULUM_NODES}
+                  onSelectNode={(nodeId) => updateState({ activeNodeId: nodeId })}
+                  language={systemState.language}
+                  theme={systemState.theme}
+                  profileLens={systemState.profileLens}
+                  searchTerm={systemState.searchTerm}
+                  selectedTag={systemState.selectedTag}
+                  onClearFilter={() => updateState({ searchTerm: '', profileLens: 'ALL', selectedTag: null })}
+                />
+              ) : (
+                <ResumeView
+                  language={systemState.language}
+                  theme={systemState.theme}
+                  onOpenContact={() => setIsContactOpen(true)}
+                  onOpenPrivacy={() => setIsPrivacyOpen(true)}
+                />
+              )}
+            </Suspense>
+          </main>
+
+          <FooterBar
+            systemState={systemState}
+            updateState={updateState}
+            onOpenPrivacy={() => setIsPrivacyOpen(true)}
+          />
+        </div>
       </div>
 
       <NodeInspector
@@ -233,12 +246,6 @@ export default function App() {
           />
         </Suspense>
       )}
-
-      <FooterBar
-        systemState={systemState}
-        updateState={updateState}
-        onOpenPrivacy={() => setIsPrivacyOpen(true)}
-      />
     </div>
   );
 }
