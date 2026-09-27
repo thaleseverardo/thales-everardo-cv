@@ -1,3 +1,14 @@
+export type OAuthProvider = 'google.com' | 'github.com' | 'password';
+
+export interface AnalyticsEventParams {
+  architecture_inspect?: { nodeId: string };
+  cv_view?: { language: AppLanguage };
+  cv_download?: { extension: 'pdf' | 'txt' | 'md'; language: AppLanguage };
+  auth_attempt?: { provider: OAuthProvider };
+  auth_success?: { provider: OAuthProvider };
+  auth_failure?: { provider: OAuthProvider; errorCode: string };
+}
+
 export type SystemMode = 'DIGITAL_ARCHITECTURE' | 'PHYSICAL_OPERATIONS';
 export type SystemHealth = 'HEALTHY' | 'DEGRADED' | 'CRITICAL';
 export type AppLanguage = 'PT' | 'EN' | 'ES' | 'FR';

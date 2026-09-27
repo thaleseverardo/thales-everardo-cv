@@ -6,6 +6,8 @@
   color-scheme: light dark;
   --font-mono: "JetBrains Mono", monospace;
   --font-sans: "Plus Jakarta Sans", sans-serif;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 html.dark {
@@ -16,9 +18,6 @@ html.light {
   color-scheme: light;
 }
 
-/* ==========================================================================
-   PLATFORM & MOBILE RESILIENCE (iOS Safari & Accessibility WCAG AAA)
-   ========================================================================== */
 @media screen and (max-width: 768px) {
   input, textarea, select {
     font-size: 16px !important;
@@ -30,33 +29,59 @@ html.light {
 }
 
 /* ==========================================================================
+   TOUCH TARGETS & ERGONOMIA MOBILE (WCAG 2.5.5 / 2.5.8 >= 44x44px)
+   ========================================================================== */
+@media (pointer: coarse) {
+  button, 
+  a, 
+  [role="button"],
+  [role="tab"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .touch-target-expand {
+    position: relative;
+  }
+  .touch-target-expand::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 44px;
+    min-height: 44px;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* ==========================================================================
    DESIGN SYSTEM AAA CANONICAL CLASSES
    ========================================================================== */
-
-/* Compensação óptica para JetBrains Mono alinhada a ícones SVG */
 .opt-mono {
   transform: translateY(1px);
   line-height: 1;
 }
 
-/* Segmented Control Flush (Zero-Inset) */
+/* Segmented Control Flush */
 .segmented-control {
   display: inline-flex;
   align-items: stretch;
   padding: 0;
-  height: 2.25rem; /* 36px (h-9) */
-  border-radius: 0.5rem;
+  height: 2.5rem;
+  border-radius: 0.625rem;
   overflow: hidden;
   border-width: 1px;
   border-style: solid;
-  border-color: #e2e8f0;
+  border-color: #cbd5e1;
   background-color: #f1f5f9;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   flex-shrink: 0;
 }
 
 :where(.dark, .dark *) .segmented-control {
-  border-color: #27272a;
+  border-color: #3f3f46;
   background-color: #18181b;
 }
 
@@ -66,55 +91,53 @@ html.light {
   align-items: center;
   justify-content: center;
   gap: 0.375rem;
-  padding-left: 0.875rem;
-  padding-right: 0.875rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 500;
-  color: #64748b;
+  color: #475569;
   background-color: transparent;
-  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
   outline: none;
 }
 
 .segmented-btn:hover {
   color: #0f172a;
-  background-color: rgba(226, 232, 240, 0.5);
+  background-color: rgba(226, 232, 240, 0.7);
 }
 
 :where(.dark, .dark *) .segmented-btn {
-  color: #a1a1aa;
+  color: #d4d4d8;
 }
 
 :where(.dark, .dark *) .segmented-btn:hover {
-  color: #f4f4f5;
-  background-color: rgba(39, 39, 42, 0.5);
+  color: #ffffff;
+  background-color: rgba(39, 39, 42, 0.7);
 }
 
 .segmented-btn-active {
-  font-weight: 600;
-  color: #2563eb;
+  font-weight: 700;
+  color: #1d4ed8;
   background-color: #ffffff;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
 :where(.dark, .dark *) .segmented-btn-active {
-  color: #67e8f9;
+  color: #22d3ee;
   background-color: #27272a;
 }
 
-/* Par Estético do Header */
+/* Header Buttons */
 .header-btn-secondary {
-  height: 2.25rem;
+  height: 2.5rem;
   padding-left: 1rem;
   padding-right: 1rem;
-  border-radius: 0.5rem;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #cbd5e1;
+  border-radius: 0.625rem;
+  border: 1px solid #cbd5e1;
   background-color: #ffffff;
-  color: #1e293b;
+  color: #0f172a;
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 700;
@@ -123,7 +146,7 @@ html.light {
   gap: 0.5rem;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   cursor: pointer;
-  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 120ms ease, background-color 150ms ease, border-color 150ms ease;
 }
 
 .header-btn-secondary:hover {
@@ -131,10 +154,14 @@ html.light {
   border-color: #94a3b8;
 }
 
+.header-btn-secondary:active {
+  transform: scale(0.97);
+}
+
 :where(.dark, .dark *) .header-btn-secondary {
   border-color: #3f3f46;
   background-color: #18181b;
-  color: #e4e4e7;
+  color: #f4f4f5;
 }
 
 :where(.dark, .dark *) .header-btn-secondary:hover {
@@ -143,10 +170,10 @@ html.light {
 }
 
 .header-btn-primary {
-  height: 2.25rem;
+  height: 2.5rem;
   padding-left: 1.25rem;
   padding-right: 1.25rem;
-  border-radius: 0.5rem;
+  border-radius: 0.625rem;
   background-color: #2563eb;
   color: #ffffff;
   font-family: var(--font-mono);
@@ -156,47 +183,63 @@ html.light {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px 0 rgba(37, 99, 235, 0.3);
   cursor: pointer;
-  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 120ms ease, background-color 150ms ease;
 }
 
 .header-btn-primary:hover {
   background-color: #1d4ed8;
 }
 
-/* Campo de Busca da Toolbar */
+.header-btn-primary:active {
+  transform: scale(0.97);
+}
+
+/* Toolbar Search */
 .toolbar-search-field {
   width: 100%;
-  height: 2.25rem;
-  border-radius: 0.5rem;
+  height: 2.5rem;
+  border-radius: 0.625rem;
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #e2e8f0;
+  border: 1px solid #cbd5e1;
   background-color: #ffffff;
   color: #0f172a;
   padding-left: 2.25rem;
-  padding-right: 1.75rem;
+  padding-right: 2rem;
   outline: none;
-  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
 .toolbar-search-field:focus {
   border-color: #2563eb;
-  box-shadow: 0 0 0 1px #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
 :where(.dark, .dark *) .toolbar-search-field {
-  border-color: #27272a;
+  border-color: #3f3f46;
   background-color: #18181b;
   color: #f4f4f5;
 }
 
 :where(.dark, .dark *) .toolbar-search-field:focus {
   border-color: #06b6d4;
-  box-shadow: 0 0 0 1px #06b6d4;
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+}
+
+/* Focus Rings Universais Acessíveis (WCAG 2.4.7) */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid #2563eb !important;
+  outline-offset: 2px !important;
+}
+
+:where(.dark, .dark *) button:focus-visible,
+:where(.dark, .dark *) a:focus-visible,
+:where(.dark, .dark *) input:focus-visible {
+  outline-color: #38bdf8 !important;
 }
 
 /* Tooltip Customizado Flutuante */
@@ -232,22 +275,28 @@ html.light {
 }
 
 /* ==========================================================================
-   WCAG AAA COLOR CONTRAST GUARANTEES (>= 4.5:1 ratio)
+   WCAG AAA CONTRAST ENFORCEMENT (>= 7:1)
    ========================================================================== */
 :where(html:not(.dark), .light, .light *) .text-slate-500 {
+  color: #334155;
+}
+:where(html:not(.dark), .light, .light *) .text-slate-400 {
   color: #475569;
 }
 
+:where(.dark, .dark *) .text-zinc-400 {
+  color: #e4e4e7;
+}
 :where(.dark, .dark *) .text-zinc-500 {
-  color: #a1a1aa;
+  color: #d4d4d8;
 }
 
 :where(.dark, .dark *) .opacity-40,
 :where(.dark, .dark *) .opacity-50 {
-  opacity: 0.75;
+  opacity: 0.85;
 }
 
 .opacity-40,
 .opacity-50 {
-  opacity: 0.72;
+  opacity: 0.82;
 }

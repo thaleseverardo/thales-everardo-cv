@@ -10,8 +10,9 @@ import {
   User,
   deleteUser,
   reauthenticateWithPopup,
+  AuthError,
 } from 'firebase/auth';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, deleteDoc } from 'firebase/firestore';
 
 export interface AuthUser {
   uid: string;
@@ -55,7 +56,7 @@ if (typeof window !== 'undefined' && app) {
   });
 }
 
-export function logAnalyticsEvent(eventName: string, eventParams?: Record<string, any>) {
+export function logAnalyticsEvent(eventName: string, eventParams?: Record<string, string | number | boolean>) {
   try {
     if (analytics) {
       logEvent(analytics, eventName, eventParams);
@@ -115,13 +116,16 @@ export async function signInWithGoogle(): Promise<AuthUser> {
     if (!user) throw new Error('Falha ao processar login do Google.');
     currentUser = user;
     listeners.forEach((cb) => cb(currentUser));
+    logAnalyticsEvent('auth_success', { provider: 'google.com' });
     return user;
-  } catch (error: any) {
+  } catch (err) {
+    const error = err as AuthError;
     if (error?.code === 'auth/popup-closed-by-user') {
       console.warn('Login cancelado pelo usuário.');
     } else {
       console.error('Erro na autenticação do Google:', error);
     }
+    logAnalyticsEvent('auth_failure', { provider: 'google.com', errorCode: error?.code || 'unknown' });
     throw error;
   }
 }
@@ -142,8 +146,10 @@ export async function signInWithGithub(): Promise<AuthUser> {
     if (!user) throw new Error('Falha ao processar login do GitHub.');
     currentUser = user;
     listeners.forEach((cb) => cb(currentUser));
+    logAnalyticsEvent('auth_success', { provider: 'github.com' });
     return user;
-  } catch (error: any) {
+  } catch (err) {
+    const error = err as AuthError;
     if (error?.code === 'auth/popup-closed-by-user') {
       console.warn('Login cancelado pelo usuário.');
     } else if (error?.code === 'auth/account-exists-with-different-credential') {
@@ -151,6 +157,7 @@ export async function signInWithGithub(): Promise<AuthUser> {
     } else {
       console.error('Erro na autenticação do GitHub:', error);
     }
+    logAnalyticsEvent('auth_failure', { provider: 'github.com', errorCode: error?.code || 'unknown' });
     throw error;
   }
 }
@@ -194,13 +201,14 @@ export async function fetchProtectedContact(user: AuthUser | null): Promise<Cont
           "[Firestore Warning] Documento 'portfolio/contacts' não encontrado. Verifique se a coleção é 'portfolio' e o documento é 'contacts'."
         );
       }
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as { code?: string };
       if (error?.code === 'permission-denied') {
         console.error(
           "[Firestore Permission Denied] As regras de segurança do Firestore bloquearam a leitura. Permita a leitura com: allow read: if request.auth != null; no Firebase Console."
         );
       } else {
-        console.error("[Firestore Error] Falha ao carregar contatos protegidos:", error);
+        console.error("[Firestore Error] Falha ao carregar contatos protegidos:", err);
       }
     }
   }
@@ -226,7 +234,6 @@ export async function revokeAccessAndPurgeUserData(user?: AuthUser | null): Prom
   // 1. Limpeza de registros no Firestore se houver
   if (db && firebaseUser.uid) {
     try {
-      const { deleteDoc, doc } = await import('firebase/firestore');
       await deleteDoc(doc(db, "audit_sessions", firebaseUser.uid));
     } catch {}
   }
@@ -237,9 +244,10 @@ export async function revokeAccessAndPurgeUserData(user?: AuthUser | null): Prom
     currentUser = null;
     listeners.forEach((cb) => cb(null));
     return true;
-  } catch (err: any) {
+  } catch (err) {
+    const error = err as AuthError;
     // 3. Tratamento de segurança obrigatório: auth/requires-recent-login
-    if (err?.code === 'auth/requires-recent-login') {
+    if (error?.code === 'auth/requires-recent-login') {
       try {
         const providerId = firebaseUser.providerData[0]?.providerId || '';
         const provider = providerId.includes('github')

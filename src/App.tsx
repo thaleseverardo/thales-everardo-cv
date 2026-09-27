@@ -3,22 +3,42 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { SystemState, AppTheme } from './types';
 import { ControlPanel } from './components/organisms/ControlPanel';
-import { SystemCanvas } from './components/templates/SystemCanvas';
-import { ExecutiveTimelineView } from './components/templates/ExecutiveTimelineView';
-import { ResumeView } from './components/templates/ResumeView';
 import { SidebarNavigation } from './components/organisms/SidebarNavigation';
 import { NodeInspector } from './components/organisms/NodeInspector';
-const ContactAuthModal = React.lazy(() =>
-  import('./components/organisms/ContactAuthModal').then((m) => ({ default: m.ContactAuthModal }))
-);
-const PrivacyPolicyModal = React.lazy(() =>
-  import('./components/organisms/PrivacyPolicyModal').then((m) => ({ default: m.PrivacyPolicyModal }))
-);
 import { FooterBar } from './components/organisms/FooterBar';
 import { OfflineIndicator } from './components/atoms/OfflineIndicator';
+
+const SystemCanvas = lazy(() =>
+  import('./components/templates/SystemCanvas').then((m) => ({ default: m.SystemCanvas }))
+);
+const ExecutiveTimelineView = lazy(() =>
+  import('./components/templates/ExecutiveTimelineView').then((m) => ({ default: m.ExecutiveTimelineView }))
+);
+const ResumeView = lazy(() =>
+  import('./components/templates/ResumeView').then((m) => ({ default: m.ResumeView }))
+);
+const ContactAuthModal = lazy(() =>
+  import('./components/organisms/ContactAuthModal').then((m) => ({ default: m.ContactAuthModal }))
+);
+const PrivacyPolicyModal = lazy(() =>
+  import('./components/organisms/PrivacyPolicyModal').then((m) => ({ default: m.PrivacyPolicyModal }))
+);
+
+const ViewFallbackSkeleton: React.FC<{ theme: AppTheme }> = ({ theme }) => (
+  <div
+    className={`w-full h-full flex-1 flex flex-col items-center justify-center p-8 animate-pulse ${
+      theme === 'dark' ? 'bg-[#09090b]' : 'bg-slate-50'
+    }`}
+  >
+    <div className="w-9 h-9 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mb-3" />
+    <span className="text-[11px] font-mono font-semibold tracking-wider text-slate-500 dark:text-zinc-400">
+      CARREGANDO ARQUITETURA...
+    </span>
+  </div>
+);
 
 function applyThemeDOM(theme: AppTheme) {
   if (typeof document === 'undefined') return;
@@ -117,7 +137,7 @@ export default function App() {
 
   return (
     <div
-      className={`min-h-screen flex flex-col font-sans selection:bg-cyan-500/20 selection:text-cyan-300 antialiased transition-colors ${
+      className={`min-h-[100dvh] flex flex-col font-sans selection:bg-cyan-500/25 selection:text-cyan-300 antialiased transition-colors ${
         systemState.theme === 'dark' ? 'bg-[#09090b] text-zinc-100' : 'bg-slate-50 text-slate-900'
       }`}
     >
@@ -150,31 +170,33 @@ export default function App() {
           tabIndex={-1}
           className="flex-1 w-full min-w-0 pl-14 sm:pl-16 relative flex flex-col focus:outline-hidden"
         >
-          {systemState.viewLayout === 'GRAPH' ? (
-            <SystemCanvas
-              systemState={systemState}
-              updateState={updateState}
-              onSelectNode={(nodeId) => updateState({ activeNodeId: nodeId })}
-            />
-          ) : systemState.viewLayout === 'TIMELINE' ? (
-            <ExecutiveTimelineView
-              nodes={CURRICULUM_NODES}
-              onSelectNode={(nodeId) => updateState({ activeNodeId: nodeId })}
-              language={systemState.language}
-              theme={systemState.theme}
-              profileLens={systemState.profileLens}
-              searchTerm={systemState.searchTerm}
-              selectedTag={systemState.selectedTag}
-              onClearFilter={() => updateState({ searchTerm: '', profileLens: 'ALL', selectedTag: null })}
-            />
-          ) : (
-            <ResumeView
-              language={systemState.language}
-              theme={systemState.theme}
-              onOpenContact={() => setIsContactOpen(true)}
-              onOpenPrivacy={() => setIsPrivacyOpen(true)}
-            />
-          )}
+          <Suspense fallback={<ViewFallbackSkeleton theme={systemState.theme} />}>
+            {systemState.viewLayout === 'GRAPH' ? (
+              <SystemCanvas
+                systemState={systemState}
+                updateState={updateState}
+                onSelectNode={(nodeId) => updateState({ activeNodeId: nodeId })}
+              />
+            ) : systemState.viewLayout === 'TIMELINE' ? (
+              <ExecutiveTimelineView
+                nodes={CURRICULUM_NODES}
+                onSelectNode={(nodeId) => updateState({ activeNodeId: nodeId })}
+                language={systemState.language}
+                theme={systemState.theme}
+                profileLens={systemState.profileLens}
+                searchTerm={systemState.searchTerm}
+                selectedTag={systemState.selectedTag}
+                onClearFilter={() => updateState({ searchTerm: '', profileLens: 'ALL', selectedTag: null })}
+              />
+            ) : (
+              <ResumeView
+                language={systemState.language}
+                theme={systemState.theme}
+                onOpenContact={() => setIsContactOpen(true)}
+                onOpenPrivacy={() => setIsPrivacyOpen(true)}
+              />
+            )}
+          </Suspense>
         </main>
       </div>
 
@@ -191,25 +213,25 @@ export default function App() {
       />
 
       {isContactOpen && (
-        <React.Suspense fallback={null}>
+        <Suspense fallback={null}>
           <ContactAuthModal
             isOpen={isContactOpen}
             onClose={() => setIsContactOpen(false)}
             language={systemState.language}
             theme={systemState.theme}
           />
-        </React.Suspense>
+        </Suspense>
       )}
 
       {isPrivacyOpen && (
-        <React.Suspense fallback={null}>
+        <Suspense fallback={null}>
           <PrivacyPolicyModal
             isOpen={isPrivacyOpen}
             onClose={() => setIsPrivacyOpen(false)}
             language={systemState.language}
             theme={systemState.theme}
           />
-        </React.Suspense>
+        </Suspense>
       )}
 
       <FooterBar
