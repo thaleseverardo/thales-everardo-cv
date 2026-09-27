@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Layers, List, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ViewLayout, AppLanguage, AppTheme } from '../../types';
 import { t, TranslationKey } from '../../i18n/translations';
@@ -46,6 +46,8 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
   language,
   theme,
 }) => {
+  const sidebarRef = useRef<HTMLElement>(null);
+
   const [isCollapsed, setIsCollapsed] = useState<boolean>(() => {
     if (typeof window === 'undefined') return true;
     try {
@@ -66,19 +68,49 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
     });
   };
 
+  // No desktop, clicar fora da barra fecha o overlay de forma fluida
+  useEffect(() => {
+    if (isCollapsed) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        typeof window !== 'undefined' &&
+        window.innerWidth >= 768 &&
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
+        setIsCollapsed(true);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isCollapsed]);
+
+  const handleNavItemClick = (id: ViewLayout) => {
+    onSelectView(id);
+
+    // No mobile (< 768px), recolhe o menu para liberar o espaço na tela
+    // No desktop (>= 768px), PERMANECE ABERTO, respeitando a experiência do usuário!
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setIsCollapsed(true);
+    }
+  };
+
   return (
     <>
-      {/* BACKDROP QUANDO O MENU ESTIVER ABERTO EM OVERLAY NO MOBILE */}
+      {/* BACKDROP ESCURECIDO EXCLUSIVO PARA O MOBILE */}
       {!isCollapsed && (
         <div
-          className="fixed inset-0 z-35 bg-black/50 backdrop-blur-2xs transition-opacity animate-in fade-in duration-150"
+          className="md:hidden fixed inset-0 z-35 bg-black/50 backdrop-blur-2xs transition-opacity animate-in fade-in duration-150"
           onClick={() => setIsCollapsed(true)}
           aria-hidden="true"
         />
       )}
 
-      {/* BARRA LATERAL COM PADRÃO VISUAL AAA */}
+      {/* BARRA LATERAL FIXADA NO VIEWPORT */}
       <aside
+        ref={sidebarRef}
         aria-label="Navegação de Vistas"
         className={`fixed left-0 top-16 md:top-18 bottom-12 select-none transition-all duration-200 ease-in-out flex flex-col justify-between print:hidden border-r z-40 overflow-hidden ${
           isCollapsed
@@ -102,20 +134,13 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
               <button
                 key={item.id}
                 type="button"
-                onClick={() => {
-                  onSelectView(item.id);
-                  if (!isCollapsed) {
-                    setIsCollapsed(true);
-                  }
-                }}
+                onClick={() => handleNavItemClick(item.id)}
                 aria-current={isActive ? 'page' : undefined}
                 className={`relative group flex items-center transition-all duration-150 cursor-pointer font-sans outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:focus-visible:ring-cyan-400 ${
-                  /* No modo recolhido: caixa 40x40 rigorosamente centrada */
                   isCollapsed
                     ? 'w-10 h-10 sm:w-11 sm:h-11 mx-auto rounded-xl justify-center'
                     : 'w-full h-11 px-3 rounded-xl gap-3 text-left'
                 } ${
-                  /* Tratamento de micro-elevação e contraste AAA */
                   isActive
                     ? theme === 'dark'
                       ? 'bg-zinc-800/90 text-zinc-100 border border-white/10 shadow-inner'
@@ -125,7 +150,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
                     : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100/70 border border-transparent'
                 }`}
               >
-                {/* ÍCONE COM NÍVEL DE CONTRASTE AAA */}
+                {/* ÍCONE */}
                 <div className="shrink-0 flex items-center justify-center">
                   <Icon
                     className={`w-5 h-5 transition-colors ${
@@ -158,7 +183,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
                   </div>
                 )}
 
-                {/* TOOLTIP FLUTUANTE RECOLHIDO (DESKTOP) */}
+                {/* TOOLTIP QUANDO RECOLHIDO (DESKTOP) */}
                 {isCollapsed && (
                   <span
                     style={{ left: 'calc(100% + 10px)', top: '50%', transform: 'translateY(-50%)', bottom: 'auto' }}

@@ -437,18 +437,19 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-slate-200/60 dark:border-zinc-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+                  <div className="mt-4 pt-3.5 border-t border-slate-200/60 dark:border-zinc-800/80 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+                    {/* BOTÃO LINKEDIN REFINADO (AZUL OFICIAL #0A66C2 + PADRÃO AAA) */}
                     <a
                       href="https://br.linkedin.com/in/thaleseverardo"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`h-9 px-3.5 rounded-xl border font-medium text-xs transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                      className={`h-9.5 px-3.5 rounded-xl border font-sans font-medium text-xs transition-all flex items-center justify-center gap-2.5 cursor-pointer shadow-xs active:scale-[0.98] ${
                         theme === 'dark'
-                          ? 'bg-zinc-800 hover:bg-zinc-700/80 border-zinc-700 text-zinc-200 hover:text-white'
-                          : 'bg-white hover:bg-slate-100 border-slate-300 text-slate-700 shadow-2xs'
+                          ? 'bg-zinc-800/90 hover:bg-zinc-700/80 border-zinc-700/80 text-zinc-100 hover:border-zinc-600'
+                          : 'bg-white hover:bg-slate-50 border-slate-300 text-slate-700 hover:border-slate-400'
                       }`}
                     >
-                      <Linkedin className="w-3.5 h-3.5 text-blue-500 dark:text-cyan-400 shrink-0" />
+                      <Linkedin className="w-3.5 h-3.5 text-[#0A66C2] shrink-0" />
                       <span>{t(language, 'auth.connectLinkedIn')}</span>
                     </a>
 
@@ -461,24 +462,36 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                           signInWithGoogle();
                         }
                       }}
-                      className="h-9 px-4 rounded-xl font-sans text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                      className="h-9.5 px-4 rounded-xl font-sans text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
                     >
                       <LogIn className="w-3.5 h-3.5" />
                       <span>{t(language, 'resume.gateButton')}</span>
                     </button>
                   </div>
 
-                  <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between text-[11px] font-sans opacity-70">
-                    <span className="flex items-center gap-1.5">
-                      <Lock className="w-3 h-3 text-emerald-500 shrink-0" />
-                      <span>{t(language, 'resume.lgpdBadge')}</span>
+                  {/* RODAPÉ DO CARD SÓBRIO E INSTITUCIONAL (SEM CADEADO VERDE OU CIANO MONOESPAÇADO) */}
+                  <div className="mt-3.5 pt-2.5 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between text-[11px] font-sans">
+                    <span className="text-slate-500 dark:text-zinc-400">
+                      {language === 'PT'
+                        ? 'Privacidade assegurada por LGPD e GDPR'
+                        : language === 'ES'
+                        ? 'Privacidad asegurada por LGPD y RGPD'
+                        : language === 'FR'
+                        ? 'Confidentialité assurée par RGPD et LGPD'
+                        : 'Privacy ensured by GDPR & LGPD'}
                     </span>
                     <button
                       type="button"
                       onClick={onOpenPrivacy}
-                      className="text-blue-600 dark:text-cyan-400 hover:underline font-mono text-[10px] cursor-pointer"
+                      className="font-medium text-slate-500 hover:text-slate-800 dark:text-zinc-400 dark:hover:text-zinc-100 hover:underline transition-colors cursor-pointer"
                     >
-                      {t(language, 'auth.privacyPolicyLink')}
+                      {language === 'PT'
+                        ? 'Política de Privacidade'
+                        : language === 'ES'
+                        ? 'Política de Privacidad'
+                        : language === 'FR'
+                        ? 'Politique de Confidentialité'
+                        : 'Privacy Policy'}
                     </button>
                   </div>
                 </div>
