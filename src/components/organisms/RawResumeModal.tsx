@@ -16,7 +16,8 @@ import {
   ExternalLink,
   Globe,
   ChevronDown,
-  ShieldCheck,
+  Lock,
+  LogIn,
   FileText,
   FileCode,
   FileCheck,
@@ -24,28 +25,23 @@ import {
 import { CURRICULUM_NODES, PROFILE_DATA } from '../../data/curriculumData';
 import { playSound } from '../../utils/audio';
 import { AppLanguage, AppTheme } from '../../types';
-import { t, getNodeContent } from '../../i18n/translations';
+import { t, getNodeContent, LOCALIZED_LANGUAGE_NAMES } from '../../i18n/translations';
 import { useAuth } from '../../hooks/useAuth';
-
-const LOCALIZED_LANGUAGE_NAMES: Record<AppLanguage, Record<AppLanguage, string>> = {
-  PT: { PT: 'Português', EN: 'Inglês', ES: 'Espanhol', FR: 'Francês' },
-  EN: { PT: 'Portuguese', EN: 'English', ES: 'Spanish', FR: 'French' },
-  ES: { PT: 'Portugués', EN: 'Inglés', ES: 'Español', FR: 'Francés' },
-  FR: { PT: 'Portugais', EN: 'Anglais', ES: 'Espagnol', FR: 'Français' },
-};
-
-const GoogleLogo = () => (
-  <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
-    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
-  </svg>
-);
+import { logAnalyticsEvent } from '../../services/firebaseAuth';
+import { GoogleLogo } from '../atoms/SocialIcons';
+import {
+  getProfileTitle,
+  getProfileLocation,
+  getProfileSummary,
+  getEducationDegree,
+  generateMarkdownResume,
+} from '../../utils/resumeGenerator';
 
 interface RawResumeModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenContact?: () => void;
+  onOpenPrivacy?: () => void;
   soundEnabled: boolean;
   language: AppLanguage;
   theme: AppTheme;
@@ -54,6 +50,8 @@ interface RawResumeModalProps {
 export const RawResumeModal: React.FC<RawResumeModalProps> = ({
   isOpen,
   onClose,
+  onOpenContact,
+  onOpenPrivacy,
   soundEnabled,
   language: initialLanguage,
   theme,
@@ -68,6 +66,12 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
   const [showLangMenu, setShowLangMenu] = useState(false);
 
   const email = contact?.email || '';
+
+  React.useEffect(() => {
+    if (isOpen) {
+      logAnalyticsEvent('cv_view', { language: activeLang });
+    }
+  }, [isOpen, activeLang]);
   const phone = contact?.phone || '';
 
   if (!isOpen) {
@@ -103,86 +107,14 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    logAnalyticsEvent('cv_download', { extension, language: activeLang });
 
     setShowDownloadMenu(false);
     playSound('success', soundEnabled);
   };
 
-  const getProfileTitle = () => {
-    if (activeLang === 'PT') return PROFILE_DATA.titlePT;
-    if (activeLang === 'ES') return 'Ingeniero de Software Staff y Arquitecto de Sistemas';
-    if (activeLang === 'FR') return 'Ingénieur Logiciel Staff & Architecte de Systèmes';
-    return PROFILE_DATA.title;
-  };
-
-  const getProfileLocation = () => {
-    if (activeLang === 'PT') return 'São Paulo, SP — Brasil';
-    if (activeLang === 'FR') return 'São Paulo, Brésil';
-    if (activeLang === 'ES') return 'São Paulo, Brasil';
-    return 'São Paulo, Brazil';
-  };
-
-  const getProfileSummary = () => {
-    if (activeLang === 'PT') return PROFILE_DATA.summaryPT;
-    if (activeLang === 'ES') {
-      return 'Arquitecto de Sistemas e Ingeniero de Software Staff con más de 10 años de experiencia en ingeniería de datos, microservicios distribuidos, tolerancia a fallos y arquitectura dirigida por eventos (EDA). Especialista en eliminar latencias críticas en entornos transaccionales de alto volumen con estricto cumplimiento ACID.';
-    }
-    if (activeLang === 'FR') {
-      return "Architecte de Systèmes et Ingénieur Logiciel Staff avec plus de 10 ans d'expérience en ingénierie des données, microservices distribués, tolérance aux pannes et architectures orientées événements (EDA). Spécialiste de l'élimination des latences critiques dans les environnements transactionnels à haut débit sous stricte conformité ACID.";
-    }
-    return PROFILE_DATA.summary;
-  };
-
-  const getEducationDegree = (degree: string, degreePT: string) => {
-    if (activeLang === 'PT') return degreePT;
-    if (activeLang === 'ES') {
-      return degreePT.includes('Pós-Graduação')
-        ? 'Posgrado en Arquitectura de Software y Sistemas Distribuidos'
-        : 'Licenciatura en Tecnología de la Información y Sistemas';
-    }
-    if (activeLang === 'FR') {
-      return degreePT.includes('Pós-Graduação')
-        ? "Diplôme d'Études Supérieures en Architecture Logicielle et Systèmes Distribués"
-        : "Licence en Technologies de l'Information et Systèmes";
-    }
-    return degree;
-  };
-
-  const getMarkdownResume = () => {
-    return `# Thales Everardo
-**${getProfileTitle()}**
-
-📧 ${isAuthenticated ? email : '[Protected - Google Sign-In Required]'} | 📱 ${isAuthenticated ? phone : '[Protected - Google Sign-In Required]'} | 📍 ${getProfileLocation()}
-🔗 [GitHub](${PROFILE_DATA.github}) | 🔗 [LinkedIn](${PROFILE_DATA.linkedin})
-
----
-
-## ${t(activeLang, 'resume.executiveSummary')}
-${getProfileSummary()}
-
----
-
-## ${t(activeLang, 'resume.coreExperience')}
-${CURRICULUM_NODES.map((n) => {
-  const c = getNodeContent(n, activeLang);
-  return `### ${n.company} — ${c.role}
-*${n.period} | ${n.location}*
-
-- **${t(activeLang, 'resume.businessRoi')}** ${c.businessValue}
-- **${t(activeLang, 'resume.engineeringFeat')}** ${c.engineeringFeat}
-- **${t(activeLang, 'resume.solution')}** ${c.architecturalSolution}
-- **Stack:** \`${n.technologies.join('`, `')}\`
-`;
-}).join('\n')}
----
-
-## ${t(activeLang, 'resume.educationCert')}
-${PROFILE_DATA.education.map((e) => `- **${getEducationDegree(e.degree, e.degreePT)}**, ${e.institution}`).join('\n')}
-`;
-  };
-
   const handleCopyMarkdown = () => {
-    navigator.clipboard.writeText(getMarkdownResume());
+    navigator.clipboard.writeText(generateMarkdownResume(activeLang, isAuthenticated, email, phone));
     setCopied(true);
     playSound('click', soundEnabled);
     setTimeout(() => setCopied(false), 2000);
@@ -246,7 +178,7 @@ ${PROFILE_DATA.education.map((e) => `- **${getEducationDegree(e.degree, e.degree
   const handleNativeShare = async () => {
     const pdfUrl = getAbsoluteDocUrl('pdf');
     const title = `Thales Everardo - CV (${activeLang})`;
-    const text = `${PROFILE_DATA.name} - ${getProfileTitle()}`;
+    const text = `${PROFILE_DATA.name} - ${getProfileTitle(activeLang)}`;
 
     try {
       if (typeof navigator !== 'undefined' && navigator.share) {
@@ -594,7 +526,7 @@ ${PROFILE_DATA.education.map((e) => `- **${getEducationDegree(e.degree, e.degree
               {PROFILE_DATA.name.toUpperCase()}
             </h1>
             <div className="text-sm sm:text-base font-sans font-semibold text-blue-600 dark:text-blue-400 mt-1 print:text-black">
-              {getProfileTitle()}
+              {getProfileTitle(activeLang)}
             </div>
 
             {/* DADOS DE CONTATO & CLEARANCE DE SEGURANÇA */}
@@ -618,7 +550,7 @@ ${PROFILE_DATA.education.map((e) => `- **${getEducationDegree(e.degree, e.degree
                   <span className="opacity-30">•</span>
                   <span className="flex items-center gap-1.5">
                     <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" />
-                    <span>{getProfileLocation()}</span>
+                    <span>{getProfileLocation(activeLang)}</span>
                   </span>
                   <span className="opacity-30 hidden sm:inline">•</span>
                   <span className="hidden sm:flex items-center gap-1.5 text-slate-500 dark:text-zinc-400">
@@ -627,40 +559,75 @@ ${PROFILE_DATA.education.map((e) => `- **${getEducationDegree(e.degree, e.degree
                   </span>
                 </div>
               ) : (
-                /* ESTADO NÃO AUTENTICADO: ENTERPRISE SECURITY CLEARANCE CARD */
+                /* ESTADO NÃO AUTENTICADO: CARD SÓBRIO DE PRIVACIDADE */
                 <div className="space-y-3">
                   <div
-                    className={`w-full p-4 rounded-2xl border transition-all ${
+                    className={`w-full p-4.5 sm:p-5 rounded-2xl border transition-all ${
                       theme === 'dark'
-                        ? 'bg-gradient-to-br from-zinc-900/90 via-zinc-900/50 to-zinc-950/80 border-white/10 shadow-lg shadow-black/40'
-                        : 'bg-gradient-to-br from-slate-50 via-white to-slate-100/60 border-slate-200/90 shadow-2xs'
+                        ? 'bg-zinc-900/50 border-zinc-800 text-zinc-200 shadow-sm'
+                        : 'bg-slate-50/90 border-slate-200 text-slate-800 shadow-2xs'
                     }`}
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
-                      <div className="flex items-start gap-3 min-w-0">
-                        <div className="w-8 h-8 rounded-xl bg-blue-500/10 dark:bg-cyan-500/10 border border-blue-500/20 dark:border-cyan-500/20 flex items-center justify-center shrink-0 mt-0.5 text-blue-600 dark:text-cyan-400">
-                          <ShieldCheck className="w-4 h-4" />
-                        </div>
-                        <div className="space-y-0.5 min-w-0">
-                          <div className="font-sans font-semibold text-xs sm:text-sm text-slate-900 dark:text-zinc-100 tracking-tight flex items-center gap-2">
-                            <span>{t(activeLang, 'resume.gateTitle')}</span>
-                            <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-blue-500/10 dark:bg-cyan-500/10 text-blue-600 dark:text-cyan-400 font-bold tracking-wider">
-                              OAuth 2.0
-                            </span>
-                          </div>
-                          <p className="font-sans text-xs text-slate-500 dark:text-zinc-400 leading-relaxed max-w-xl">
-                            {t(activeLang, 'resume.gateDesc')}
-                          </p>
-                        </div>
+                    {/* PARTE SUPERIOR: ÍCONE + TEXTO NARRATIVO */}
+                    <div className="flex items-start gap-3.5 sm:gap-4">
+                      <Lock
+                        className="w-7 h-7 sm:w-8 sm:h-8 text-slate-400 dark:text-zinc-500 shrink-0 mt-0.5"
+                        strokeWidth={1.75}
+                      />
+                      <div className="space-y-1 min-w-0">
+                        <h3 className="font-sans font-semibold text-sm sm:text-base text-slate-900 dark:text-zinc-100 tracking-tight leading-snug">
+                          {t(activeLang, 'resume.gateTitle')}
+                        </h3>
+                        <p className="font-sans text-xs sm:text-sm text-slate-500 dark:text-zinc-400 leading-relaxed max-w-xl">
+                          {t(activeLang, 'resume.gateDesc')}
+                        </p>
                       </div>
+                    </div>
+
+                    {/* PARTE INFERIOR: AÇÃO DUPLA (LINKEDIN SEM CADASTRO + ENTRAR NA LINHA DIRETA) */}
+                    <div className="mt-4 pt-3 border-t border-slate-200/60 dark:border-zinc-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+                      <a
+                        href="https://br.linkedin.com/in/thaleseverardo"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`h-9 px-3.5 rounded-xl border font-medium text-xs transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                          theme === 'dark'
+                            ? 'bg-zinc-800 hover:bg-zinc-700/80 border-zinc-700 text-zinc-200 hover:text-white'
+                            : 'bg-white hover:bg-slate-100 border-slate-300 text-slate-700 shadow-2xs'
+                        }`}
+                      >
+                        <Linkedin className="w-3.5 h-3.5 text-blue-500 dark:text-cyan-400 shrink-0" />
+                        <span>{t(activeLang, 'auth.connectLinkedIn')}</span>
+                      </a>
 
                       <button
                         type="button"
-                        onClick={() => signInWithGoogle()}
-                        className="h-10 px-4 rounded-xl font-sans text-xs font-semibold bg-white dark:bg-zinc-800 hover:bg-slate-50 dark:hover:bg-zinc-700 text-slate-800 dark:text-zinc-100 border border-slate-300/80 dark:border-white/10 shadow-sm transition-all flex items-center justify-center gap-2.5 shrink-0 cursor-pointer active:scale-95"
+                        onClick={() => {
+                          if (onOpenContact) {
+                            onOpenContact();
+                          } else {
+                            signInWithGoogle();
+                          }
+                        }}
+                        className="h-9 px-4 rounded-xl font-sans text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                       >
-                        <GoogleLogo />
+                        <LogIn className="w-3.5 h-3.5" />
                         <span>{t(activeLang, 'resume.gateButton')}</span>
+                      </button>
+                    </div>
+
+                    {/* SELO DE CONFORMIDADE LGPD VISÍVEL */}
+                    <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between text-[11px] font-sans opacity-70">
+                      <span className="flex items-center gap-1.5">
+                        <Lock className="w-3 h-3 text-emerald-500 shrink-0" />
+                        <span>{t(activeLang, 'resume.lgpdBadge')}</span>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={onOpenPrivacy}
+                        className="text-blue-600 dark:text-cyan-400 hover:underline font-mono text-[10px] cursor-pointer"
+                      >
+                        {t(activeLang, 'auth.privacyPolicyLink')}
                       </button>
                     </div>
                   </div>
@@ -669,7 +636,7 @@ ${PROFILE_DATA.education.map((e) => `- **${getEducationDegree(e.degree, e.degree
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs font-mono opacity-85 pt-0.5 pl-0.5">
                     <div className="flex items-center gap-1.5 text-slate-700 dark:text-zinc-300">
                       <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" />
-                      <span>{getProfileLocation()}</span>
+                      <span>{getProfileLocation(activeLang)}</span>
                     </div>
                     <span className="opacity-30 hidden sm:inline">•</span>
                     <div className="flex items-center gap-1.5 text-slate-500 dark:text-zinc-400 text-[11px]">
@@ -688,7 +655,7 @@ ${PROFILE_DATA.education.map((e) => `- **${getEducationDegree(e.degree, e.degree
               {t(activeLang, 'resume.executiveSummary')}
             </h2>
             <p className="text-sm opacity-90 leading-relaxed font-sans">
-              {getProfileSummary()}
+              {getProfileSummary(activeLang)}
             </p>
           </div>
 
@@ -746,26 +713,245 @@ ${PROFILE_DATA.education.map((e) => `- **${getEducationDegree(e.degree, e.degree
             })}
           </div>
 
-          {/* FORMAÇÃO & CERTIFICAÇÕES */}
-          <div className="mb-6 space-y-3">
+          {/* FORMAÇÃO & CERTIFICAÇÕES ESTRUTURADAS (KPI HUD + DEGREES + HASHES + TRACKS + IDIOMAS) */}
+          <div className="mb-6 space-y-6">
             <h2 className="text-xs font-mono font-bold uppercase tracking-wider border-b pb-1 dark:border-zinc-800 border-slate-200 text-blue-600 dark:text-blue-400 print:text-black">
-              {t(activeLang, 'resume.educationCert')}
+              {t(activeLang, 'academic.formalDegreesTitle')}
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
-              {PROFILE_DATA.education.map((edu, idx) => (
+
+            {/* KPI HUD MÉTRICO ACADÊMICO */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 print:hidden">
+              <div className={`p-3 rounded-xl border font-mono text-center ${theme === 'dark' ? 'bg-zinc-900/60 border-zinc-800' : 'bg-slate-50 border-slate-200'}`}>
+                <div className="text-base sm:text-lg font-bold text-blue-600 dark:text-cyan-400">1.660h</div>
+                <div className="text-[10px] font-semibold opacity-70 uppercase tracking-tight">{t(activeLang, 'academic.kpiHours')}</div>
+                <div className="text-[9px] opacity-50 truncate">{t(activeLang, 'academic.kpiHoursSub')}</div>
+              </div>
+
+              <div className={`p-3 rounded-xl border font-mono text-center ${theme === 'dark' ? 'bg-zinc-900/60 border-zinc-800' : 'bg-slate-50 border-slate-200'}`}>
+                <div className="text-base sm:text-lg font-bold text-blue-600 dark:text-cyan-400">4 Graus</div>
+                <div className="text-[10px] font-semibold opacity-70 uppercase tracking-tight">{t(activeLang, 'academic.kpiDegrees')}</div>
+                <div className="text-[9px] opacity-50 truncate">{t(activeLang, 'academic.kpiDegreesSub')}</div>
+              </div>
+
+              <div className={`p-3 rounded-xl border font-mono text-center ${theme === 'dark' ? 'bg-zinc-900/60 border-zinc-800' : 'bg-slate-50 border-slate-200'}`}>
+                <div className="text-base sm:text-lg font-bold text-emerald-500">🇨🇦 WES CA</div>
+                <div className="text-[10px] font-semibold opacity-70 uppercase tracking-tight">{t(activeLang, 'academic.kpiWes')}</div>
+                <div className="text-[9px] opacity-50 truncate">{t(activeLang, 'academic.kpiWesSub')}</div>
+              </div>
+
+              <div className={`p-3 rounded-xl border font-mono text-center ${theme === 'dark' ? 'bg-zinc-900/60 border-zinc-800' : 'bg-slate-50 border-slate-200'}`}>
+                <div className="text-base sm:text-lg font-bold text-amber-500">7 Hashes</div>
+                <div className="text-[10px] font-semibold opacity-70 uppercase tracking-tight">{t(activeLang, 'academic.kpiCredentials')}</div>
+                <div className="text-[9px] opacity-50 truncate">{t(activeLang, 'academic.kpiCredentialsSub')}</div>
+              </div>
+            </div>
+
+            {/* 1. FORMAÇÃO ACADÊMICA FORMAL */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs font-sans">
+              {PROFILE_DATA.academicDegrees.map((deg) => (
                 <div
-                  key={idx}
-                  className="p-3 rounded border dark:bg-zinc-900/60 dark:border-zinc-800 bg-slate-50 border-slate-200 print:border-gray-300"
+                  key={deg.id}
+                  className={`p-3.5 rounded-xl border flex flex-col justify-between transition-all ${
+                    theme === 'dark'
+                      ? 'bg-zinc-900/60 border-zinc-800 hover:border-zinc-700'
+                      : 'bg-slate-50 border-slate-200 hover:border-slate-300 shadow-2xs'
+                  } print:border-gray-300`}
                 >
-                  <div className="font-bold text-slate-900 dark:text-zinc-100 print:text-black">
-                    {getEducationDegree(edu.degree, edu.degreePT)}
+                  <div>
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="font-bold text-slate-900 dark:text-zinc-100 print:text-black text-sm leading-snug">
+                        {activeLang === 'PT' ? deg.degreeName : deg.degreeNameEN}
+                      </div>
+                      <span className="font-mono text-[11px] opacity-65 shrink-0 pt-0.5">{deg.period}</span>
+                    </div>
+
+                    <div className="text-blue-600 dark:text-cyan-400 font-semibold text-xs mt-1 print:text-black">
+                      {deg.institution}
+                    </div>
+
+                    {deg.status === 'IN_PROGRESS' && (
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 mt-2 rounded-md font-mono text-[10px] font-bold bg-blue-500/10 text-blue-600 dark:text-cyan-400 border border-blue-500/20">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                        {t(activeLang, 'academic.inProgressBadge')}
+                      </span>
+                    )}
+
+                    {deg.internationalEquivalency && (
+                      <div className="mt-2 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/25 text-emerald-700 dark:text-emerald-400 font-mono text-[10px] font-semibold flex items-center gap-1.5">
+                        <span>🇨🇦</span>
+                        <span>WES Canadian Equivalency: {deg.internationalEquivalency.canadianEquivalency}</span>
+                      </div>
+                    )}
+
+                    <p className="opacity-75 text-[11px] mt-2.5 leading-relaxed font-sans">
+                      {activeLang === 'PT' ? deg.focus : deg.focusEN}
+                    </p>
                   </div>
-                  <div className="text-blue-600 dark:text-blue-400 font-semibold mt-0.5 print:text-black">
-                    {edu.institution}
+
+                  <div className="flex flex-wrap gap-1 mt-3 pt-2.5 border-t border-slate-200/60 dark:border-zinc-800/80 font-mono text-[10px]">
+                    {deg.skills.map((s, sIdx) => (
+                      <span key={sIdx} className="px-1.5 py-0.5 rounded bg-slate-200/60 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300">
+                        {s}
+                      </span>
+                    ))}
                   </div>
-                  <div className="opacity-70 mt-1">{activeLang === 'PT' ? edu.focusPT : edu.focus}</div>
                 </div>
               ))}
+            </div>
+
+            {/* 2. CERTIFICAÇÕES ACADÊMICAS OFICIAIS COM HASH (ESTÁCIO MEC) */}
+            <div className="pt-2">
+              <h2 className="text-xs font-mono font-bold uppercase tracking-wider border-b pb-1 dark:border-zinc-800 border-slate-200 text-blue-600 dark:text-blue-400 print:text-black mb-3">
+                {t(activeLang, 'academic.verifiedCredentialsTitle')}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
+                {PROFILE_DATA.verifiedCredentials.map((cred) => (
+                  <div
+                    key={cred.id}
+                    className={`p-3.5 rounded-xl border flex flex-col justify-between ${
+                      theme === 'dark' ? 'bg-zinc-900/40 border-zinc-800' : 'bg-white border-slate-200 shadow-2xs'
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="font-semibold text-slate-900 dark:text-zinc-100 text-xs leading-snug">
+                          {activeLang === 'PT' ? cred.title : cred.titleEN}
+                        </div>
+                        <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 shrink-0">
+                          {cred.workloadHours}h
+                        </span>
+                      </div>
+                      <div className="text-[11px] text-slate-500 dark:text-zinc-400 mt-1">{cred.institution}</div>
+                      <div className="text-[10px] opacity-60 font-mono mt-1">Disciplinas: {cred.disciplinesIncluded.join(', ')}</div>
+                    </div>
+
+                    <div className="mt-3 pt-2 border-t border-slate-100 dark:border-zinc-800 flex items-center justify-between">
+                      <span className="font-mono text-[10px] opacity-50">{cred.issueDate}</span>
+                      <a
+                        href={cred.verificationUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 font-mono text-[10px] font-bold text-blue-600 dark:text-cyan-400 hover:underline cursor-pointer"
+                      >
+                        <span>{t(activeLang, 'academic.verifyCredential')}</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 3. TRILHAS TÉCNICAS E ESPECIALIZAÇÕES */}
+            <div className="pt-2">
+              <h2 className="text-xs font-mono font-bold uppercase tracking-wider border-b pb-1 dark:border-zinc-800 border-slate-200 text-blue-600 dark:text-blue-400 print:text-black mb-3">
+                {t(activeLang, 'academic.specializedTracksTitle')}
+              </h2>
+              <div className="flex flex-wrap gap-2 text-xs font-sans">
+                {PROFILE_DATA.technicalCourses.map((tc) => (
+                  <div
+                    key={tc.id}
+                    className={`px-3 py-2 rounded-xl border flex items-center gap-2 ${
+                      theme === 'dark' ? 'bg-zinc-900/60 border-zinc-800' : 'bg-slate-50 border-slate-200'
+                    }`}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
+                    <div>
+                      <div className="font-medium text-slate-900 dark:text-zinc-100 text-xs leading-none">{tc.title}</div>
+                      <div className="text-[10px] opacity-60 font-mono mt-1">
+                        {tc.institution} {tc.associatedCompany ? `· ${tc.associatedCompany}` : ''}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 4. IDIOMAS & PROFICIÊNCIA */}
+            <div className="pt-2">
+              <h2 className="text-xs font-mono font-bold uppercase tracking-wider border-b pb-1 dark:border-zinc-800 border-slate-200 text-blue-600 dark:text-blue-400 print:text-black mb-3">
+                {t(activeLang, 'academic.languagesTitle')}
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-sans text-xs">
+                {PROFILE_DATA.languages.map((langItem, lIdx) => (
+                  <div
+                    key={lIdx}
+                    className={`p-3 rounded-xl border ${
+                      theme === 'dark' ? 'bg-zinc-900/60 border-zinc-800' : 'bg-slate-50 border-slate-200'
+                    }`}
+                  >
+                    <div className="font-bold text-slate-900 dark:text-zinc-100">{langItem.language}</div>
+                    <div className="text-blue-600 dark:text-cyan-400 text-[11px] font-medium mt-0.5">
+                      {activeLang === 'PT' ? langItem.proficiencyPT : langItem.proficiencyEN}
+                    </div>
+                    <div className="font-mono text-[10px] opacity-50 mt-1">Quadro Europeu: {langItem.cefrLevel}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          
+
+            {/* 5. COMPETÊNCIAS TÉCNICAS (HARD SKILLS POR DOMÍNIO) */}
+            <div className="pt-2">
+              <h2 className="text-xs font-mono font-bold uppercase tracking-wider border-b pb-1 dark:border-zinc-800 border-slate-200 text-blue-600 dark:text-blue-400 print:text-black mb-3">
+                {t(activeLang, 'skills.hardSkillsTitle')}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
+                {PROFILE_DATA.hardSkillsDomains.map((dom) => (
+                  <div
+                    key={dom.id}
+                    className={`p-3.5 rounded-xl border flex flex-col justify-between ${
+                      theme === 'dark' ? 'bg-zinc-900/40 border-zinc-800' : 'bg-slate-50 border-slate-200'
+                    }`}
+                  >
+                    <div className="font-semibold text-slate-900 dark:text-zinc-100 text-xs mb-2">
+                      {activeLang === 'PT' ? dom.categoryPT : dom.categoryEN}
+                    </div>
+                    <div className="flex flex-wrap gap-1 font-mono text-[10px]">
+                      {dom.skills.map((sk, skIdx) => (
+                        <span
+                          key={skIdx}
+                          className="px-2 py-0.5 rounded-md border dark:bg-zinc-950 dark:border-zinc-800 bg-white border-slate-200 text-slate-700 dark:text-zinc-300"
+                        >
+                          {sk}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 6. LIDERANÇA TÉCNICA & SOFT SKILLS (STAFF / PRINCIPAL ENGINEER) */}
+            <div className="pt-2">
+              <h2 className="text-xs font-mono font-bold uppercase tracking-wider border-b pb-1 dark:border-zinc-800 border-slate-200 text-blue-600 dark:text-blue-400 print:text-black mb-3">
+                {t(activeLang, 'skills.softSkillsTitle')}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
+                {PROFILE_DATA.softSkillsCompetencies.map((comp) => (
+                  <div
+                    key={comp.id}
+                    className={`p-3.5 rounded-xl border flex flex-col justify-between ${
+                      theme === 'dark' ? 'bg-zinc-900/40 border-zinc-800' : 'bg-slate-50 border-slate-200'
+                    }`}
+                  >
+                    <div>
+                      <div className="font-semibold text-slate-900 dark:text-zinc-100 text-xs flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                        <span>{activeLang === 'PT' ? comp.titlePT : comp.titleEN}</span>
+                      </div>
+                      <p className="opacity-75 text-[11px] mt-1.5 leading-relaxed font-sans">
+                        {activeLang === 'PT' ? comp.descriptionPT : comp.descriptionEN}
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-1 mt-2.5 pt-2 border-t border-slate-200/60 dark:border-zinc-800/80 font-mono text-[9px] opacity-60">
+                      {comp.linkedSkills.map((ls, lsIdx) => (
+                        <span key={lsIdx}>#{ls}</span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -806,7 +992,7 @@ ${PROFILE_DATA.education.map((e) => `- **${getEducationDegree(e.degree, e.degree
             <Printer className="w-4 h-4 opacity-75" />
           </button>
 
-          {/* COMPARTILHAR (MENU ABRE PARA CIMA NO MOBILE) */}
+          {/* COMPARTILHAR */}
           <div className="relative">
             <button
               type="button"
@@ -897,7 +1083,7 @@ ${PROFILE_DATA.education.map((e) => `- **${getEducationDegree(e.degree, e.degree
             )}
           </div>
 
-          {/* CTA PRIMÁRIO: BAIXAR MULTIFORMATO (MENU ABRE PARA CIMA NO MOBILE) */}
+          {/* CTA PRIMÁRIO: BAIXAR MULTIFORMATO */}
           <div className="relative flex-1">
             <button
               type="button"

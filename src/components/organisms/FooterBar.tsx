@@ -11,9 +11,10 @@ import { t } from '../../i18n/translations';
 interface FooterBarProps {
   systemState: SystemState;
   updateState?: (updates: Partial<SystemState>) => void;
+  onOpenPrivacy?: () => void;
 }
 
-export const FooterBar: React.FC<FooterBarProps> = ({ systemState }) => {
+export const FooterBar: React.FC<FooterBarProps> = ({ systemState, onOpenPrivacy }) => {
   const { language, theme } = systemState;
 
   const currentYear = new Date().getFullYear();
@@ -36,13 +37,21 @@ export const FooterBar: React.FC<FooterBarProps> = ({ systemState }) => {
         <span className="text-[11px] opacity-60 hidden sm:inline">
 {t(language, 'footer.subtitle')}
         </span>
+        <span className="opacity-30 hidden sm:inline">•</span>
+        <button
+          type="button"
+          onClick={onOpenPrivacy}
+          className="text-[11px] opacity-70 hover:opacity-100 hover:underline transition-opacity cursor-pointer font-sans"
+        >
+          {t(language, 'footer.privacyLink')}
+        </button>
       </div>
 
       {/* BANDEJA DE REDES SOCIAIS (ÍCONES MINIMALISTAS SEM BORDA/FUNDO) */}
       <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
         {/* LINKEDIN (ATIVO) */}
         <a
-          href="https://br.linkedin.com/in/thaleseareis"
+          href="https://br.linkedin.com/in/thaleseverardo"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="LinkedIn"

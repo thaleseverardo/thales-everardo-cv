@@ -2,12 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   ArrowLeft,
   FileText,
-  Mail,
-  MessageSquare,
-  MessageCircle,
-  Linkedin,
-  Phone,
-  Handshake,
   Sun,
   Moon,
   List,
@@ -17,28 +11,20 @@ import {
   AlertTriangle,
   RotateCcw,
   Settings,
-  Globe,
   ChevronDown,
   Volume2,
   VolumeX,
-  DownloadCloud,
   Check,
-  CheckCircle2,
-  LogIn,
-  User,
   LogOut,
-  Smartphone,
-  MonitorSmartphone,
-  ChevronRight,
-  Share,
-  PlusSquare,
 } from 'lucide-react';
 import { SystemState, AppLanguage, ViewLayout, ProfileLens } from '../../types';
 import { PROFILE_LENSES_CONFIG } from '../../data/curriculumData';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
 import { useAuth } from '../../hooks/useAuth';
 import { usePWAInstall } from '../../hooks/usePWAInstall';
-import { t } from '../../i18n/translations';
+import { t, LOCALIZED_LANGUAGE_NAMES } from '../../i18n/translations';
+import { SpeedDialContact } from '../molecules/SpeedDialContact';
+import { PWAInstallGuideModal } from '../molecules/PWAInstallGuideModal';
 
 import thalesAvatar from '../../assets/images/thales_avatar_250x250.webp?inline';
 
@@ -48,13 +34,6 @@ interface ControlPanelProps {
   onOpenContact: () => void;
   onOpenResume: () => void;
 }
-
-const LOCALIZED_LANGUAGE_NAMES: Record<AppLanguage, Record<AppLanguage, string>> = {
-  PT: { PT: 'Português', EN: 'Inglês', ES: 'Espanhol', FR: 'Francês' },
-  EN: { PT: 'Portuguese', EN: 'English', ES: 'Spanish', FR: 'French' },
-  ES: { PT: 'Portugués', EN: 'Inglés', ES: 'Español', FR: 'Francés' },
-  FR: { PT: 'Portugais', EN: 'Anglais', ES: 'Espagnol', FR: 'Français' },
-};
 
 const GuestAvatarToken: React.FC<{ sizeClass?: string }> = ({ sizeClass = 'w-11 h-11' }) => (
   <div
@@ -137,7 +116,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [showInstallGuide, setShowInstallGuide] = useState(false);
   const [radialOpen, setRadialOpen] = useState(false);
-  const radialMenuRef = useRef<HTMLDivElement>(null);
   const settingsMenuRef = useRef<HTMLDivElement>(null);
   const settingsPopoverRef = useRef<HTMLDivElement>(null);
 
@@ -155,28 +133,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
     observer.observe(leftColRef.current);
     return () => observer.disconnect();
   }, []);
-
-  useEffect(() => {
-    const handleRadialClickOutside = (event: MouseEvent | TouchEvent) => {
-      if (radialMenuRef.current && !radialMenuRef.current.contains(event.target as Node)) {
-        setRadialOpen(false);
-      }
-    };
-    const handleRadialKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setRadialOpen(false);
-    };
-
-    if (radialOpen) {
-      document.addEventListener("mousedown", handleRadialClickOutside);
-      document.addEventListener("touchstart", handleRadialClickOutside, { passive: true });
-      document.addEventListener("keydown", handleRadialKeyDown);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleRadialClickOutside);
-      document.removeEventListener("touchstart", handleRadialClickOutside);
-      document.removeEventListener("keydown", handleRadialKeyDown);
-    };
-  }, [radialOpen]);
 
   useEffect(() => {
     const handleSettingsClickOutside = (event: MouseEvent | TouchEvent) => {
@@ -824,221 +780,26 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         </div>
       </div>
 
-      {/* 4. SPEED-DIAL RADIAL EM ARCO (SATÉLITES COM TRAVA DE CLIQUE) */}
-      {radialOpen && (
-        <div
-          onClick={() => setRadialOpen(false)}
-          className="fixed inset-0 z-35 bg-black/20 backdrop-blur-[1px] md:hidden animate-in fade-in duration-150"
-          aria-hidden="true"
-        />
-      )}
+      {/* 4. SPEED-DIAL RADIAL EM ARCO */}
+      <SpeedDialContact
+        isOpen={radialOpen}
+        onToggle={setRadialOpen}
+        isAuthenticated={isAuthenticated}
+        contact={contact}
+        language={language}
+        theme={theme}
+        onOpenContactModal={onOpenContact}
+        onPlaySound={(sType) => play(sType)}
+      />
 
-      <div
-        ref={radialMenuRef}
-        className="fixed bottom-[max(4rem,calc(3.5rem+env(safe-area-inset-bottom,0px)))] right-5 sm:bottom-16 sm:right-8 z-40 select-none group"
-      >
-        <div className="absolute -top-16 -left-16 w-38 h-38 pointer-events-none group-hover:pointer-events-auto rounded-tl-full" />
-
-        {/* SATÉLITE 1: E-MAIL (PROTEGIDO / FIRESTORE) */}
-        <button
-          type="button"
-          onClick={() => {
-            setRadialOpen(false);
-            if (isAuthenticated && contact?.email) {
-              window.location.href = `mailto:${contact.email}`;
-              play('click');
-            } else {
-              onOpenContact();
-              play('alert');
-            }
-          }}
-          aria-label="E-mail"
-          className={`absolute -top-14 left-9 w-11 h-11 rounded-full border shadow-xl flex items-center justify-center cursor-pointer transition-all duration-200 ease-out group/sat ${
-            radialOpen
-              ? 'opacity-100 scale-100 pointer-events-auto'
-              : 'opacity-0 scale-50 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto delay-150 group-hover:delay-0'
-          } ${
-            theme === 'dark'
-              ? 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-700 hover:scale-110 shadow-md shadow-black/50'
-              : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300 hover:scale-110 shadow-slate-400/30'
-          }`}
-        >
-          <Mail className="w-5 h-5 opacity-80" />
-          <span className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-zinc-900 text-zinc-100 border border-zinc-800 shadow-md opacity-0 group-hover/sat:opacity-100 pointer-events-none whitespace-nowrap transition-opacity">
-            {isAuthenticated ? "E-mail" : "🔒 E-mail"}
-          </span>
-        </button>
-
-        {/* SATÉLITE 2: LINKEDIN (100% PÚBLICO) */}
-        <a
-          href="https://br.linkedin.com/in/thaleseareis"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => {
-            setRadialOpen(false);
-            play('click');
-          }}
-          aria-label="LinkedIn"
-          className={`absolute -top-12.5 -left-3.5 w-11 h-11 rounded-full border shadow-xl flex items-center justify-center cursor-pointer transition-all duration-200 delay-50 ease-out group/sat ${
-            radialOpen
-              ? 'opacity-100 scale-100 pointer-events-auto'
-              : 'opacity-0 scale-50 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto delay-150 group-hover:delay-50'
-          } ${
-            theme === 'dark'
-              ? 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:text-blue-400 hover:border-blue-500/50 hover:scale-110 shadow-md shadow-black/50'
-              : 'bg-white border-slate-200 text-slate-700 hover:text-blue-600 hover:border-blue-400 hover:scale-110 shadow-slate-400/30'
-          }`}
-        >
-          <Linkedin className="w-5 h-5 text-blue-500 dark:text-cyan-400" />
-          <span className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-zinc-900 text-zinc-100 border border-zinc-800 shadow-md opacity-0 group-hover/sat:opacity-100 pointer-events-none whitespace-nowrap transition-opacity">
-            LinkedIn
-          </span>
-        </a>
-
-        {/* SATÉLITE 3: TELEFONE (PROTEGIDO / FIRESTORE) */}
-        <button
-          type="button"
-          onClick={() => {
-            setRadialOpen(false);
-            if (isAuthenticated && contact?.phone) {
-              const cleanPhone = contact.phone.replace(/[^0-9]/g, "");
-              window.location.href = `tel:+${cleanPhone}`;
-              play('click');
-            } else {
-              onOpenContact();
-              play('alert');
-            }
-          }}
-          aria-label={language === 'PT' ? 'Ligar' : 'Phone'}
-          className={`absolute -top-3.5 -left-12.5 w-11 h-11 rounded-full border shadow-xl flex items-center justify-center cursor-pointer transition-all duration-200 delay-100 ease-out group/sat ${
-            radialOpen
-              ? 'opacity-100 scale-100 pointer-events-auto'
-              : 'opacity-0 scale-50 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto delay-150 group-hover:delay-100'
-          } ${
-            theme === 'dark'
-              ? 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:text-amber-400 hover:border-amber-500/50 hover:scale-110 shadow-md shadow-black/50'
-              : 'bg-white border-slate-200 text-slate-700 hover:text-amber-600 hover:border-amber-400 hover:scale-110 shadow-slate-400/30'
-          }`}
-        >
-          <Phone className="w-5 h-5 text-amber-500" />
-          <span className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-zinc-900 text-zinc-100 border border-zinc-800 shadow-md opacity-0 group-hover/sat:opacity-100 pointer-events-none whitespace-nowrap transition-opacity">
-            {isAuthenticated ? (language === 'PT' ? 'Ligar' : language === 'ES' ? 'Llamar' : language === 'FR' ? 'Appeler' : 'Call') : "🔒 " + (language === 'PT' ? 'Ligar' : 'Call')}
-          </span>
-        </button>
-
-        {/* SATÉLITE 4: WHATSAPP (PROTEGIDO / FIRESTORE) */}
-        <button
-          type="button"
-          onClick={() => {
-            setRadialOpen(false);
-            if (isAuthenticated && contact?.phone) {
-              const cleanPhone = contact.phone.replace(/[^0-9]/g, "");
-              window.open(`https://wa.me/${cleanPhone}`, "_blank", "noopener,noreferrer");
-              play('click');
-            } else {
-              onOpenContact();
-              play('alert');
-            }
-          }}
-          aria-label="WhatsApp"
-          className={`absolute top-9 -left-14 w-11 h-11 rounded-full border shadow-xl flex items-center justify-center cursor-pointer transition-all duration-200 delay-150 ease-out group/sat ${
-            radialOpen
-              ? 'opacity-100 scale-100 pointer-events-auto'
-              : 'opacity-0 scale-50 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto delay-150 group-hover:delay-150'
-          } ${
-            theme === 'dark'
-              ? 'bg-zinc-900 border-zinc-700 text-zinc-300 hover:text-emerald-400 hover:border-emerald-500/50 hover:scale-110 shadow-md shadow-black/50'
-              : 'bg-white border-slate-200 text-slate-700 hover:text-emerald-600 hover:border-emerald-400 hover:scale-110 shadow-slate-400/30'
-          }`}
-        >
-          <MessageCircle className="w-5 h-5 text-emerald-500" />
-          <span className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-zinc-900 text-zinc-100 border border-zinc-800 shadow-md opacity-0 group-hover/sat:opacity-100 pointer-events-none whitespace-nowrap transition-opacity">
-            {isAuthenticated ? "WhatsApp" : "🔒 WhatsApp"}
-          </span>
-        </button>
-
-        {/* ESFERA PRINCIPAL AZUL RADIAL */}
-        <button
-          type="button"
-          onClick={() => {
-            setRadialOpen((prev) => !prev);
-            play('click');
-          }}
-          className={`relative w-19 h-19 sm:w-20 sm:h-20 rounded-full text-white shadow-xl shadow-black/50 hover:shadow-2xl hover:shadow-black/60 transition-all cursor-pointer border flex flex-col items-center justify-center select-none ${
-            radialOpen
-              ? 'bg-blue-700 border-white/80 ring-2 ring-blue-500/40 scale-105'
-              : 'bg-blue-600 hover:bg-blue-500 border-blue-400/30 hover:scale-105 active:scale-95'
-          }`}
-          aria-expanded={radialOpen}
-          aria-label={language === 'PT' ? 'Contato' : language === 'ES' ? 'Contacto' : 'Contact'}
-        >
-          <Handshake className="w-6 h-6 transition-transform group-hover:scale-110" />
-          <span className="font-mono text-[11px] font-bold uppercase tracking-wider mt-1">
-            {language === 'PT' ? 'CONTATO' : language === 'ES' ? 'CONTACTO' : 'CONTACT'}
-          </span>
-        </button>
-      </div>
-
-      {/* MODAL IN-APP DE INSTALAÇÃO DO PWA (SEM ALERT DO NAVEGADOR) */}
-      {showInstallGuide && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 font-sans animate-in fade-in duration-150">
-          <div
-            className={`w-full max-w-sm rounded-2xl p-5 shadow-2xl border ${
-              theme === 'dark'
-                ? 'bg-zinc-950 border-zinc-700 text-zinc-100'
-                : 'bg-white border-slate-300 text-slate-900'
-            }`}
-          >
-            <div className="flex items-center justify-between pb-3 border-b dark:border-zinc-800 border-slate-200">
-              <h3 className="text-sm font-bold flex items-center gap-2">
-                <DownloadCloud className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
-                <span>{isIOS ? t(language, 'pwa.iosTitle') : t(language, 'pwa.guideTitle')}</span>
-              </h3>
-              <button
-                onClick={() => setShowInstallGuide(false)}
-                className="p-1 rounded-lg hover:bg-zinc-800/40 text-zinc-400 cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="mt-4 space-y-3 text-xs">
-              {isIOS ? (
-                <>
-                  <div className="flex items-start gap-3 p-3 rounded-xl dark:bg-zinc-900/60 dark:border-zinc-800 bg-slate-50 border border-slate-200">
-                    <Share className="w-4 h-4 text-blue-600 dark:text-cyan-400 shrink-0 mt-0.5" />
-                    <div>{t(language, 'pwa.iosStep1')}</div>
-                  </div>
-
-                  <div className="flex items-start gap-3 p-3 rounded-xl dark:bg-zinc-900/60 dark:border-zinc-800 bg-slate-50 border border-slate-200">
-                    <PlusSquare className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <div>{t(language, 'pwa.iosStep2')}</div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex items-start gap-3 p-3 rounded-xl dark:bg-zinc-900/60 dark:border-zinc-800 bg-slate-50 border border-slate-200">
-                    <DownloadCloud className="w-4 h-4 text-blue-600 dark:text-cyan-400 shrink-0 mt-0.5" />
-                    <div>{t(language, 'pwa.guideDesktopStep')}</div>
-                  </div>
-
-                  <div className="flex items-start gap-3 p-3 rounded-xl dark:bg-zinc-900/60 dark:border-zinc-800 bg-slate-50 border border-slate-200">
-                    <Smartphone className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <div>{t(language, 'pwa.guideMobileStep')}</div>
-                  </div>
-                </>
-              )}
-            </div>
-
-            <button
-              onClick={() => setShowInstallGuide(false)}
-              className="mt-5 w-full rounded-xl bg-blue-600 py-2.5 text-xs font-semibold text-white hover:bg-blue-500 transition-colors cursor-pointer"
-            >
-              {t(language, 'pwa.iosGotIt')}
-            </button>
-          </div>
-        </div>
-      )}
+      {/* MODAL IN-APP DE INSTALAÇÃO DO PWA */}
+      <PWAInstallGuideModal
+        isOpen={showInstallGuide}
+        onClose={() => setShowInstallGuide(false)}
+        isIOS={isIOS}
+        language={language}
+        theme={theme}
+      />
     </>
   );
 };

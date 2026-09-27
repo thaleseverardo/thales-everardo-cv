@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { DownloadCloud, Smartphone, X, Share, PlusSquare, Sparkles } from 'lucide-react';
+import { DownloadCloud, Smartphone, X, Sparkles } from 'lucide-react';
 import { usePWAInstall } from '../../hooks/usePWAInstall';
 import { AppLanguage, AppTheme } from '../../types';
 import { t } from '../../i18n/translations';
+import { PWAInstallGuideModal } from '../molecules/PWAInstallGuideModal';
 import {
   getStoredPreferences,
   updateStoredPreferences,
@@ -138,52 +139,16 @@ export const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ language, th
         </div>
       </aside>
 
-      {showIOSGuide && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4">
-          <div
-            className={`w-full max-w-sm rounded-xl p-5 shadow-2xl border ${
-              theme === 'dark'
-                ? 'bg-zinc-950 border-zinc-700 text-zinc-100'
-                : 'bg-white border-slate-300 text-slate-900'
-            }`}
-          >
-            <div className="flex items-center justify-between pb-3 border-b dark:border-zinc-800 border-slate-200">
-              <h3 className="font-mono text-xs font-bold flex items-center gap-2">
-                <Smartphone className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
-                <span>{t(language, 'pwa.iosTitle')}</span>
-              </h3>
-              <button
-                onClick={() => setShowIOSGuide(false)}
-                className="p-1 rounded hover:bg-zinc-800/40 text-zinc-400"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="mt-4 space-y-3 font-sans text-xs">
-              <div className="flex items-start gap-3 p-3 rounded-lg dark:bg-zinc-900/60 dark:border-zinc-800 bg-slate-50 border border-slate-200">
-                <Share className="w-4 h-4 text-blue-600 dark:text-cyan-400 shrink-0 mt-0.5" />
-                <div>{t(language, 'pwa.iosStep1')}</div>
-              </div>
-
-              <div className="flex items-start gap-3 p-3 rounded-lg dark:bg-zinc-900/60 dark:border-zinc-800 bg-slate-50 border border-slate-200">
-                <PlusSquare className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                <div>{t(language, 'pwa.iosStep2')}</div>
-              </div>
-            </div>
-
-            <button
-              onClick={() => {
-                setShowIOSGuide(false);
-                handleNotNow();
-              }}
-              className="mt-5 w-full rounded-md bg-blue-600 py-2 text-xs font-mono font-bold text-white hover:bg-blue-500 transition-colors"
-            >
-              {t(language, 'pwa.iosGotIt')}
-            </button>
-          </div>
-        </div>
-      )}
+      <PWAInstallGuideModal
+        isOpen={showIOSGuide}
+        onClose={() => {
+          setShowIOSGuide(false);
+          handleNotNow();
+        }}
+        isIOS={isIOS}
+        language={language}
+        theme={theme}
+      />
     </>
   );
 };

@@ -13,6 +13,7 @@ import {
 import { SystemState, MetricHighlight } from '../../types';
 import { CURRICULUM_NODES } from '../../data/curriculumData';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
+import { logAnalyticsEvent } from '../../services/firebaseAuth';
 import { t, getNodeContent } from '../../i18n/translations';
 
 interface NodeInspectorProps {
@@ -47,6 +48,12 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
   } = systemState;
 
   const { play } = useSoundEffects(soundEnabled);
+
+  React.useEffect(() => {
+    if (nodeId) {
+      logAnalyticsEvent('architecture_inspect', { nodeId });
+    }
+  }, [nodeId]);
   const [activeTab, setActiveTab] = useState<'architecture' | 'logs'>('architecture');
 
   const currentIndex = CURRICULUM_NODES.findIndex((n) => n.id === nodeId);

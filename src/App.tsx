@@ -12,6 +12,9 @@ import { NodeInspector } from './components/organisms/NodeInspector';
 const ContactAuthModal = React.lazy(() =>
   import('./components/organisms/ContactAuthModal').then((m) => ({ default: m.ContactAuthModal }))
 );
+const PrivacyPolicyModal = React.lazy(() =>
+  import('./components/organisms/PrivacyPolicyModal').then((m) => ({ default: m.PrivacyPolicyModal }))
+);
 const RawResumeModal = React.lazy(() =>
   import('./components/organisms/RawResumeModal').then((m) => ({ default: m.RawResumeModal }))
 );
@@ -74,6 +77,7 @@ export default function App() {
 
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
 
   const updateState = useCallback((updates: Partial<SystemState>) => {
     setSystemState((prev) => {
@@ -190,7 +194,23 @@ export default function App() {
           <RawResumeModal
             isOpen={isResumeOpen}
             onClose={() => setIsResumeOpen(false)}
+            onOpenContact={() => {
+              setIsResumeOpen(false);
+              setIsContactOpen(true);
+            }}
+            onOpenPrivacy={() => setIsPrivacyOpen(true)}
             soundEnabled={systemState.soundEnabled}
+            language={systemState.language}
+            theme={systemState.theme}
+          />
+        </React.Suspense>
+      )}
+
+      {isPrivacyOpen && (
+        <React.Suspense fallback={null}>
+          <PrivacyPolicyModal
+            isOpen={isPrivacyOpen}
+            onClose={() => setIsPrivacyOpen(false)}
             language={systemState.language}
             theme={systemState.theme}
           />
@@ -200,6 +220,7 @@ export default function App() {
       <FooterBar
         systemState={systemState}
         updateState={updateState}
+        onOpenPrivacy={() => setIsPrivacyOpen(true)}
       />
     </div>
   );

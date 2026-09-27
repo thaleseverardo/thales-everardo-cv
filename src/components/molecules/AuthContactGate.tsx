@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Copy, Check, Mail, Phone, Lock, ShieldCheck, LogOut } from 'lucide-react';
+import { Copy, Check, Mail, Phone, Lock, LogIn, LogOut } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import { revokeAccessAndPurgeUserData } from '../../services/firebaseAuth';
 import { AppLanguage, AppTheme } from '../../types';
 import { t } from '../../i18n/translations';
 
@@ -10,7 +11,7 @@ interface AuthContactGateProps {
 }
 
 export const AuthContactGate: React.FC<AuthContactGateProps> = ({ language, theme }) => {
-  const { isAuthenticated, contact, signInWithGoogle, signOut } = useAuth();
+  const { user, isAuthenticated, contact, signInWithGoogle, signOut } = useAuth();
   const [copiedField, setCopiedField] = useState<'email' | 'phone' | null>(null);
 
   const email = contact?.email || '';
@@ -73,28 +74,32 @@ export const AuthContactGate: React.FC<AuthContactGateProps> = ({ language, them
         </div>
 
         <div
-          className={`p-3.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+          className={`p-3.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 ${
             theme === 'dark'
-              ? 'bg-zinc-900/60 border-zinc-800 text-zinc-300'
-              : 'bg-white border-slate-300 text-slate-700 shadow-2xs'
+              ? 'bg-zinc-900/40 border-zinc-800/80 border-t-zinc-700/60 text-zinc-300 shadow-xs'
+              : 'bg-slate-50/80 border-slate-200/90 text-slate-700 shadow-2xs'
           }`}
         >
-          <div className="space-y-0.5 text-xs">
-            <div className="font-mono font-bold flex items-center gap-1.5 text-zinc-900 dark:text-zinc-100">
-              <ShieldCheck className="w-4 h-4 text-emerald-500" />
-              <span>{t(language, 'gate.antiBotTitle')}</span>
+          <div className="flex items-start sm:items-center gap-2.5 min-w-0">
+            <div className="flex items-center justify-center shrink-0 text-slate-400 dark:text-zinc-400 mt-0.5 sm:mt-0">
+              <Lock className="w-4 h-4" />
             </div>
-            <p className="text-[11px] opacity-70 font-sans">
-              {t(language, 'gate.antiBotDesc')}
-            </p>
+            <div className="space-y-0.5 text-xs min-w-0">
+              <h4 className="font-sans font-semibold text-xs text-zinc-900 dark:text-zinc-100 tracking-tight leading-snug">
+                {t(language, 'gate.antiBotTitle')}
+              </h4>
+              <p className="text-[11px] text-slate-500 dark:text-zinc-400/90 font-sans leading-normal">
+                {t(language, 'gate.antiBotDesc')}
+              </p>
+            </div>
           </div>
 
           <button
             type="button"
             onClick={() => signInWithGoogle()}
-            className="h-9 px-4 rounded-lg text-xs font-mono font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-xs transition-colors shrink-0 flex items-center justify-center gap-2 cursor-pointer"
+            className="h-8.5 px-3.5 rounded-lg text-xs font-sans font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-xs ring-1 ring-inset ring-white/15 transition-all shrink-0 flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
           >
-            <ShieldCheck className="w-4 h-4" />
+            <LogIn className="w-3.5 h-3.5" />
             <span>{t(language, 'gate.unlockContacts')}</span>
           </button>
         </div>
@@ -188,14 +193,26 @@ export const AuthContactGate: React.FC<AuthContactGateProps> = ({ language, them
         <span className="truncate">
           {t(language, 'gate.verifiedSession')}
         </span>
-        <button
-          type="button"
-          onClick={() => signOut()}
-          className="hover:underline text-rose-500 flex items-center gap-1 shrink-0 ml-2 cursor-pointer"
-        >
-          <LogOut className="w-3 h-3" />
-          <span>{t(language, 'gate.lockContacts')}</span>
-        </button>
+        <div className="flex items-center gap-3 shrink-0 ml-2">
+          <button
+            type="button"
+            onClick={async () => {
+              await revokeAccessAndPurgeUserData(user);
+            }}
+            className="hover:underline text-[10px] text-zinc-500 hover:text-rose-500 transition-colors cursor-pointer"
+            title="Excluir dados da sessão conforme Art. 18 da LGPD"
+          >
+            {t(language, 'auth.revokeData')}
+          </button>
+          <button
+            type="button"
+            onClick={() => signOut()}
+            className="hover:underline text-rose-500 flex items-center gap-1 cursor-pointer font-bold"
+          >
+            <LogOut className="w-3 h-3" />
+            <span>{t(language, 'gate.lockContacts')}</span>
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import { getAnalytics, isSupported, logEvent, Analytics } from 'firebase/analytics';
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import {
   getAuth,
@@ -7,8 +8,8 @@ import {
   signOut,
   onAuthStateChanged,
   User,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
+  deleteUser,
+  reauthenticateWithPopup,
 } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
@@ -32,6 +33,7 @@ const firebaseConfig = {
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || '',
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '',
   appId: import.meta.env.VITE_FIREBASE_APP_ID || '',
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || '',
 };
 
 export const isFirebaseConfigured = Boolean(firebaseConfig.apiKey && firebaseConfig.authDomain);
@@ -39,6 +41,28 @@ export const isFirebaseConfigured = Boolean(firebaseConfig.apiKey && firebaseCon
 const app = getApps().length > 0 ? getApp() : (isFirebaseConfigured ? initializeApp(firebaseConfig) : null);
 export const auth = app ? getAuth(app) : null;
 export const db = app ? getFirestore(app) : null;
+
+export let analytics: Analytics | null = null;
+if (typeof window !== 'undefined' && app) {
+  isSupported().then((supported) => {
+    if (supported && app) {
+      try {
+        analytics = getAnalytics(app);
+      } catch (e) {
+        console.warn('Analytics não inicializado:', e);
+      }
+    }
+  });
+}
+
+export function logAnalyticsEvent(eventName: string, eventParams?: Record<string, any>) {
+  try {
+    if (analytics) {
+      logEvent(analytics, eventName, eventParams);
+    }
+  } catch {}
+}
+
 
 type AuthListener = (user: AuthUser | null) => void;
 const listeners: Set<AuthListener> = new Set();
@@ -81,6 +105,8 @@ export async function signInWithGoogle(): Promise<AuthUser> {
   }
 
   const provider = new GoogleAuthProvider();
+  provider.addScope('email');
+  provider.addScope('profile');
   provider.setCustomParameters({ prompt: 'select_account' });
 
   try {
@@ -129,26 +155,6 @@ export async function signInWithGithub(): Promise<AuthUser> {
   }
 }
 
-export async function signInWithEmail(email: string, pass: string): Promise<AuthUser> {
-  if (!auth) throw new Error("Firebase Auth não configurado");
-  const res = await signInWithEmailAndPassword(auth, email.trim(), pass);
-  const user = mapFirebaseUser(res.user);
-  if (!user) throw new Error("Falha ao autenticar");
-  currentUser = user;
-  listeners.forEach((cb) => cb(currentUser));
-  return user;
-}
-
-export async function signUpWithEmail(email: string, pass: string): Promise<AuthUser> {
-  if (!auth) throw new Error("Firebase Auth não configurado");
-  const res = await createUserWithEmailAndPassword(auth, email.trim(), pass);
-  const user = mapFirebaseUser(res.user);
-  if (!user) throw new Error("Falha ao registrar");
-  currentUser = user;
-  listeners.forEach((cb) => cb(currentUser));
-  return user;
-}
-
 export async function signOutUser(): Promise<void> {
   try {
     if (auth) {
@@ -185,3 +191,69 @@ export async function fetchProtectedContact(user: AuthUser | null): Promise<Cont
 
   return null;
 }
+
+export async function revokeAccessAndPurgeUserData(user?: AuthUser | null): Promise<boolean> {
+  if (!auth) return false;
+
+  let firebaseUser = auth.currentUser;
+  if (!firebaseUser) {
+    currentUser = null;
+    listeners.forEach((cb) => cb(null));
+    return true;
+  }
+
+  // 1. Limpeza de registros no Firestore se houver
+  if (db && firebaseUser.uid) {
+    try {
+      const { deleteDoc, doc } = await import('firebase/firestore');
+      await deleteDoc(doc(db, "audit_sessions", firebaseUser.uid));
+    } catch {}
+  }
+
+  // 2. Tentativa direta de exclusão
+  try {
+    await deleteUser(firebaseUser);
+    currentUser = null;
+    listeners.forEach((cb) => cb(null));
+    return true;
+  } catch (err: any) {
+    // 3. Tratamento de segurança obrigatório: auth/requires-recent-login
+    if (err?.code === 'auth/requires-recent-login') {
+      try {
+        const providerId = firebaseUser.providerData[0]?.providerId || '';
+        const provider = providerId.includes('github')
+          ? new GithubAuthProvider()
+          : new GoogleAuthProvider();
+
+        if (provider instanceof GoogleAuthProvider) {
+          provider.addScope('email');
+          provider.addScope('profile');
+        }
+
+        // Renova as credenciais através de popup de confirmação do provedor
+        await reauthenticateWithPopup(firebaseUser, provider);
+
+        // Executa a exclusão definitiva agora com o token de segurança renovado
+        firebaseUser = auth.currentUser || firebaseUser;
+        await deleteUser(firebaseUser);
+
+        currentUser = null;
+        listeners.forEach((cb) => cb(null));
+        return true;
+      } catch (reauthErr) {
+        console.warn("Usuário cancelou a confirmação de segurança ou falha na reautenticação:", reauthErr);
+        await signOut(auth);
+        currentUser = null;
+        listeners.forEach((cb) => cb(null));
+        return false;
+      }
+    } else {
+      console.error("Erro inesperado na exclusão do usuário:", err);
+      await signOut(auth);
+      currentUser = null;
+      listeners.forEach((cb) => cb(null));
+      return false;
+    }
+  }
+}
+
