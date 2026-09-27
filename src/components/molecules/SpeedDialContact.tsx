@@ -11,7 +11,6 @@ interface SpeedDialContactProps {
   language: AppLanguage;
   theme: AppTheme;
   onOpenContactModal: () => void;
-  onPlaySound: (type: 'click' | 'alert') => void;
 }
 
 export const SpeedDialContact: React.FC<SpeedDialContactProps> = ({
@@ -22,7 +21,6 @@ export const SpeedDialContact: React.FC<SpeedDialContactProps> = ({
   language,
   theme,
   onOpenContactModal,
-  onPlaySound,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [footerOverlap, setFooterOverlap] = useState(0);
@@ -100,8 +98,7 @@ export const SpeedDialContact: React.FC<SpeedDialContactProps> = ({
           rel="noopener noreferrer"
           onClick={() => {
             onToggle(false);
-            onPlaySound('click');
-          }}
+                      }}
           aria-label="LinkedIn"
           className={`absolute -top-14 left-9 w-11 h-11 rounded-full border shadow-xl flex items-center justify-center cursor-pointer transition-all duration-200 ease-out group/sat ${
             isOpen
@@ -126,11 +123,9 @@ export const SpeedDialContact: React.FC<SpeedDialContactProps> = ({
             onToggle(false);
             if (isAuthenticated && contact?.email) {
               window.location.href = `mailto:${contact.email}`;
-              onPlaySound('click');
-            } else {
+                          } else {
               onOpenContactModal();
-              onPlaySound('alert');
-            }
+                          }
           }}
           aria-label="E-mail"
           className={`absolute -top-12.5 -left-3.5 w-11 h-11 rounded-full border shadow-xl flex items-center justify-center cursor-pointer transition-all duration-200 delay-50 ease-out group/sat ${
@@ -171,11 +166,9 @@ export const SpeedDialContact: React.FC<SpeedDialContactProps> = ({
             if (isAuthenticated && contact?.phone) {
               const cleanPhone = contact.phone.replace(/[^0-9]/g, '');
               window.location.href = `tel:+${cleanPhone}`;
-              onPlaySound('click');
-            } else {
+                          } else {
               onOpenContactModal();
-              onPlaySound('alert');
-            }
+                          }
           }}
           aria-label={language === 'PT' ? 'Ligar' : 'Phone'}
           className={`absolute -top-3.5 -left-12.5 w-11 h-11 rounded-full border shadow-xl flex items-center justify-center cursor-pointer transition-all duration-200 delay-100 ease-out group/sat ${
@@ -216,11 +209,9 @@ export const SpeedDialContact: React.FC<SpeedDialContactProps> = ({
             if (isAuthenticated && contact?.phone) {
               const cleanPhone = contact.phone.replace(/[^0-9]/g, '');
               window.open(`https://wa.me/${cleanPhone}`, '_blank', 'noopener,noreferrer');
-              onPlaySound('click');
-            } else {
+                          } else {
               onOpenContactModal();
-              onPlaySound('alert');
-            }
+                          }
           }}
           aria-label="WhatsApp"
           className={`absolute top-9 -left-14 w-11 h-11 rounded-full border shadow-xl flex items-center justify-center cursor-pointer transition-all duration-200 delay-150 ease-out group/sat ${
@@ -258,8 +249,7 @@ export const SpeedDialContact: React.FC<SpeedDialContactProps> = ({
           type="button"
           onClick={() => {
             onToggle(!isOpen);
-            onPlaySound('click');
-          }}
+                      }}
           className={`relative w-19 h-19 sm:w-20 sm:h-20 rounded-full text-white transition-all cursor-pointer flex items-center justify-center select-none ${
             isOpen
               ? 'bg-blue-700 border border-white/80 ring-2 ring-blue-400/60 scale-105 shadow-2xl shadow-blue-900/40'

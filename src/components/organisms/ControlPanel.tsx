@@ -8,18 +8,13 @@ import {
   Layers,
   Search,
   X,
-  AlertTriangle,
-  RotateCcw,
   Settings,
   ChevronDown,
-  Volume2,
-  VolumeX,
   Check,
   LogOut,
 } from 'lucide-react';
 import { SystemState, AppLanguage, ViewLayout, ProfileLens } from '../../types';
 import { PROFILE_LENSES_CONFIG } from '../../data/curriculumData';
-import { useSoundEffects } from '../../hooks/useSoundEffects';
 import { useAuth } from '../../hooks/useAuth';
 import { usePWAInstall } from '../../hooks/usePWAInstall';
 import { t, LOCALIZED_LANGUAGE_NAMES } from '../../i18n/translations';
@@ -100,8 +95,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
 }) => {
   const [langAccordionOpen, setLangAccordionOpen] = useState(false);
   const {
-    failureInjected,
-    soundEnabled,
     language,
     theme,
     viewLayout,
@@ -109,7 +102,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
     searchTerm,
   } = systemState;
 
-  const { play } = useSoundEffects(soundEnabled);
   const { isAuthenticated, user, contact, signOut } = useAuth();
   const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
 
@@ -167,51 +159,23 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   const handleToggleLanguage = (newLang: AppLanguage) => {
     if (language === newLang) return;
     updateState({ language: newLang });
-    play('click');
-  };
+      };
 
   const handleToggleTheme = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     updateState({ theme: nextTheme });
-    play('click');
-  };
+      };
 
-  const handleToggleSound = () => {
-    updateState({ soundEnabled: !soundEnabled });
-    play('click');
-  };
-
-  const handleToggleViewLayout = (newLayout: ViewLayout) => {
+    const handleToggleViewLayout = (newLayout: ViewLayout) => {
     if (viewLayout === newLayout) return;
     updateState({ viewLayout: newLayout });
-    play('toggle');
-  };
+      };
 
   const handleSelectLens = (lens: ProfileLens) => {
     updateState({ profileLens: lens });
-    play('click');
-  };
+      };
 
-  const handlePanicToggle = () => {
-    if (failureInjected) {
-      updateState({
-        failureInjected: false,
-        systemHealth: 'HEALTHY',
-        failureReason: undefined,
-        recoveredCount: systemState.recoveredCount + 1,
-      });
-      play('heal');
-    } else {
-      updateState({
-        failureInjected: true,
-        systemHealth: 'CRITICAL',
-        failureReason: 'CIRCUIT_BREAKER_TRIPPED // INGESTION BUFFER SATURATION',
-      });
-      play('alert');
-    }
-  };
-
-  const userInitial = (user?.displayName || user?.email || 'U')[0].toUpperCase();
+    const userInitial = (user?.displayName || user?.email || 'U')[0].toUpperCase();
 
   return (
     <>
@@ -223,27 +187,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             : 'bg-white border-slate-200 text-slate-900 shadow-2xs'
         }`}
       >
-        {failureInjected && (
-          <div className="bg-rose-950 border-b border-rose-600/40 text-rose-200 text-xs py-1.5 px-4 sm:px-6 flex items-center justify-between gap-3 font-mono">
-            <div className="flex items-center gap-2 truncate">
-              <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 animate-pulse" />
-              <span className="font-bold text-rose-300">
-                {t(language, 'incident.badge')}
-              </span>
-              <span className="truncate">
-                {t(language, 'incident.desc')}
-              </span>
-            </div>
-            <button
-              onClick={handlePanicToggle}
-              className="flex items-center gap-1.5 px-2.5 py-0.5 bg-rose-600 hover:bg-rose-500 text-white rounded-md font-bold text-[11px] transition-colors shrink-0 cursor-pointer"
-            >
-              <RotateCcw className="w-3 h-3 animate-spin" />
-              {t(language, 'incident.autoHeal')}
-            </button>
-          </div>
-        )}
-
         {/* HEADER DESKTOP */}
         <div className="w-full px-5 sm:px-8 h-18 hidden md:flex items-center justify-between gap-4">
           <div
@@ -280,8 +223,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               type="button"
               onClick={() => {
                 onOpenResume();
-                play('click');
-              }}
+                              }}
               className="header-btn-secondary"
               aria-label={t(language, 'nav.cvButton')}
             >
@@ -294,8 +236,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               type="button"
               onClick={() => {
                 setSettingsOpen((prev) => !prev);
-                play('click');
-              }}
+                              }}
               className={`h-9 px-3 rounded-lg text-xs font-sans font-medium flex items-center gap-2 transition-colors cursor-pointer ${
                 settingsOpen
                   ? 'bg-slate-200/70 dark:bg-zinc-800 text-slate-900 dark:text-zinc-100'
@@ -340,8 +281,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               type="button"
               onClick={() => {
                 onOpenResume();
-                play('click');
-              }}
+                              }}
               className={`h-9 px-3 rounded-lg border text-xs font-mono font-semibold flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs ${
                 theme === 'dark'
                   ? 'bg-zinc-900 border-zinc-800 text-zinc-200 hover:bg-zinc-800'
@@ -358,8 +298,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               type="button"
               onClick={() => {
                 setSettingsOpen((prev) => !prev);
-                play('click');
-              }}
+                              }}
               className={`h-9 w-9 rounded-lg flex items-center justify-center cursor-pointer transition-colors active:scale-95 ${
                 settingsOpen
                   ? 'bg-slate-200/70 dark:bg-zinc-800 text-slate-900 dark:text-zinc-100'
@@ -458,8 +397,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                       e.preventDefault();
                       e.stopPropagation();
                       await signOut();
-                      play('click');
-                    }}
+                                          }}
                     aria-label={t(language, 'nav.signOut')}
                     className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-400 dark:text-zinc-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors shrink-0 cursor-pointer focus:outline-none"
                     title={t(language, 'nav.signOut')}
@@ -473,8 +411,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                   onClick={() => {
                     setSettingsOpen(false);
                     onOpenContact();
-                    play('click');
-                  }}
+                                      }}
                   className={`w-full flex items-center p-3.5 sm:p-4 rounded-2xl border transition-all cursor-pointer ${
                     theme === 'dark'
                       ? 'bg-zinc-900/90 hover:bg-zinc-800 border-zinc-800 text-zinc-100 hover:border-zinc-700 shadow-sm'
@@ -592,46 +529,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                   </button>
                 </div>
 
-                {/* SEÇÃO: EFEITOS SONOROS COM DUAL-ICON SWITCH */}
-                <div className="flex items-center justify-between py-2.5 px-1 border-t border-slate-100 dark:border-zinc-800/80">
-                  <span className="text-xs font-medium text-slate-600 dark:text-zinc-400">
-                    {t(language, 'nav.audioFx')}
-                  </span>
-
-                  <button
-                    type="button"
-                    role="switch"
-                    aria-checked={soundEnabled}
-                    onClick={handleToggleSound}
-                    className={`relative inline-flex h-7 w-14 shrink-0 cursor-pointer items-center rounded-full p-0.5 border transition-colors duration-300 focus:outline-hidden ${
-                      theme === 'dark'
-                        ? 'bg-zinc-950 border-zinc-800 shadow-inner'
-                        : 'bg-slate-200/80 border-slate-300 shadow-inner'
-                    }`}
-                    aria-label={t(language, 'nav.audioFx')}
-                  >
-                    <VolumeX className="w-3.5 h-3.5 text-rose-500/60 dark:text-rose-400/60 absolute left-1.5 pointer-events-none" />
-                    <Volume2 className="w-3.5 h-3.5 text-emerald-500/70 absolute right-1.5 pointer-events-none" />
-
-                    <span
-                      className={`pointer-events-none flex items-center justify-center h-6 w-6 transform rounded-full shadow-md transition-transform duration-300 ease-in-out z-10 ${
-                        soundEnabled
-                          ? theme === 'dark'
-                            ? 'translate-x-7 bg-zinc-900 text-emerald-400 border border-zinc-700/80'
-                            : 'translate-x-7 bg-white text-emerald-600 border border-slate-200'
-                          : theme === 'dark'
-                          ? 'translate-x-0 bg-zinc-900 text-rose-400 border border-zinc-700/80'
-                          : 'translate-x-0 bg-white text-rose-600 border border-slate-200'
-                      }`}
-                    >
-                      {soundEnabled ? (
-                        <Volume2 className="w-3 h-3 fill-current" />
-                      ) : (
-                        <VolumeX className="w-3 h-3 fill-current" />
-                      )}
-                    </span>
-                  </button>
-                </div>
+                
               </div>
 
               {/* CARD 3: APLICATIVO STANDALONE / PWA (AJUSTE FINO COMERCIAL AAA) */}
@@ -789,7 +687,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         language={language}
         theme={theme}
         onOpenContactModal={onOpenContact}
-        onPlaySound={(sType) => play(sType)}
       />
 
       {/* MODAL IN-APP DE INSTALAÇÃO DO PWA */}

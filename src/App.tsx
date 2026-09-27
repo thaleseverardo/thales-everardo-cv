@@ -62,9 +62,6 @@ export default function App() {
       isSyncActive: true,
       activeNodeId: null,
       systemHealth: 'HEALTHY',
-      failureInjected: false,
-      recoveredCount: 0,
-      soundEnabled: true,
       language: detectLocalLanguage(), // PT para lusófonos, ES para hispanófonos, FR para francófonos, EN padrão
       theme: getInitialTheme(),
       profileLens: 'ALL',
@@ -182,7 +179,6 @@ export default function App() {
           <ContactAuthModal
             isOpen={isContactOpen}
             onClose={() => setIsContactOpen(false)}
-            soundEnabled={systemState.soundEnabled}
             language={systemState.language}
             theme={systemState.theme}
           />
@@ -199,7 +195,6 @@ export default function App() {
               setIsContactOpen(true);
             }}
             onOpenPrivacy={() => setIsPrivacyOpen(true)}
-            soundEnabled={systemState.soundEnabled}
             language={systemState.language}
             theme={systemState.theme}
           />

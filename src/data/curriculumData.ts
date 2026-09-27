@@ -467,7 +467,7 @@ export const PROFILE_DATA = {
   title: 'Staff Software Engineer & Systems Architect',
   titlePT: 'Engenheiro de Software Staff & Arquiteto de Sistemas',
   location: 'São Paulo, Brazil',
-  email: 'thales.everardo@gmail.com',
+  email: 'email@gmail.com',
   github: 'https://github.com/thaleseverardo',
   linkedin: 'https://linkedin.com/in/thaleseverardo',
   summary:

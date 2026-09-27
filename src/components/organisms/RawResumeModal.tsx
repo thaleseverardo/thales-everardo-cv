@@ -23,7 +23,6 @@ import {
   FileCheck,
 } from 'lucide-react';
 import { CURRICULUM_NODES, PROFILE_DATA } from '../../data/curriculumData';
-import { playSound } from '../../utils/audio';
 import { AppLanguage, AppTheme } from '../../types';
 import { t, getNodeContent, LOCALIZED_LANGUAGE_NAMES } from '../../i18n/translations';
 import { useAuth } from '../../hooks/useAuth';
@@ -42,7 +41,6 @@ interface RawResumeModalProps {
   onClose: () => void;
   onOpenContact?: () => void;
   onOpenPrivacy?: () => void;
-  soundEnabled: boolean;
   language: AppLanguage;
   theme: AppTheme;
 }
@@ -52,7 +50,6 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
   onClose,
   onOpenContact,
   onOpenPrivacy,
-  soundEnabled,
   language: initialLanguage,
   theme,
 }) => {
@@ -82,8 +79,7 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
   }
 
   const handlePrint = () => {
-    playSound('click', soundEnabled);
-    window.print();
+        window.print();
   };
 
   const getAbsoluteDocUrl = (extension: 'pdf' | 'txt' | 'md' = 'pdf') => {
@@ -110,22 +106,19 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
     logAnalyticsEvent('cv_download', { extension, language: activeLang });
 
     setShowDownloadMenu(false);
-    playSound('success', soundEnabled);
-  };
+      };
 
   const handleCopyMarkdown = () => {
     navigator.clipboard.writeText(generateMarkdownResume(activeLang, isAuthenticated, email, phone));
     setCopied(true);
-    playSound('click', soundEnabled);
-    setTimeout(() => setCopied(false), 2000);
+        setTimeout(() => setCopied(false), 2000);
   };
 
   const handleCopyPdfLink = () => {
     const pdfUrl = getAbsoluteDocUrl('pdf');
     navigator.clipboard.writeText(pdfUrl);
     setCopiedLink(true);
-    playSound('success', soundEnabled);
-    setTimeout(() => {
+        setTimeout(() => {
       setCopiedLink(false);
       setShowShareMenu(false);
     }, 1800);
@@ -137,8 +130,7 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
 
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
     setShowShareMenu(false);
-    playSound('click', soundEnabled);
-  };
+      };
 
   const handleShareLinkedIn = () => {
     const pdfUrl = getAbsoluteDocUrl('pdf');
@@ -148,8 +140,7 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
       'noopener,noreferrer'
     );
     setShowShareMenu(false);
-    playSound('click', soundEnabled);
-  };
+      };
 
   const handleShareEmail = () => {
     const pdfUrl = getAbsoluteDocUrl('pdf');
@@ -167,8 +158,7 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
 
     navigator.clipboard.writeText(pdfUrl);
     setEmailCopiedFeedback(true);
-    playSound('success', soundEnabled);
-
+    
     setTimeout(() => {
       setEmailCopiedFeedback(false);
       setShowShareMenu(false);
@@ -184,8 +174,7 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
       if (typeof navigator !== 'undefined' && navigator.share) {
         await navigator.share({ title, text, url: pdfUrl });
         setShowShareMenu(false);
-        playSound('success', soundEnabled);
-      }
+              }
     } catch {}
   };
 
@@ -231,8 +220,7 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
                 setShowLangMenu((prev) => !prev);
                 setShowDownloadMenu(false);
                 setShowShareMenu(false);
-                playSound('click', soundEnabled);
-              }}
+                              }}
               className={`h-9 px-3 rounded-xl border text-xs font-mono font-bold flex items-center gap-1.5 transition-colors cursor-pointer ${
                 showLangMenu
                   ? 'bg-slate-200 dark:bg-zinc-800 border-slate-300 dark:border-zinc-700 text-blue-600 dark:text-cyan-400'
@@ -263,8 +251,7 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
                           onClick={() => {
                             setActiveLang(code);
                             setShowLangMenu(false);
-                            playSound('click', soundEnabled);
-                          }}
+                                                      }}
                           className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-all flex items-center justify-between cursor-pointer ${
                             isSelected
                               ? 'bg-blue-600 text-white font-semibold shadow-xs'
@@ -333,8 +320,7 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
                     setShowShareMenu((prev) => !prev);
                     setShowDownloadMenu(false);
                     setShowLangMenu(false);
-                    playSound('click', soundEnabled);
-                  }}
+                                      }}
                   className={`h-full px-2.5 flex items-center justify-center hover:bg-slate-50 dark:hover:bg-zinc-900 transition-colors cursor-pointer ${
                     showShareMenu ? 'bg-slate-100 dark:bg-zinc-900 text-blue-600 dark:text-cyan-400' : ''
                   }`}
@@ -419,8 +405,7 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
                   setShowDownloadMenu((prev) => !prev);
                   setShowLangMenu(false);
                   setShowShareMenu(false);
-                  playSound('click', soundEnabled);
-                }}
+                                  }}
                 className="h-8 px-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-sans text-xs font-semibold tracking-wide transition-all shadow-md shadow-blue-900/20 ring-1 ring-inset ring-white/20 flex items-center gap-1.5 cursor-pointer active:scale-95"
                 title={t(activeLang, 'resume.staticDownload')}
                 aria-expanded={showDownloadMenu}
@@ -1000,8 +985,7 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
                 setShowShareMenu((prev) => !prev);
                 setShowDownloadMenu(false);
                 setShowLangMenu(false);
-                playSound('click', soundEnabled);
-              }}
+                              }}
               className={`h-10 w-10 rounded-xl border flex items-center justify-center transition-all cursor-pointer shrink-0 shadow-2xs active:scale-95 ${
                 showShareMenu
                   ? 'bg-slate-200 dark:bg-zinc-800 border-slate-300 dark:border-zinc-700 text-blue-600 dark:text-cyan-400'
@@ -1091,8 +1075,7 @@ export const RawResumeModal: React.FC<RawResumeModalProps> = ({
                 setShowDownloadMenu((prev) => !prev);
                 setShowLangMenu(false);
                 setShowShareMenu(false);
-                playSound('click', soundEnabled);
-              }}
+                              }}
               className="w-full h-10 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-sans text-xs font-semibold tracking-wide transition-all shadow-lg shadow-blue-900/30 ring-1 ring-inset ring-white/20 flex items-center justify-between cursor-pointer active:scale-95"
               aria-expanded={showDownloadMenu}
             >

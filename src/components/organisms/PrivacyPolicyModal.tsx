@@ -86,7 +86,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
               <UserCheck className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400" />
               <span>{t(language, 'auth.privacyController')}</span>
             </div>
-            <div className="text-[11px] opacity-75">São Paulo, SP — Brasil · Contato: thales.everardo@gmail.com</div>
+            <div className="text-[11px] opacity-75">São Paulo, SP — Brasil · Contato: email@gmail.com</div>
           </div>
 
           <div className="space-y-1">

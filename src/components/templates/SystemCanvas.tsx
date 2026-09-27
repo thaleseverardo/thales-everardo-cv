@@ -9,7 +9,6 @@ import {
 } from 'lucide-react';
 import { SystemState, NodeVisualShape } from '../../types';
 import { CURRICULUM_NODES } from '../../data/curriculumData';
-import { useSoundEffects } from '../../hooks/useSoundEffects';
 import { isNodeActiveInFilter } from '../../utils/filterUtils';
 import { t, getNodeContent } from '../../i18n/translations';
 
@@ -35,8 +34,6 @@ export const SystemCanvas: React.FC<SystemCanvasProps> = ({
     isPurgeExecuted,
     isSyncActive,
     activeNodeId,
-    failureInjected,
-    soundEnabled,
     language,
     theme,
     profileLens,
@@ -44,7 +41,6 @@ export const SystemCanvas: React.FC<SystemCanvasProps> = ({
     selectedTag,
   } = systemState;
 
-  const { play } = useSoundEffects(soundEnabled);
   const isPT = language === 'PT';
 
   useEffect(() => {
@@ -164,20 +160,14 @@ export const SystemCanvas: React.FC<SystemCanvasProps> = ({
           ctx.bezierCurveTo(midX, fromPos.y, midX, toPos.y, toPos.x, toPos.y);
         }
 
-        if (failureInjected) {
-          ctx.strokeStyle = '#f43f5e';
-          ctx.lineWidth = 2;
-          ctx.setLineDash([4, 4]);
-        } else {
-          ctx.strokeStyle = isHovered ? color : `${color}75`;
-          ctx.lineWidth = isHovered ? edge.width + 1.5 : edge.width;
-          if (!edge.isPrimary && !isHovered && !isSmallScreen) {
-            ctx.setLineDash([3, 4]);
-          }
+        ctx.strokeStyle = isHovered ? color : `${color}75`;
+        ctx.lineWidth = isHovered ? edge.width + 1.5 : edge.width;
+        if (!edge.isPrimary && !isHovered && !isSmallScreen) {
+          ctx.setLineDash([3, 4]);
         }
         ctx.stroke();
 
-        if (edge.isPrimary && !failureInjected) {
+        if (edge.isPrimary) {
           const t = (step % 1);
           let px = 0;
           let py = 0;
@@ -206,7 +196,7 @@ export const SystemCanvas: React.FC<SystemCanvasProps> = ({
 
     render();
     return () => cancelAnimationFrame(animationFrameId);
-  }, [containerSize, nodeCoordinates, theme, failureInjected, isPurgeExecuted, isSyncActive, hoveredNodeId, isSmallScreen]);
+  }, [containerSize, nodeCoordinates, theme, isPurgeExecuted, isSyncActive, hoveredNodeId, isSmallScreen]);
 
   const renderShapeIcon = (shape: NodeVisualShape) => {
     switch (shape) {
@@ -298,14 +288,12 @@ export const SystemCanvas: React.FC<SystemCanvasProps> = ({
               onMouseLeave={() => setHoveredNodeId(null)}
               onClick={() => {
                 onSelectNode(node.id);
-                play('click');
-              }}
+                              }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
                   onSelectNode(node.id);
-                  play('click');
-                }
+                                  }
               }}
               className={`absolute pointer-events-auto cursor-pointer w-80 sm:w-85 rounded-xl border transition-all duration-200 group focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-hidden ${
                 !isMatching

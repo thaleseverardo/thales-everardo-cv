@@ -3,7 +3,6 @@ import { X, AlertCircle, Shield, ExternalLink, Linkedin } from 'lucide-react';
 import { AppLanguage, AppTheme } from '../../types';
 import { t } from '../../i18n/translations';
 import { useAuth } from '../../hooks/useAuth';
-import { useSoundEffects } from '../../hooks/useSoundEffects';
 import { GoogleLogo, GithubLogo } from '../atoms/SocialIcons';
 import thalesAvatar from '../../assets/images/thales_avatar_250x250.webp?inline';
 
@@ -13,7 +12,6 @@ interface ContactAuthModalProps {
   onSuccess?: () => void;
   language: AppLanguage;
   theme: AppTheme;
-  soundEnabled: boolean;
 }
 
 export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
@@ -22,10 +20,8 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
   onSuccess,
   language,
   theme,
-  soundEnabled,
 }) => {
   const { signInWithGoogle, signInWithGithub } = useAuth();
-  const { play } = useSoundEffects(soundEnabled);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
 
@@ -35,8 +31,7 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
     try {
       setErrorMsg(null);
       await signInWithGoogle();
-      play('success');
-      onSuccess?.();
+            onSuccess?.();
       onClose();
     } catch (err: unknown) {
       const error = err as { code?: string; message?: string };
@@ -46,16 +41,14 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
       } else {
         setErrorMsg(t(language, 'auth.errorGoogle'));
       }
-      play('alert');
-    }
+          }
   };
 
   const handleGithubLogin = async () => {
     try {
       setErrorMsg(null);
       await signInWithGithub();
-      play('success');
-      onSuccess?.();
+            onSuccess?.();
       onClose();
     } catch (err: unknown) {
       const error = err as { code?: string; message?: string };
@@ -65,8 +58,7 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
       } else {
         setErrorMsg(t(language, 'auth.errorGeneric'));
       }
-      play('alert');
-    }
+          }
   };
 
   return (
@@ -164,8 +156,7 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-              play('click');
-              onClose();
+                            onClose();
             }}
             className={`w-full h-10 px-4 rounded-xl border font-medium text-xs transition-all flex items-center justify-center gap-2 cursor-pointer ${
               theme === 'dark'

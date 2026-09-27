@@ -12,7 +12,6 @@ import {
 } from 'lucide-react';
 import { SystemState, MetricHighlight } from '../../types';
 import { CURRICULUM_NODES } from '../../data/curriculumData';
-import { useSoundEffects } from '../../hooks/useSoundEffects';
 import { logAnalyticsEvent } from '../../services/firebaseAuth';
 import { t, getNodeContent } from '../../i18n/translations';
 
@@ -42,12 +41,10 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
     isLatencyOptimized,
     isPurgeExecuted,
     isSyncActive,
-    soundEnabled,
     language,
     theme,
   } = systemState;
 
-  const { play } = useSoundEffects(soundEnabled);
 
   React.useEffect(() => {
     if (nodeId) {
@@ -64,15 +61,12 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
     if (node.id === 'LATENCY_OPTIMIZER') {
       const next = !isLatencyOptimized;
       updateState({ isLatencyOptimized: next });
-      play(next ? 'success' : 'toggle');
     } else if (node.id === 'DATA_PURGE_NODE') {
       const next = !isPurgeExecuted;
       updateState({ isPurgeExecuted: next });
-      play(next ? 'purge' : 'toggle');
     } else if (node.id === 'SYNC_GATEWAY') {
       const next = !isSyncActive;
       updateState({ isSyncActive: next });
-      play(next ? 'blip' : 'toggle');
     }
   };
 
@@ -281,11 +275,33 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
               </div>
             </>
           ) : (
-            <div className="p-3.5 rounded-lg bg-zinc-950 border border-zinc-800 font-mono text-xs text-zinc-300 space-y-2">
-              <div className="text-[10px] text-zinc-500 mb-2">// TELEMETRY_STREAM: {node.id}</div>
-              <div>[00:00:01] CLUSTER_STATE: Active Invariants Verified (ACID OK)</div>
-              <div>[00:00:02] THROUGHPUT: {content.metricHighlight}</div>
-              <div>[00:00:03] FAILOVER: Circuit Breaker nominal with sub-second health checks</div>
+            <div className="space-y-3 font-mono text-xs">
+              <div className="p-3.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-300 space-y-2.5">
+                <div className="text-[11px] font-bold text-amber-500 tracking-wider uppercase flex items-center gap-1.5">
+                  <span>[POST-MORTEM & DECISÃO ARQUITETURAL // ADR]</span>
+                </div>
+                <div className="text-[11px] text-zinc-400">
+                  <span className="text-zinc-500 font-bold">SUBSYSTEM:</span> {node.id} ({node.company})
+                </div>
+                <div className="pt-1.5 border-t border-zinc-800/80 space-y-2 leading-relaxed">
+                  <div>
+                    <span className="text-rose-400 font-bold">CAUSA-RAIZ / DESAFIO:</span>
+                    <p className="text-zinc-300 font-sans text-xs mt-0.5">{content.contextProblem}</p>
+                  </div>
+                  <div>
+                    <span className="text-blue-400 font-bold">CONTRAMEDIDA ARQUITETURAL:</span>
+                    <p className="text-zinc-300 font-sans text-xs mt-0.5">{content.architecturalSolution}</p>
+                  </div>
+                  <div>
+                    <span className="text-emerald-400 font-bold">RESULTADO EM PRODUÇÃO:</span>
+                    <p className="text-zinc-300 font-sans text-xs mt-0.5">{content.businessValue}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-xl border dark:bg-zinc-900/40 dark:border-zinc-800 bg-slate-50 border-slate-200 text-[11px] font-sans text-slate-600 dark:text-zinc-400">
+                <strong>Critério de Aceitação de Arquitetura:</strong> A solução opera em conformidade estrita com garantias ACID e idempotência de eventos, mitigando qualquer necessidade de intervenção manual em janelas críticas.
+              </div>
             </div>
           )}
         </div>
@@ -302,10 +318,7 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
             {t(language, 'inspector.close')}
           </button>
           <button
-            onClick={() => {
-              onOpenContact();
-              play('click');
-            }}
+            onClick={onOpenContact}
             className="header-btn-primary h-8! px-3! text-xs"
           >
             {t(language, 'inspector.connect')}

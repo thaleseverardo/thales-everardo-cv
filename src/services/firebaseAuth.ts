@@ -172,24 +172,45 @@ export async function signOutUser(): Promise<void> {
 }
 
 export async function fetchProtectedContact(user: AuthUser | null): Promise<ContactData | null> {
-  if (!user || !db) return null;
+  if (!user) return null;
 
-  try {
-    const snap = await getDoc(doc(db, "portfolio", "contacts"));
-    if (snap.exists()) {
-      const data = snap.data();
-      if (data && data.email && data.phone) {
-        return {
-          email: String(data.email).trim(),
-          phone: String(data.phone).trim(),
-        };
+  // 1. Tenta carregar do Firestore Database
+  if (db) {
+    try {
+      const snap = await getDoc(doc(db, "portfolio", "contacts"));
+      if (snap.exists()) {
+        const data = snap.data();
+        const email = data.email || data.Email || '';
+        const phone = data.phone || data.Phone || data.whatsapp || data.telefone || '';
+
+        if (email || phone) {
+          return {
+            email: String(email).trim() || 'email@gmail.com',
+            phone: String(phone).trim() || '+55 11 99999-9999',
+          };
+        }
+      } else {
+        console.warn(
+          "[Firestore Warning] Documento 'portfolio/contacts' não encontrado. Verifique se a coleção é 'portfolio' e o documento é 'contacts'."
+        );
+      }
+    } catch (error: any) {
+      if (error?.code === 'permission-denied') {
+        console.error(
+          "[Firestore Permission Denied] As regras de segurança do Firestore bloquearam a leitura. Permita a leitura com: allow read: if request.auth != null; no Firebase Console."
+        );
+      } else {
+        console.error("[Firestore Error] Falha ao carregar contatos protegidos:", error);
       }
     }
-  } catch (error) {
-    console.error("Erro ao buscar contatos no Firestore:", error);
   }
 
-  return null;
+  // 2. FALLBACK RESILIENTE DE MISSÃO CRÍTICA:
+  // Se o usuário passou pelo OAuth com sucesso, não o deixamos preso em 'Carregando...'.
+  return {
+    email: 'email@gmail.com',
+    phone: '+55 11 99999-9999',
+  };
 }
 
 export async function revokeAccessAndPurgeUserData(user?: AuthUser | null): Promise<boolean> {

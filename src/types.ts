@@ -14,10 +14,6 @@ export interface SystemState {
   isSyncActive: boolean;
   activeNodeId: string | null;
   systemHealth: SystemHealth;
-  failureInjected: boolean;
-  failureReason?: string;
-  recoveredCount: number;
-  soundEnabled: boolean;
   language: AppLanguage;
   theme: AppTheme;
   profileLens: ProfileLens;
