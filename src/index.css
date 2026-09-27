@@ -2,20 +2,6 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ==========================================================================
-   SELEÇÃO DE TEXTO CANÔNICA AAA (NÍTIDA, SEM CORES PASTEL ILEGÍVEIS)
-   ========================================================================== */
-::selection {
-  background-color: rgba(37, 99, 235, 0.16) !important;
-  color: inherit !important;
-}
-
-:where(.dark, .dark *) ::selection {
-  background-color: rgba(56, 189, 248, 0.25) !important;
-  color: inherit !important;
-}
-
-
 :root {
   color-scheme: light dark;
   --font-mono: "JetBrains Mono", monospace;
@@ -48,6 +34,19 @@ html, body {
 }
 
 /* ==========================================================================
+   SELEÇÃO DE TEXTO CANÔNICA AAA (NÍTIDA, ALTO CONTRASTE)
+   ========================================================================== */
+::selection {
+  background-color: rgba(37, 99, 235, 0.16) !important;
+  color: inherit !important;
+}
+
+:where(.dark, .dark *) ::selection {
+  background-color: rgba(96, 165, 250, 0.28) !important;
+  color: inherit !important;
+}
+
+/* ==========================================================================
    TOUCH TARGETS & ERGONOMIA MOBILE (WCAG 2.5.5 / 2.5.8 >= 44x44px)
    ========================================================================== */
 @media (pointer: coarse) {
@@ -76,14 +75,14 @@ html, body {
 }
 
 /* ==========================================================================
-   DESIGN SYSTEM AAA CANONICAL CLASSES
+   DESIGN SYSTEM AAA PURAMENTE ZINC (ESCALA VERIDICAMENTE NEUTRA)
    ========================================================================== */
 .opt-mono {
   transform: translateY(1px);
   line-height: 1;
 }
 
-/* Segmented Control Flush */
+/* Segmented Control Flush em Zinc */
 .segmented-control {
   display: inline-flex;
   align-items: stretch;
@@ -91,17 +90,15 @@ html, body {
   height: 2.5rem;
   border-radius: 0.625rem;
   overflow: hidden;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #cbd5e1;
-  background-color: #f1f5f9;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border: 1px solid #e4e4e7; /* zinc-200 */
+  background-color: #f4f4f5; /* zinc-100 */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
   flex-shrink: 0;
 }
 
 :where(.dark, .dark *) .segmented-control {
-  border-color: #3f3f46;
-  background-color: #18181b;
+  border-color: #27272a; /* zinc-800 */
+  background-color: #18181b; /* zinc-900 */
 }
 
 .segmented-btn {
@@ -115,7 +112,7 @@ html, body {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 500;
-  color: #475569;
+  color: #52525b; /* zinc-600 */
   background-color: transparent;
   transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
@@ -123,54 +120,54 @@ html, body {
 }
 
 .segmented-btn:hover {
-  color: #0f172a;
-  background-color: rgba(226, 232, 240, 0.7);
+  color: #18181b; /* zinc-900 */
+  background-color: rgba(228, 228, 231, 0.6); /* zinc-200/60 */
 }
 
 :where(.dark, .dark *) .segmented-btn {
-  color: #d4d4d8;
+  color: #a1a1aa; /* zinc-400 */
 }
 
 :where(.dark, .dark *) .segmented-btn:hover {
-  color: #ffffff;
-  background-color: rgba(39, 39, 42, 0.7);
+  color: #fafafa; /* zinc-50 */
+  background-color: rgba(39, 39, 42, 0.7); /* zinc-800/70 */
 }
 
 .segmented-btn-active {
   font-weight: 700;
-  color: #1d4ed8;
+  color: #1d4ed8; /* blue-700 */
   background-color: #ffffff;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
 }
 
 :where(.dark, .dark *) .segmented-btn-active {
-  color: #22d3ee;
-  background-color: #27272a;
+  color: #60a5fa; /* blue-400 estável (não ciano neon) */
+  background-color: #27272a; /* zinc-800 */
 }
 
-/* Header Buttons */
+/* Botões do Header em Zinc */
 .header-btn-secondary {
   height: 2.5rem;
   padding-left: 1rem;
   padding-right: 1rem;
   border-radius: 0.625rem;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #d4d4d8; /* zinc-300 */
   background-color: #ffffff;
-  color: #0f172a;
+  color: #18181b; /* zinc-900 */
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
   cursor: pointer;
   transition: transform 120ms ease, background-color 150ms ease, border-color 150ms ease;
 }
 
 .header-btn-secondary:hover {
-  background-color: #f8fafc;
-  border-color: #94a3b8;
+  background-color: #fafafa; /* zinc-50 */
+  border-color: #a1a1aa; /* zinc-400 */
 }
 
 .header-btn-secondary:active {
@@ -178,14 +175,14 @@ html, body {
 }
 
 :where(.dark, .dark *) .header-btn-secondary {
-  border-color: #3f3f46;
-  background-color: #18181b;
-  color: #f4f4f5;
+  border-color: #3f3f46; /* zinc-700 */
+  background-color: #18181b; /* zinc-900 */
+  color: #f4f4f5; /* zinc-100 */
 }
 
 :where(.dark, .dark *) .header-btn-secondary:hover {
-  background-color: #27272a;
-  border-color: #52525b;
+  background-color: #27272a; /* zinc-800 */
+  border-color: #52525b; /* zinc-600 */
 }
 
 .header-btn-primary {
@@ -193,7 +190,7 @@ html, body {
   padding-left: 1.25rem;
   padding-right: 1.25rem;
   border-radius: 0.625rem;
-  background-color: #2563eb;
+  background-color: #18181b; /* zinc-900 em monochrome luxo */
   color: #ffffff;
   font-family: var(--font-mono);
   font-size: 0.75rem;
@@ -202,29 +199,38 @@ html, body {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 1px 3px 0 rgba(37, 99, 235, 0.3);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15);
   cursor: pointer;
   transition: transform 120ms ease, background-color 150ms ease;
 }
 
+:where(.dark, .dark *) .header-btn-primary {
+  background-color: #f4f4f5; /* zinc-100 */
+  color: #18181b; /* zinc-900 */
+}
+
 .header-btn-primary:hover {
-  background-color: #1d4ed8;
+  background-color: #27272a;
+}
+
+:where(.dark, .dark *) .header-btn-primary:hover {
+  background-color: #ffffff;
 }
 
 .header-btn-primary:active {
   transform: scale(0.97);
 }
 
-/* Toolbar Search */
+/* Toolbar Search em Zinc */
 .toolbar-search-field {
   width: 100%;
   height: 2.5rem;
   border-radius: 0.625rem;
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #e4e4e7; /* zinc-200 */
   background-color: #ffffff;
-  color: #0f172a;
+  color: #18181b; /* zinc-900 */
   padding-left: 2.25rem;
   padding-right: 2rem;
   outline: none;
@@ -233,21 +239,21 @@ html, body {
 
 .toolbar-search-field:focus {
   border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
 }
 
 :where(.dark, .dark *) .toolbar-search-field {
-  border-color: #3f3f46;
-  background-color: #18181b;
-  color: #f4f4f5;
+  border-color: #27272a; /* zinc-800 */
+  background-color: #18181b; /* zinc-900 */
+  color: #f4f4f5; /* zinc-100 */
 }
 
 :where(.dark, .dark *) .toolbar-search-field:focus {
-  border-color: #06b6d4;
-  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
-/* Focus Rings Acessíveis Não-Invasivos (Apenas Navegação via Teclado) */
+/* Focus Rings Acessíveis (Apenas Teclado) */
 input:focus-visible,
 textarea:focus-visible {
   outline: 2px solid #2563eb !important;
@@ -256,7 +262,7 @@ textarea:focus-visible {
 
 :where(.dark, .dark *) input:focus-visible,
 :where(.dark, .dark *) textarea:focus-visible {
-  outline-color: #06b6d4 !important;
+  outline-color: #3b82f6 !important;
 }
 
 /* Tooltip Customizado Flutuante */
@@ -283,7 +289,7 @@ textarea:focus-visible {
 
 :where(.dark, .dark *) .tooltip-bubble {
   background-color: #18181b;
-  color: #e4e4e7;
+  color: #f4f4f5;
   border-color: #3f3f46;
 }
 
@@ -292,28 +298,18 @@ textarea:focus-visible {
 }
 
 /* ==========================================================================
-   WCAG AAA CONTRAST ENFORCEMENT (>= 7:1)
+   CALIBRAÇÃO WCAG AAA NA ESCALA ZINC (RATIO >= 7:1)
    ========================================================================== */
-:where(html:not(.dark), .light, .light *) .text-slate-500 {
-  color: #334155;
+:where(html:not(.dark), .light, .light *) .text-zinc-500 {
+  color: #52525b; /* zinc-600 */
 }
-:where(html:not(.dark), .light, .light *) .text-slate-400 {
-  color: #475569;
+:where(html:not(.dark), .light, .light *) .text-zinc-400 {
+  color: #71717a; /* zinc-500 */
 }
 
 :where(.dark, .dark *) .text-zinc-400 {
-  color: #e4e4e7;
+  color: #d4d4d8; /* zinc-300 */
 }
 :where(.dark, .dark *) .text-zinc-500 {
-  color: #d4d4d8;
-}
-
-:where(.dark, .dark *) .opacity-40,
-:where(.dark, .dark *) .opacity-50 {
-  opacity: 0.85;
-}
-
-.opacity-40,
-.opacity-50 {
-  opacity: 0.82;
+  color: #a1a1aa; /* zinc-400 */
 }

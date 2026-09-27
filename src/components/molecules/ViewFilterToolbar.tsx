@@ -21,7 +21,7 @@ export const ViewFilterToolbar: React.FC<ViewFilterToolbarProps> = ({
     <div className="hidden md:flex w-full px-5 sm:px-8 pt-4 pb-2 z-20 shrink-0">
       <div className="w-full flex items-center justify-between gap-3">
         {/* BARRA DE CATEGORIAS / LENTES */}
-        <div role="tablist" className="segmented-control divide-x divide-slate-200 dark:divide-zinc-800">
+        <div role="tablist" className="segmented-control divide-x divide-zinc-200 dark:divide-zinc-800">
           {ALL_LENSES.map((lensKey) => {
             const isActive = profileLens === lensKey;
 
@@ -52,7 +52,7 @@ export const ViewFilterToolbar: React.FC<ViewFilterToolbarProps> = ({
 
         {/* CAMPO DE BUSCA AMPLO */}
         <div className="relative flex-1 min-w-56 shadow-2xs">
-          <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-zinc-500 pointer-events-none" />
+          <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500 pointer-events-none" />
           <input
             type="text"
             value={searchTerm}
@@ -65,7 +65,7 @@ export const ViewFilterToolbar: React.FC<ViewFilterToolbarProps> = ({
             <button
               type="button"
               onClick={() => updateState({ searchTerm: '' })}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 dark:text-zinc-500 dark:hover:text-zinc-200 cursor-pointer"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-200 cursor-pointer"
               aria-label={t(language, 'nav.clearSearch')}
             >
               <X className="w-3 h-3" />

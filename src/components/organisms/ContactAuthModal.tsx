@@ -71,7 +71,7 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
       }}
     >
       <div
-        className={`w-full max-w-[420px] rounded-3xl shadow-2xl flex flex-col justify-center border transition-all relative overflow-hidden ${
+        className={`w-full max-w-105 rounded-3xl shadow-2xl flex flex-col justify-center border transition-all relative overflow-hidden ${
           theme === 'dark'
             ? 'bg-zinc-950 sm:bg-zinc-900 border-zinc-800 text-zinc-100 shadow-black/80'
             : 'bg-white border-slate-200 text-slate-900 shadow-slate-300/40'

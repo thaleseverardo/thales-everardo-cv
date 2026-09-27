@@ -25,27 +25,9 @@ export const SpeedDialContact: React.FC<SpeedDialContactProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [footerOverlap, setFooterOverlap] = useState(0);
 
-  // Monitora a entrada do rodapé na viewport para evitar sobreposição ao rolar a página
+  // Posição estável e ergonômica gerenciada por coordenadas de viewport
   useEffect(() => {
-    const handleFooterCollision = () => {
-      const footer = document.querySelector('footer');
-      if (!footer) {
-        setFooterOverlap(0);
-        return;
-      }
-      const rect = footer.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const overlap = Math.max(0, viewportHeight - rect.top);
-      setFooterOverlap(overlap);
-    };
-
-    handleFooterCollision();
-    window.addEventListener('scroll', handleFooterCollision, { passive: true });
-    window.addEventListener('resize', handleFooterCollision);
-    return () => {
-      window.removeEventListener('scroll', handleFooterCollision);
-      window.removeEventListener('resize', handleFooterCollision);
-    };
+    setFooterOverlap(0);
   }, []);
 
   useEffect(() => {
@@ -76,14 +58,14 @@ export const SpeedDialContact: React.FC<SpeedDialContactProps> = ({
       {isOpen && (
         <div
           onClick={() => onToggle(false)}
-          className="fixed inset-0 z-[48] bg-black/60 dark:bg-black/75 backdrop-blur-md transition-all animate-in fade-in duration-200"
+          className="fixed inset-0 z-48 bg-black/60 dark:bg-black/75 backdrop-blur-md transition-all animate-in fade-in duration-200"
           aria-hidden="true"
         />
       )}
 
       <div
         ref={containerRef}
-        className="fixed bottom-[max(1.5rem,calc(1.5rem+env(safe-area-inset-bottom,0px)))] right-5 sm:bottom-8 sm:right-8 z-[49] select-none group"
+        className="fixed bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] md:bottom-8 right-4 sm:right-8 z-50 select-none group"
       >
         <div className="absolute -top-16 -left-16 w-38 h-38 pointer-events-none group-hover:pointer-events-auto rounded-tl-full" />
 
@@ -245,7 +227,7 @@ export const SpeedDialContact: React.FC<SpeedDialContactProps> = ({
           className={`relative w-15 h-15 sm:w-17 sm:h-17 rounded-full text-white transition-all duration-200 cursor-pointer flex items-center justify-center select-none shadow-xl ${
             isOpen
               ? 'bg-zinc-900/90 dark:bg-zinc-850/95 border border-white/20 text-white shadow-2xl shadow-black/80 scale-105 ring-4 ring-blue-500/20 backdrop-blur-md'
-              : 'bg-gradient-to-tr from-blue-700 via-blue-600 to-indigo-600 hover:from-blue-600 hover:to-indigo-500 border border-white/25 shadow-lg shadow-blue-900/40 hover:scale-105 active:scale-95'
+              : 'bg-linear-to-tr from-blue-700 via-blue-600 to-indigo-600 hover:from-blue-600 hover:to-indigo-500 border border-white/25 shadow-lg shadow-blue-900/40 hover:scale-105 active:scale-95'
           }`}
           aria-expanded={isOpen}
           aria-label={language === 'PT' ? 'Contato' : language === 'ES' ? 'Contacto' : 'Contact'}

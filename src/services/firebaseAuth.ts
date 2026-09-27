@@ -192,8 +192,8 @@ export async function fetchProtectedContact(user: AuthUser | null): Promise<Cont
 
         if (email || phone) {
           return {
-            email: String(email).trim() || 'thales.everardo@gmail.com',
-            phone: String(phone).trim() || '+55 11 98322-0744',
+            email: String(email).trim() || 'email@gmail.com',
+            phone: String(phone).trim() || '+55 11 99999-9999',
           };
         }
       } else {
@@ -216,8 +216,8 @@ export async function fetchProtectedContact(user: AuthUser | null): Promise<Cont
   // 2. FALLBACK RESILIENTE DE MISSÃO CRÍTICA:
   // Se o usuário passou pelo OAuth com sucesso, não o deixamos preso em 'Carregando...'.
   return {
-    email: 'thales.everardo@gmail.com',
-    phone: '+55 11 98322-0744',
+    email: 'email@gmail.com',
+    phone: '+55 11 99999-9999',
   };
 }
 

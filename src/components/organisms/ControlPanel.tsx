@@ -33,11 +33,11 @@ interface ControlPanelProps {
 const GuestAvatarToken: React.FC<{ sizeClass?: string }> = ({ sizeClass = 'w-11 h-11' }) => (
   <div
     className={`${sizeClass} rounded-2xl flex items-center justify-center shrink-0 relative overflow-hidden transition-all duration-300 ${
-      'bg-gradient-to-b from-slate-100 to-slate-200/90 border border-slate-300/80 shadow-xs dark:from-zinc-800/90 dark:via-zinc-850 dark:to-zinc-950 dark:border-white/10 dark:shadow-inner'
+      'bg-lienar-to-b from-slate-100 to-slate-200/90 border border-slate-300/80 shadow-xs dark:from-zinc-800/90 dark:via-zinc-850 dark:to-zinc-950 dark:border-white/10 dark:shadow-inner'
     }`}
   >
     {/* Linha de reflexo especular no topo */}
-    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+    <div className="absolute inset-x-0 top-0 h-px bg-lienar-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
     <svg className="w-5 h-5 text-slate-500 dark:text-zinc-400 drop-shadow-xs" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
         d="M12 12a4 4 0 100-8 4 4 0 000 8z"
@@ -80,7 +80,7 @@ const UserAvatar: React.FC<{
 
   return (
     <div
-      className={`${sizeClass} rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-500 text-white font-sans font-bold ${textSizeClass} flex items-center justify-center shrink-0 border border-white/20 shadow-md shadow-blue-900/30 tracking-tight`}
+      className={`${sizeClass} rounded-full bg-lienar-to-tr from-blue-600 via-indigo-600 to-cyan-500 text-white font-sans font-bold ${textSizeClass} flex items-center justify-center shrink-0 border border-white/20 shadow-md shadow-blue-900/30 tracking-tight`}
     >
       {initial}
     </div>
@@ -182,8 +182,8 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
       <header
         className={`border-b sticky top-0 z-40 transition-colors select-none ${
           theme === 'dark'
-            ? 'bg-[#09090b] border-zinc-800 text-zinc-100'
-            : 'bg-white border-slate-200 text-slate-900 shadow-2xs'
+            ? 'bg-[#111115]/95 border-zinc-800/80 text-zinc-100 backdrop-blur-md'
+            : 'bg-white/95 border-zinc-200 text-zinc-900 shadow-xs backdrop-blur-md'
         }`}
       >
         {/* HEADER DESKTOP */}
@@ -238,7 +238,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               aria-expanded={settingsOpen}
               aria-label={t(language, 'nav.preferences')}
             >
-              <Settings className="w-[21px] h-[21px] opacity-80 shrink-0" />
+              <Settings className="w-5.25 h-5.25 opacity-80 shrink-0" />
             </button>
           </div>
         </div>
@@ -246,7 +246,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         {/* HEADER MOBILE */}
         <div className="w-full px-4 h-16 flex md:hidden items-center justify-between">
           <div className="flex items-center gap-3 min-w-0 pr-2">
-            <div className="relative w-[50px] h-[50px] rounded-full overflow-hidden border-2 border-slate-300 dark:border-zinc-700 shrink-0 shadow-xs">
+            <div className="relative w-12.5 h-12.5 rounded-full overflow-hidden border-2 border-slate-300 dark:border-zinc-700 shrink-0 shadow-xs">
               <img
                 src={thalesAvatar}
                 alt="Thales Everardo"
@@ -288,7 +288,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               }`}
               aria-label={t(language, 'nav.preferences')}
             >
-              <Settings className="w-[21px] h-[21px] opacity-80 shrink-0" />
+              <Settings className="w-5.25 h-5.25 opacity-80 shrink-0" />
             </button>
           </div>
         </div>
@@ -297,27 +297,31 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
       {/* 2. MENU UNIFICADO (DROPDOWN NO DESKTOP / BOTTOM SHEET NATIVO NO MOBILE) */}
       {settingsOpen && (
         <>
-          {/* BACKDROP SUTIL (APENAS DESKTOP) */}
+          {/* BACKDROP UNIVERSAL (Z-59: COBRE CONTEÚDO E BOTTOM BAR NO MOBILE) */}
           <div
-            className="hidden md:block fixed inset-0 z-45 bg-black/40 backdrop-blur-2xs transition-opacity"
+            className="fixed inset-0 z-59 bg-black/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
             onClick={() => setSettingsOpen(false)}
             aria-hidden="true"
           />
 
           <div
             ref={settingsPopoverRef}
-            className={`fixed md:absolute z-50 transition-all font-sans ${
-              /* Mobile: Página Completa Nativa com Safe Area */
-              'inset-0 w-full h-[100dvh] rounded-none border-none p-0 overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-200'
+            className={`fixed md:absolute z-60 transition-all font-sans ${
+              /* Mobile: Bottom Sheet Nativa com Altura Orgânica e Puxador */
+              'inset-x-0 bottom-0 max-h-[85vh] rounded-t-3xl border-t border-zinc-200 dark:border-zinc-800 p-0 overflow-y-auto animate-in slide-in-from-bottom duration-200 shadow-2xl'
             } ${
               /* Desktop: Dropdown flutuante ancorado no topo */
-              'md:inset-auto md:top-20 md:right-8 md:w-[350px] md:h-auto md:rounded-3xl md:border md:p-3.5 md:shadow-2xl md:shadow-black/80 md:animate-in md:fade-in md:zoom-in-95'
+              'md:inset-auto md:top-20 md:right-8 md:w-87.5 md:h-auto md:max-h-none md:rounded-3xl md:border md:p-3.5 md:shadow-2xl md:shadow-black/80 md:animate-in md:fade-in md:zoom-in-95'
             } ${
               theme === 'dark'
-                ? 'bg-zinc-950 md:bg-zinc-900 md:border-zinc-800 text-zinc-100'
-                : 'bg-slate-100 md:bg-white md:border-slate-200 text-slate-900'
+                ? 'bg-[#0e0e12] md:bg-zinc-900 md:border-zinc-800 text-zinc-100'
+                : 'bg-white md:border-zinc-200 text-zinc-900'
             }`}
           >
+            {/* PUXADOR TÁTIL DO BOTTOM SHEET (EXCLUSIVO MOBILE) */}
+            <div className="md:hidden pt-3 pb-1 flex justify-center">
+              <div className="w-10 h-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
+            </div>
             {/* CABEÇALHO NATIVO DA PÁGINA (EXCLUSIVO MOBILE) */}
             <div
               className={`md:hidden sticky top-0 z-20 h-14 px-4 border-b flex items-center justify-between backdrop-blur-md shrink-0 select-none ${
@@ -493,12 +497,12 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                     aria-label={theme === 'dark' ? t(language, 'nav.themeDark') : t(language, 'nav.themeLight')}
                   >
                     <Sun className="w-3.5 h-3.5 text-amber-500/70 absolute left-1.5 pointer-events-none" />
-                    <Moon className="w-3.5 h-3.5 text-cyan-400/70 absolute right-1.5 pointer-events-none" />
+                    <Moon className="w-3.5 h-3.5 text-blue-400/80 absolute right-1.5 pointer-events-none" />
 
                     <span
                       className={`pointer-events-none flex items-center justify-center h-6 w-6 transform rounded-full shadow-md transition-transform duration-300 ease-in-out z-10 ${
                         theme === 'dark'
-                          ? 'translate-x-7 bg-zinc-900 text-cyan-300 border border-zinc-700/80'
+                          ? 'translate-x-7 bg-zinc-900 text-blue-400 border border-zinc-700/80'
                           : 'translate-x-0 bg-white text-amber-500 border border-slate-200'
                       }`}
                     >

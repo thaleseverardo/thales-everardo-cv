@@ -52,7 +52,7 @@ function getInitialTheme(): AppTheme {
 const ViewFallbackSkeleton: React.FC<{ theme: AppTheme }> = ({ theme }) => (
   <div
     className={`w-full h-full flex-1 flex flex-col items-center justify-center p-8 animate-pulse ${
-      theme === 'dark' ? 'bg-[#09090b]' : 'bg-slate-50'
+      theme === 'dark' ? 'bg-[#09090b]' : 'bg-zinc-100/70'
     }`}
   >
     <div className="w-9 h-9 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mb-3" />
@@ -124,7 +124,7 @@ export default function App() {
   return (
     <div
       className={`h-dvh w-full flex flex-col font-sans  antialiased overflow-hidden transition-colors ${
-        systemState.theme === 'dark' ? 'bg-[#09090b] text-zinc-100' : 'bg-slate-50 text-slate-900'
+        systemState.theme === 'dark' ? 'bg-[#09090b] text-zinc-100' : 'bg-zinc-100/70 text-zinc-900'
       }`}
     >
       <a
@@ -137,7 +137,7 @@ export default function App() {
       <OfflineIndicator language={systemState.language} theme={systemState.theme} />
 
       {/* HEADER FIXO DO APP SHELL */}
-      <div className="shrink-0 z-40">
+      <div className="shrink-0">
         <ControlPanel
           systemState={systemState}
           updateState={updateState}
@@ -157,7 +157,7 @@ export default function App() {
         {/* CONTAINER COM SCROLL INTERNO DEDICADO (SEM NENHUM SCROLL HORIZONTAL DA JANELA) */}
         <div
           id="main-scroll-container"
-          className={`flex-1 min-w-0 h-full flex flex-col relative ${
+          className={`flex-1 min-w-0 h-full flex flex-col relative pb-[calc(6.5rem+env(safe-area-inset-bottom,0px))] md:pb-0 ${
             systemState.viewLayout === 'GRAPH'
               ? 'overflow-hidden'
               : 'overflow-y-auto overflow-x-hidden'
