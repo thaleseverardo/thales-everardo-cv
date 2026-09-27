@@ -12,6 +12,7 @@ import {
   ChevronDown,
   Check,
   LogOut,
+  Globe,
 } from 'lucide-react';
 import { SystemState, AppLanguage, ViewLayout, ProfileLens } from '../../types';
 import { PROFILE_LENSES_CONFIG } from '../../data/curriculumData';
@@ -27,7 +28,6 @@ interface ControlPanelProps {
   systemState: SystemState;
   updateState: (updates: Partial<SystemState>) => void;
   onOpenContact: () => void;
-  onOpenResume: () => void;
 }
 
 const GuestAvatarToken: React.FC<{ sizeClass?: string }> = ({ sizeClass = 'w-11 h-11' }) => (
@@ -91,7 +91,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   systemState,
   updateState,
   onOpenContact,
-  onOpenResume,
 }) => {
   const [langAccordionOpen, setLangAccordionOpen] = useState(false);
   const {
@@ -219,25 +218,19 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           </div>
 
           <div className="flex items-center justify-end gap-2.5 shrink-0" ref={settingsMenuRef}>
-            <button
-              type="button"
-              onClick={() => {
-                onOpenResume();
-                              }}
-              className="header-btn-secondary"
-              aria-label={t(language, 'nav.cvButton')}
-            >
-              <FileText className="w-3.5 h-3.5 opacity-70 shrink-0" />
-              <span className="opt-mono">{t(language, 'nav.cvButton')}</span>
-            </button>
+            {/* INDICADOR TEXTUAL DE IDIOMA ATIVO (LABEL INFORMATIVO, NÃO-CLICÁVEL) */}
+            <div className="flex items-center gap-1.5 px-1 font-mono text-xs font-semibold text-slate-500 dark:text-zinc-400 select-none">
+              <Globe className="w-4 h-4 text-slate-400 dark:text-zinc-500 opacity-80 shrink-0" />
+              <span className="tracking-wider">{language}</span>
+            </div>
 
-            {/* GATILHO DO MENU UNIFICADO (DESKTOP // GHOST ACTION SEM BORDA) */}
+            {/* GATILHO DEDICADO DE CONFIGURAÇÕES (+30% MAIOR) */}
             <button
               type="button"
               onClick={() => {
                 setSettingsOpen((prev) => !prev);
-                              }}
-              className={`h-9 px-3 rounded-lg text-xs font-sans font-medium flex items-center gap-2 transition-colors cursor-pointer ${
+              }}
+              className={`h-9 w-9 rounded-lg flex items-center justify-center transition-colors cursor-pointer ${
                 settingsOpen
                   ? 'bg-slate-200/70 dark:bg-zinc-800 text-slate-900 dark:text-zinc-100'
                   : 'text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800/60 hover:text-slate-900 dark:hover:text-zinc-100'
@@ -245,8 +238,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               aria-expanded={settingsOpen}
               aria-label={t(language, 'nav.preferences')}
             >
-              <Settings className="w-4 h-4 opacity-75" />
-              <span className="font-mono text-[11px] font-bold">{language}</span>
+              <Settings className="w-[21px] h-[21px] opacity-80 shrink-0" />
             </button>
           </div>
         </div>
@@ -265,10 +257,10 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               />
             </div>
             <div className="min-w-0">
-              <span className="font-sans font-bold text-xs sm:text-sm tracking-tight block truncate text-zinc-900 dark:text-zinc-100">
+              <span className="font-sans font-bold text-[15px] sm:text-base tracking-tight block truncate text-zinc-900 dark:text-zinc-100 leading-snug">
                 Thales Everardo
               </span>
-              <div className="text-[10px] font-sans opacity-65 leading-tight flex items-center gap-1 truncate">
+              <div className="text-[11px] font-sans opacity-70 leading-tight flex items-center gap-1 truncate pt-0.5">
                 <span className="font-medium text-blue-600 dark:text-cyan-400 truncate">Staff Engineer</span>
                 <span className="opacity-40">•</span>
                 <span className="truncate">{t(language, 'nav.architectTitle')}</span>
@@ -277,28 +269,18 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <button
-              type="button"
-              onClick={() => {
-                onOpenResume();
-                              }}
-              className={`h-9 px-3 rounded-lg border text-xs font-mono font-semibold flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs ${
-                theme === 'dark'
-                  ? 'bg-zinc-900 border-zinc-800 text-zinc-200 hover:bg-zinc-800'
-                  : 'bg-white border-slate-300 text-slate-800 hover:bg-slate-50'
-              }`}
-              aria-label={t(language, 'nav.cvButton')}
-            >
-              <FileText className="w-3.5 h-3.5 opacity-70 shrink-0" />
-              <span className="opt-mono">{t(language, 'nav.cvButton')}</span>
-            </button>
+            {/* INDICADOR TEXTUAL DE IDIOMA ATIVO (MOBILE) */}
+            <div className="flex items-center gap-1 font-mono text-xs font-semibold text-slate-500 dark:text-zinc-400 select-none">
+              <Globe className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 opacity-80 shrink-0" />
+              <span className="tracking-wider">{language}</span>
+            </div>
 
-            {/* GATILHO DO MENU UNIFICADO (MOBILE // GHOST ACTION SEM BORDA) */}
+            {/* GATILHO DEDICADO DE CONFIGURAÇÕES (+30% MAIOR) (MOBILE) */}
             <button
               type="button"
               onClick={() => {
                 setSettingsOpen((prev) => !prev);
-                              }}
+              }}
               className={`h-9 w-9 rounded-lg flex items-center justify-center cursor-pointer transition-colors active:scale-95 ${
                 settingsOpen
                   ? 'bg-slate-200/70 dark:bg-zinc-800 text-slate-900 dark:text-zinc-100'
@@ -306,7 +288,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               }`}
               aria-label={t(language, 'nav.preferences')}
             >
-              <Settings className="w-4 h-4" />
+              <Settings className="w-[21px] h-[21px] opacity-80 shrink-0" />
             </button>
           </div>
         </div>
@@ -593,35 +575,10 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
         </>
       )}
 
-      {/* 3. TOOLBAR FLUTUANTE SOBRE O CANVAS (SOMENTE CONTROLES DE NAVEGAÇÃO) */}
+      {/* 3. TOOLBAR FLUTUANTE SOBRE O CANVAS (LENTES E BUSCA) */}
+      {viewLayout !== 'RESUME' && (
       <div className="hidden md:flex w-full px-5 sm:px-8 pt-4 pb-2 z-30 relative pointer-events-none">
         <div className="w-full flex items-center justify-between gap-3 pointer-events-auto">
-          {/* SELETOR DE MODO */}
-          <div className="segmented-control divide-x divide-slate-200 dark:divide-zinc-800" role="tablist">
-            <button
-              type="button"
-              role="tab"
-              aria-selected={viewLayout === 'GRAPH'}
-              onClick={() => handleToggleViewLayout('GRAPH')}
-              className={`segmented-btn ${viewLayout === 'GRAPH' ? 'segmented-btn-active' : ''}`}
-              aria-label={t(language, 'nav.graphView')}
-            >
-              <Layers className={`w-3.5 h-3.5 shrink-0 ${viewLayout === 'GRAPH' ? 'text-blue-600 dark:text-cyan-400' : 'opacity-60'}`} />
-              <span className="opt-mono">{t(language, 'nav.graphView')}</span>
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={viewLayout === 'TIMELINE'}
-              onClick={() => handleToggleViewLayout('TIMELINE')}
-              className={`segmented-btn ${viewLayout === 'TIMELINE' ? 'segmented-btn-active' : ''}`}
-              aria-label={t(language, 'nav.timelineView')}
-            >
-              <List className={`w-3.5 h-3.5 shrink-0 ${viewLayout === 'TIMELINE' ? 'text-blue-600 dark:text-cyan-400' : 'opacity-60'}`} />
-              <span className="opt-mono">{t(language, 'nav.timelineView')}</span>
-            </button>
-          </div>
-
           {/* BARRA DE CATEGORIAS */}
           <div role="tablist" className="segmented-control divide-x divide-slate-200 dark:divide-zinc-800">
             {allLenses.map((lensKey) => {
@@ -677,6 +634,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           </div>
         </div>
       </div>
+      )}
 
       {/* 4. SPEED-DIAL RADIAL EM ARCO */}
       <SpeedDialContact

@@ -8,15 +8,14 @@ import { SystemState, AppTheme } from './types';
 import { ControlPanel } from './components/organisms/ControlPanel';
 import { SystemCanvas } from './components/templates/SystemCanvas';
 import { ExecutiveTimelineView } from './components/templates/ExecutiveTimelineView';
+import { ResumeView } from './components/templates/ResumeView';
+import { SidebarNavigation } from './components/organisms/SidebarNavigation';
 import { NodeInspector } from './components/organisms/NodeInspector';
 const ContactAuthModal = React.lazy(() =>
   import('./components/organisms/ContactAuthModal').then((m) => ({ default: m.ContactAuthModal }))
 );
 const PrivacyPolicyModal = React.lazy(() =>
   import('./components/organisms/PrivacyPolicyModal').then((m) => ({ default: m.PrivacyPolicyModal }))
-);
-const RawResumeModal = React.lazy(() =>
-  import('./components/organisms/RawResumeModal').then((m) => ({ default: m.RawResumeModal }))
 );
 import { FooterBar } from './components/organisms/FooterBar';
 import { OfflineIndicator } from './components/atoms/OfflineIndicator';
@@ -73,7 +72,6 @@ export default function App() {
   });
 
   const [isContactOpen, setIsContactOpen] = useState(false);
-  const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
 
   const updateState = useCallback((updates: Partial<SystemState>) => {
@@ -109,18 +107,17 @@ export default function App() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (isContactOpen) setIsContactOpen(false);
-        else if (isResumeOpen) setIsResumeOpen(false);
         else if (systemState.activeNodeId) updateState({ activeNodeId: null });
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isContactOpen, isResumeOpen, systemState.activeNodeId, updateState]);
+  }, [isContactOpen, systemState.activeNodeId, updateState]);
 
   return (
     <div
-      className={`min-h-screen flex flex-col font-sans selection:bg-cyan-500/20 selection:text-cyan-300 antialiased overflow-x-hidden transition-colors ${
+      className={`min-h-screen flex flex-col font-sans selection:bg-cyan-500/20 selection:text-cyan-300 antialiased transition-colors ${
         systemState.theme === 'dark' ? 'bg-[#09090b] text-zinc-100' : 'bg-slate-50 text-slate-900'
       }`}
     >
@@ -137,29 +134,49 @@ export default function App() {
         systemState={systemState}
         updateState={updateState}
         onOpenContact={() => setIsContactOpen(true)}
-        onOpenResume={() => setIsResumeOpen(true)}
       />
 
-      <main id="main-content" tabIndex={-1} className="flex-1 relative flex flex-col focus:outline-hidden">
-        {systemState.viewLayout === 'GRAPH' ? (
-          <SystemCanvas
-            systemState={systemState}
-            updateState={updateState}
-            onSelectNode={(nodeId) => updateState({ activeNodeId: nodeId })}
-          />
-        ) : (
-          <ExecutiveTimelineView
-            nodes={CURRICULUM_NODES}
-            onSelectNode={(nodeId) => updateState({ activeNodeId: nodeId })}
-            language={systemState.language}
-            theme={systemState.theme}
-            profileLens={systemState.profileLens}
-            searchTerm={systemState.searchTerm}
-            selectedTag={systemState.selectedTag}
-            onClearFilter={() => updateState({ searchTerm: '', profileLens: 'ALL', selectedTag: null })}
-          />
-        )}
-      </main>
+      {/* ÁREA MESTRE: MENU LATERAL COM OVERLAY + CONTEÚDO */}
+      <div className="flex-1 flex relative">
+        <SidebarNavigation
+          viewLayout={systemState.viewLayout}
+          onSelectView={(layout) => updateState({ viewLayout: layout })}
+          language={systemState.language}
+          theme={systemState.theme}
+        />
+
+        <main
+          id="main-content"
+          tabIndex={-1}
+          className="flex-1 w-full min-w-0 pl-14 sm:pl-16 relative flex flex-col focus:outline-hidden"
+        >
+          {systemState.viewLayout === 'GRAPH' ? (
+            <SystemCanvas
+              systemState={systemState}
+              updateState={updateState}
+              onSelectNode={(nodeId) => updateState({ activeNodeId: nodeId })}
+            />
+          ) : systemState.viewLayout === 'TIMELINE' ? (
+            <ExecutiveTimelineView
+              nodes={CURRICULUM_NODES}
+              onSelectNode={(nodeId) => updateState({ activeNodeId: nodeId })}
+              language={systemState.language}
+              theme={systemState.theme}
+              profileLens={systemState.profileLens}
+              searchTerm={systemState.searchTerm}
+              selectedTag={systemState.selectedTag}
+              onClearFilter={() => updateState({ searchTerm: '', profileLens: 'ALL', selectedTag: null })}
+            />
+          ) : (
+            <ResumeView
+              language={systemState.language}
+              theme={systemState.theme}
+              onOpenContact={() => setIsContactOpen(true)}
+              onOpenPrivacy={() => setIsPrivacyOpen(true)}
+            />
+          )}
+        </main>
+      </div>
 
       <NodeInspector
         nodeId={systemState.activeNodeId}
@@ -173,28 +190,11 @@ export default function App() {
         }}
       />
 
-
       {isContactOpen && (
         <React.Suspense fallback={null}>
           <ContactAuthModal
             isOpen={isContactOpen}
             onClose={() => setIsContactOpen(false)}
-            language={systemState.language}
-            theme={systemState.theme}
-          />
-        </React.Suspense>
-      )}
-
-      {isResumeOpen && (
-        <React.Suspense fallback={null}>
-          <RawResumeModal
-            isOpen={isResumeOpen}
-            onClose={() => setIsResumeOpen(false)}
-            onOpenContact={() => {
-              setIsResumeOpen(false);
-              setIsContactOpen(true);
-            }}
-            onOpenPrivacy={() => setIsPrivacyOpen(true)}
             language={systemState.language}
             theme={systemState.theme}
           />

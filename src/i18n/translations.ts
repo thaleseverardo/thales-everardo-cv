@@ -34,6 +34,14 @@ export const TRANSLATIONS = {
     'nav.appInstalled': 'Aplicativo Instalado',
     'nav.skipContent': 'Pular para o conteúdo principal',
     'nav.clearSearch': 'Limpar busca',
+    'sidebar.graph': 'Grafo',
+    'sidebar.graphDesc': 'Arquitetura de Sistemas',
+    'sidebar.timeline': 'Linha do Tempo',
+    'sidebar.timelineDesc': 'Marcos em Produção',
+    'sidebar.resume': 'Currículo',
+    'sidebar.resumeDesc': 'Dossiê Executivo ATS',
+    'sidebar.collapse': 'Recolher menu',
+    'sidebar.expand': 'Expandir menu',
 
     // Lentes de Especialidade (Filtros)
     'lens.all': 'Todos',
@@ -267,6 +275,14 @@ export const TRANSLATIONS = {
     'nav.appInstalled': 'Application Installed',
     'nav.skipContent': 'Skip to main content',
     'nav.clearSearch': 'Clear search',
+    'sidebar.graph': 'Graph',
+    'sidebar.graphDesc': 'Interactive Architecture',
+    'sidebar.timeline': 'Timeline',
+    'sidebar.timelineDesc': 'Production Milestones',
+    'sidebar.resume': 'Resume',
+    'sidebar.resumeDesc': 'Executive ATS Dossier',
+    'sidebar.collapse': 'Collapse menu',
+    'sidebar.expand': 'Expand menu',
 
     // Lenses
     'lens.all': 'All',
@@ -494,6 +510,14 @@ export const TRANSLATIONS = {
     'nav.appInstalled': 'Aplicación Instalada',
     'nav.skipContent': 'Saltar al contenido principal',
     'nav.clearSearch': 'Limpiar búsqueda',
+    'sidebar.graph': 'Grafo',
+    'sidebar.graphDesc': 'Arquitectura Interactiva',
+    'sidebar.timeline': 'Cronología',
+    'sidebar.timelineDesc': 'Hitos en Producción',
+    'sidebar.resume': 'Currículum',
+    'sidebar.resumeDesc': 'Dossier Ejecutivo ATS',
+    'sidebar.collapse': 'Contraer menú',
+    'sidebar.expand': 'Expandir menú',
 
     // Lentes
     'lens.all': 'Todos',
@@ -721,6 +745,14 @@ export const TRANSLATIONS = {
     'nav.appInstalled': 'Application Installée',
     'nav.skipContent': 'Passer au contenu principal',
     'nav.clearSearch': 'Effacer la recherche',
+    'sidebar.graph': 'Graphe',
+    'sidebar.graphDesc': 'Architecture Interactive',
+    'sidebar.timeline': 'Chronologie',
+    'sidebar.timelineDesc': 'Jalons en Production',
+    'sidebar.resume': 'CV',
+    'sidebar.resumeDesc': 'Dossier Exécutif ATS',
+    'sidebar.collapse': 'Réduire le menu',
+    'sidebar.expand': 'Développer le menu',
 
     // Lenses
     'lens.all': 'Tous',

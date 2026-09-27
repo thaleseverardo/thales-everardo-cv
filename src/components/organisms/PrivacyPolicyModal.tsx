@@ -1,5 +1,5 @@
-import React from 'react';
-import { X, ShieldCheck, Lock, UserCheck, Trash2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Trash2 } from 'lucide-react';
 import { AppLanguage, AppTheme } from '../../types';
 import { t } from '../../i18n/translations';
 import { useAuth } from '../../hooks/useAuth';
@@ -19,8 +19,9 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
   theme,
 }) => {
   const { user } = useAuth();
-  const [confirmingRevoke, setConfirmingRevoke] = React.useState(false);
-  const [isPurging, setIsPurging] = React.useState(false);
+  const [confirmingRevoke, setConfirmingRevoke] = useState(false);
+  const [isPurging, setIsPurging] = useState(false);
+
   if (!isOpen) return null;
 
   const handleRevoke = async () => {
@@ -28,9 +29,11 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
     try {
       const ok = await revokeAccessAndPurgeUserData(user);
       if (ok) {
-        alert(language === 'PT' 
-          ? 'Conta e registros de sessão excluídos definitivamente com sucesso da base de dados.' 
-          : 'Account and session records permanently erased from database.');
+        alert(
+          language === 'PT'
+            ? 'Registros de sessão e credenciais expurgados definitivamente da base de dados.'
+            : 'Session records and credentials permanently erased from the database.'
+        );
       }
     } finally {
       setIsPurging(false);
@@ -48,26 +51,31 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
       }}
     >
       <div
-        className={`w-full max-w-lg rounded-3xl shadow-2xl border flex flex-col max-h-[90vh] overflow-hidden transition-all ${
+        className={`w-full max-w-lg rounded-3xl shadow-2xl border flex flex-col max-h-[88vh] overflow-hidden transition-all ${
           theme === 'dark'
-            ? 'bg-zinc-950 border-zinc-800 text-zinc-100 shadow-black/80'
+            ? 'bg-zinc-950 border-zinc-800 text-zinc-100 shadow-black/90'
             : 'bg-white border-slate-200 text-slate-900 shadow-slate-300/40'
         }`}
       >
-        {/* CABEÇALHO */}
-        <div className={`px-6 py-4 border-b flex items-center justify-between shrink-0 ${
-          theme === 'dark' ? 'border-zinc-800 bg-zinc-900/60' : 'border-slate-100 bg-slate-50'
-        }`}>
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-600 dark:text-cyan-400 flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-4 h-4" />
-            </div>
-            <div>
-              <h2 className="text-sm font-bold leading-tight">
-                {t(language, 'auth.privacyPolicyTitle')}
-              </h2>
-              <div className="text-[10px] font-mono opacity-60">LGPD (Lei 13.709/2018) & GDPR Compliance</div>
-            </div>
+        {/* CABEÇALHO EDITORIAL SÓBRIO (PADRÃO STRIPE / APPLE / LINEAR) */}
+        <div
+          className={`px-6 py-5 border-b flex items-center justify-between shrink-0 ${
+            theme === 'dark' ? 'border-zinc-800/80 bg-zinc-900/40' : 'border-slate-100 bg-slate-50/50'
+          }`}
+        >
+          <div>
+            <h2 className="text-base font-bold tracking-tight text-slate-900 dark:text-zinc-100 font-sans">
+              {language === 'PT'
+                ? 'Governança de Dados e Privacidade'
+                : language === 'ES'
+                ? 'Gobernanza de Datos y Privacidad'
+                : language === 'FR'
+                ? 'Gouvernance des Données et Confidentialité'
+                : 'Data Governance & Privacy Policy'}
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-zinc-400 font-sans mt-0.5">
+              LGPD (Lei 13.709/2018) & GDPR Compliance • Minimal Data Ingestion
+            </p>
           </div>
 
           <button
@@ -79,44 +87,106 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
           </button>
         </div>
 
-        {/* CONTEÚDO */}
-        <div className="p-6 overflow-y-auto space-y-4 text-xs font-sans leading-relaxed text-slate-700 dark:text-zinc-300">
-          <div className="p-3 rounded-xl border dark:bg-zinc-900/40 dark:border-zinc-800 bg-slate-50 border-slate-200 space-y-1">
-            <div className="font-bold text-slate-900 dark:text-zinc-100 flex items-center gap-1.5">
-              <UserCheck className="w-3.5 h-3.5 text-blue-600 dark:text-cyan-400" />
-              <span>{t(language, 'auth.privacyController')}</span>
+        {/* CONTEÚDO JURÍDICO EXECUTIVO */}
+        <div className="p-6 overflow-y-auto space-y-4 text-xs font-sans leading-relaxed text-slate-600 dark:text-zinc-300">
+          {/* DECLARAÇÃO DE RESPONSABILIDADE FORMAL */}
+          <p className="text-xs text-slate-500 dark:text-zinc-400 leading-relaxed">
+            {language === 'PT'
+              ? 'Este portfólio de arquitetura é mantido por Thales Everardo Albuquerque Reis (São Paulo, Brasil). O tratamento de dados pessoais neste ambiente é estritamente pautado pelos princípios de necessidade, transparência e segurança estabelecidos na legislação vigente.'
+              : language === 'ES'
+              ? 'Este portafolio de arquitectura es gestionado por Thales Everardo Albuquerque Reis (São Paulo, Brasil). El tratamiento de datos personales en este entorno se rige estrictamente por los principios de necesidad, transparencia y seguridad.'
+              : language === 'FR'
+              ? 'Ce portfolio d’architecture est géré par Thales Everardo Albuquerque Reis (São Paulo, Brésil). Le traitement des données personnelles dans cet environnement respecte scrupuleusement les principes de nécessité, de transparence et de sécurité.'
+              : 'This architectural portfolio is maintained by Thales Everardo Albuquerque Reis (São Paulo, Brazil). Personal data processing adheres strictly to necessity, transparency, and data minimization standards under international law.'}
+          </p>
+
+          <div className="space-y-3.5 border-t border-slate-100 dark:border-zinc-800/80 pt-4">
+            <div>
+              <h3 className="font-semibold text-slate-900 dark:text-zinc-100 text-xs mb-1">
+                {language === 'PT'
+                  ? '1. Dados Coletados e Autenticação Federada'
+                  : language === 'ES'
+                  ? '1. Datos Recopilados y Autenticación'
+                  : language === 'FR'
+                  ? '1. Données Collectées et Authentification'
+                  : '1. Collected Data & Federated Authentication'}
+              </h3>
+              <p className="opacity-85">
+                {language === 'PT'
+                  ? 'A navegação em todo o sistema é 100% aberta e anônima. Apenas ao solicitar acesso à Linha Direta de Contato (WhatsApp e e-mail pessoal), recebemos via OAuth (Google ou GitHub) exclusivamente: nome, endereço de e-mail e identificador de autenticação. Nenhuma senha de usuário é solicitada, processada ou armazenada neste sistema.'
+                  : language === 'ES'
+                  ? 'La navegación por todo el sistema es 100% abierta y anónima. Solo al solicitar acceso a la Línea Directa de Contacto, recibimos mediante OAuth (Google o GitHub) exclusivamente: nombre, correo electrónico e identificador de autenticación. No se almacena ninguna contraseña.'
+                  : language === 'FR'
+                  ? 'La navigation sur l’ensemble du système est 100% libre et anonyme. Uniquement lors de l’accès à la Ligne Directe, nous recevons via OAuth (Google ou GitHub) exclusivement: nom, adresse e-mail et identifiant d’authentification. Aucun mot de passe n’est stocké.'
+                  : 'Browsing across the portfolio is 100% open and anonymous. Only upon requesting Direct Contact Line access do we receive via OAuth (Google or GitHub) strictly: full name, email address, and auth token. No user password is ever processed or stored.'}
+              </p>
             </div>
-            <div className="text-[11px] opacity-75">São Paulo, SP — Brasil · Contato: email@gmail.com</div>
+
+            <div>
+              <h3 className="font-semibold text-slate-900 dark:text-zinc-100 text-xs mb-1">
+                {language === 'PT'
+                  ? '2. Finalidade Legítima & Proteção Contra Automação'
+                  : language === 'ES'
+                  ? '2. Finalidad Legítima y Protección'
+                  : language === 'FR'
+                  ? '2. Finalité Légitime & Protection'
+                  : '2. Legitimate Purpose & Anti-Bot Protection'}
+              </h3>
+              <p className="opacity-85">
+                {language === 'PT'
+                  ? 'A coleta ocorre unicamente para verificar a identidade de recrutadores, clientes e líderes técnicos, protegendo as informações de contato do profissional contra raspagem massiva por web scrapers e bots de spam. Base legal: Consentimento Expresso e Legítimo Interesse (Art. 7º, incisos I e IX da LGPD).'
+                  : language === 'ES'
+                  ? 'La recopilación tiene como único fin verificar la identidad de reclutadores y líderes técnicos, protegiendo los datos de contacto frente a scrapers y bots automatizados. Base legal: Consentimiento Expreso e Interés Legítimo.'
+                  : language === 'FR'
+                  ? 'La collecte a pour seul objectif de vérifier l’identité des recruteurs et leaders techniques, protégeant ainsi les coordonnées contre les scrapers et robots automatisés. Base légale: Consentement Exprès et Intérêt Légitime.'
+                  : 'Collection serves solely to verify recruiter and engineering leadership identity, mitigating automated contact scraping and spam bots. Legal grounds: Explicit Consent and Legitimate Interest under Art. 6(1) GDPR / Art. 7 LGPD.'}
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-slate-900 dark:text-zinc-100 text-xs mb-1">
+                {language === 'PT'
+                  ? '3. Não Compartilhamento e Ausência de Rastreamento Comercial'
+                  : language === 'ES'
+                  ? '3. No Divulgación y Cero Rastreo'
+                  : language === 'FR'
+                  ? '3. Non-Partage et Zéro Pistage'
+                  : '3. Zero Third-Party Sharing & Commercial Tracking'}
+              </h3>
+              <p className="opacity-85">
+                {language === 'PT'
+                  ? 'Seus dados jamais serão vendidos, transferidos ou compartilhados com terceiros, corretores de dados ou plataformas de publicidade. Não utilizamos cookies de rastreamento comportamental nem enviamos comunicações de marketing não solicitadas.'
+                  : language === 'ES'
+                  ? 'Sus datos nunca serán vendidos, transferidos ni compartidos con terceros o plataformas publicitarias. No utilizamos cookies de rastreo comercial ni enviamos spam.'
+                  : language === 'FR'
+                  ? 'Vos données ne seront jamais vendues, cédées ou partagées avec des tiers ou des régies publicitaires. Nous n’utilisons aucun cookie de ciblage commercial.'
+                  : 'Your data is never sold, leased, or shared with third-party brokers or ad networks. We employ zero behavioral ad cookies and send zero unsolicited marketing communications.'}
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-slate-900 dark:text-zinc-100 text-xs mb-1">
+                {language === 'PT'
+                  ? '4. Direitos do Titular & Exclusão Sob Demanda (Art. 18 LGPD)'
+                  : language === 'ES'
+                  ? '4. Derechos del Titular y Supresión (Art. 18 LGPD / RGPD)'
+                  : language === 'FR'
+                  ? '4. Droits de l’Utilisateur et Droit à l’Oubli (RGPD)'
+                  : '4. Data Subject Rights & Instant Erasure (GDPR Art. 17)'}
+              </h3>
+              <p className="opacity-85">
+                {language === 'PT'
+                  ? 'Em estrita conformidade com o Artigo 18 da LGPD e Artigo 17 do GDPR (Direito ao Esquecimento), qualquer usuário autenticado pode a qualquer momento revogar sua sessão e expurgar definitivamente todos os registros associados com um único clique abaixo.'
+                  : language === 'ES'
+                  ? 'En cumplimiento del Artículo 18 de la LGPD y Artículo 17 del RGPD (Derecho al Olvido), cualquier usuario autenticado puede revocar su sesión y eliminar permanentemente cualquier registro con un solo clic a continuación.'
+                  : language === 'FR'
+                  ? 'Conformément à l’Article 17 du RGPD (Droit à l’Oubli), tout utilisateur authentifié peut révoquer sa session et effacer définitivement ses enregistrements en un seul clic ci-dessous.'
+                  : 'In strict compliance with GDPR Article 17 (Right to Erasure) and LGPD Article 18, any authenticated visitor may revoke their session and permanently purge all associated authentication records with a single click below.'}
+              </p>
+            </div>
           </div>
 
-          <div className="space-y-1">
-            <h3 className="font-bold text-slate-900 dark:text-zinc-100 text-xs">1. Dados Pessoais Coletados via OAuth</h3>
-            <p className="opacity-80">
-              Ao optar por entrar via Google ou GitHub, coletamos estritamente: <strong>nome completo, endereço de e-mail corporativo/pessoal, foto de perfil pública</strong> e o identificador único da conta (UID). Nenhuma senha é criada ou armazenada neste portal.
-            </p>
-          </div>
-
-          <div className="space-y-1">
-            <h3 className="font-bold text-slate-900 dark:text-zinc-100 text-xs">2. Finalidade e Base Legal (Art. 7º e 9º da LGPD)</h3>
-            <p className="opacity-80">
-              A coleta tem como finalidade exclusiva verificar a identidade do visitante para liberar acesso à <strong>Linha Direta de Contato</strong> (WhatsApp e e-mail pessoal), mitigando a raspagem indiscriminada de dados por robôs. A base legal aplicada é o <em>Consentimento Expresso</em> do titular e o <em>Legítimo Interesse</em> na segurança das comunicações.
-            </p>
-          </div>
-
-          <div className="space-y-1">
-            <h3 className="font-bold text-slate-900 dark:text-zinc-100 text-xs">3. Não Compartilhamento e Antispam</h3>
-            <p className="opacity-80">
-              Seus dados <strong>nunca serão vendidos, alugados ou compartilhados</strong> com terceiros. Não enviamos newsletters, e-mails de marketing nem mensagens não solicitadas.
-            </p>
-          </div>
-
-          <div className="space-y-1">
-            <h3 className="font-bold text-slate-900 dark:text-zinc-100 text-xs">4. Direitos do Titular & Exclusão (Art. 18 da LGPD)</h3>
-            <p className="opacity-80">
-              Você tem direito à confirmação de tratamento, acesso e exclusão imediata dos seus dados. A qualquer momento, você pode revogar sua sessão no portal.
-            </p>
-          </div>
-
+          {/* BOTÃO DE EXPURGO DE DADOS SOB DEMANDA (LGPD ART. 18) */}
           {user && (
             <div className="pt-2">
               {confirmingRevoke ? (
@@ -133,9 +203,13 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
                       onClick={handleRevoke}
                       className="flex-1 py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs transition-colors cursor-pointer active:scale-95 disabled:opacity-50"
                     >
-                      {isPurging 
-                        ? (language === 'PT' ? 'Excluindo da base...' : 'Erasing...') 
-                        : (language === 'PT' ? 'Sim, excluir e revogar' : 'Yes, delete & revoke')}
+                      {isPurging
+                        ? language === 'PT'
+                          ? 'Excluindo da base...'
+                          : 'Erasing...'
+                        : language === 'PT'
+                        ? 'Sim, excluir e revogar'
+                        : 'Yes, delete & revoke'}
                     </button>
                     <button
                       type="button"
@@ -150,7 +224,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setConfirmingRevoke(true)}
-                  className="w-full py-2.5 px-3 rounded-xl border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-semibold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-2.5 px-3 rounded-xl border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/15 text-rose-600 dark:text-rose-400 font-semibold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>{t(language, 'auth.revokeData')}</span>
@@ -160,20 +234,23 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
           )}
         </div>
 
-        {/* RODAPÉ */}
-        <div className={`px-6 py-3.5 border-t flex items-center justify-between shrink-0 text-xs ${
-          theme === 'dark' ? 'border-zinc-800 bg-zinc-900/60' : 'border-slate-100 bg-slate-50'
-        }`}>
-          <div className="flex items-center gap-1.5 text-[11px] opacity-60 font-mono">
-            <Lock className="w-3 h-3 text-emerald-500" />
-            <span>Conformidade Ativa</span>
+        {/* RODAPÉ SÓBRIO E INSTITUCIONAL (SEM SELOS FALSOS OU BADGES MONOESPAÇADOS) */}
+        <div
+          className={`px-6 py-4 border-t flex items-center justify-between shrink-0 ${
+            theme === 'dark' ? 'border-zinc-800/80 bg-zinc-900/40' : 'border-slate-100 bg-slate-50/50'
+          }`}
+        >
+          <div className="text-[11px] text-slate-500 dark:text-zinc-400 font-sans">
+            {language === 'PT'
+              ? 'Art. 18 LGPD & Art. 17 GDPR Assegurados'
+              : 'LGPD & GDPR Privacy Standards'}
           </div>
 
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs transition-colors cursor-pointer"
+            className="px-4 py-2 rounded-xl text-xs font-semibold font-sans transition-all cursor-pointer bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-800 dark:text-zinc-100 active:scale-95"
           >
-            {t(language, 'inspector.close')}
+            {language === 'PT' ? 'Fechar' : language === 'ES' ? 'Cerrar' : language === 'FR' ? 'Fermer' : 'Close'}
           </button>
         </div>
       </div>

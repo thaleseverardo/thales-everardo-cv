@@ -28,22 +28,23 @@ export const FooterBar: React.FC<FooterBarProps> = ({ systemState, onOpenPrivacy
           : 'bg-white/90 border-slate-200 text-slate-600 shadow-2xs'
       }`}
     >
-      {/* IDENTIDADE INSTITUCIONAL */}
-      <div className="flex items-center gap-2 font-sans truncate">
-        <span className="font-semibold text-slate-800 dark:text-zinc-200 tracking-tight">
-          © {currentYear} Thales Everardo
+      {/* IDENTIDADE INSTITUCIONAL (RESPONSIVA SEM TRUNCAMENTO NO MOBILE) */}
+      <div className="flex items-center gap-1.5 sm:gap-2 font-sans min-w-0 pr-1 truncate">
+        <span className="font-semibold text-slate-800 dark:text-zinc-200 tracking-tight text-[11px] sm:text-xs shrink-0">
+          © {currentYear} <span className="hidden xs:inline">Thales Everardo</span><span className="xs:hidden">Thales</span>
         </span>
-        <span className="opacity-30 hidden sm:inline">•</span>
-        <span className="text-[11px] opacity-60 hidden sm:inline">
-{t(language, 'footer.subtitle')}
+        <span className="opacity-30 hidden md:inline">•</span>
+        <span className="text-[11px] opacity-60 hidden md:inline truncate">
+          {t(language, 'footer.subtitle')}
         </span>
-        <span className="opacity-30 hidden sm:inline">•</span>
+        <span className="opacity-30">•</span>
         <button
           type="button"
           onClick={onOpenPrivacy}
-          className="text-[11px] opacity-70 hover:opacity-100 hover:underline transition-opacity cursor-pointer font-sans"
+          className="text-[10px] sm:text-[11px] text-slate-500 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:underline transition-opacity cursor-pointer font-sans shrink-0"
         >
-          {t(language, 'footer.privacyLink')}
+          <span className="hidden sm:inline">{t(language, 'footer.privacyLink')}</span>
+          <span className="sm:hidden">{language === 'PT' ? 'Privacidade' : 'Privacy'}</span>
         </button>
       </div>
 

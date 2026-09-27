@@ -150,23 +150,23 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
             </span>
           </div>
 
-          {/* BOTÃO LINKEDIN SEM LOGIN */}
+          {/* BOTÃO LINKEDIN SEM LOGIN (PADRÃO AAA INTEGRADO COM GOOGLE/GITHUB) */}
           <a
             href="https://br.linkedin.com/in/thaleseverardo"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
-                            onClose();
+              onClose();
             }}
-            className={`w-full h-10 px-4 rounded-xl border font-medium text-xs transition-all flex items-center justify-center gap-2 cursor-pointer ${
+            className={`w-full h-11 px-4 rounded-xl border font-medium text-xs sm:text-sm transition-all flex items-center justify-center gap-2.5 cursor-pointer shadow-xs active:scale-[0.98] ${
               theme === 'dark'
-                ? 'bg-blue-950/30 hover:bg-blue-900/40 border-blue-800/60 text-cyan-300'
-                : 'bg-blue-50 hover:bg-blue-100/80 border-blue-200 text-blue-700'
+                ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-700/80 text-zinc-100 hover:border-zinc-600'
+                : 'bg-white hover:bg-slate-50 border-slate-300 text-slate-700 hover:border-slate-400'
             }`}
           >
-            <Linkedin className="w-4 h-4 shrink-0" />
+            <Linkedin className="w-4 h-4 text-[#0A66C2] shrink-0" />
             <span>{t(language, 'auth.connectLinkedIn')}</span>
-            <ExternalLink className="w-3 h-3 opacity-60 ml-0.5" />
+            <ExternalLink className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 ml-0.5" />
           </a>
 
           {/* BLINDAGEM LGPD / GDPR */}
@@ -178,9 +178,9 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
             <button
               type="button"
               onClick={() => setShowPrivacyPolicy(!showPrivacyPolicy)}
-              className="text-[10px] font-mono text-blue-600 dark:text-cyan-400 hover:underline flex items-center gap-1 cursor-pointer"
+              className="text-[11px] font-sans font-medium text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1.5 cursor-pointer"
             >
-              <Shield className="w-3 h-3 shrink-0" />
+              <Shield className="w-3.5 h-3.5 shrink-0" />
               <span>{t(language, 'auth.privacyPolicyLink')}</span>
             </button>
 
