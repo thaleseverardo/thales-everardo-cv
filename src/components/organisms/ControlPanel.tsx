@@ -492,7 +492,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                     role="switch"
                     aria-checked={theme === 'dark'}
                     onClick={handleToggleTheme}
-                    className={`relative inline-flex h-5.5 w-10.5 min-h-[1.375rem] max-h-[1.375rem] min-w-[2.625rem] max-w-[2.625rem] shrink-0 cursor-pointer items-center rounded-full p-0.5 border transition-colors duration-200 focus:outline-hidden touch-target-expand ${
+                    className={`relative inline-flex h-5.5 w-10.5 min-h-5.5 max-h-5.5 min-w-10.5 max-w-10.5 shrink-0 cursor-pointer items-center rounded-full p-0.5 border transition-colors duration-200 focus:outline-hidden touch-target-expand ${
                       theme === 'dark'
                         ? 'bg-zinc-900 border-zinc-700/90 shadow-inner'
                         : 'bg-zinc-200 border-zinc-300/90 shadow-inner'

@@ -184,7 +184,7 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
               <span>{t(language, 'auth.privacyPolicyLink')}</span>
             </button>
 
-            {/* MICRO-MODAL IN-APP DE POLÍTICA */}
+            {/* MODAL IN-APP DE POLÍTICA */}
             {showPrivacyPolicy && (
               <div className="p-3 rounded-xl border dark:bg-zinc-950 dark:border-zinc-800 bg-slate-50 border-slate-200 text-[10px] font-sans leading-relaxed space-y-1.5 animate-in fade-in duration-150">
                 <div className="font-bold text-slate-900 dark:text-zinc-100">

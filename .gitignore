@@ -9,3 +9,4 @@ coverage/
 *dump*
 *.py
 .doc
+README.md

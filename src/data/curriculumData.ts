@@ -162,7 +162,7 @@ export const CURRICULUM_NODES: ArchitectureNode[] = [
       { label: 'Delivery Reliability', value: '100%', subtext: 'On-schedule executive dispatch', trend: 'up', color: 'blue' },
     ],
     contextProblem: 'Operational reporting workflows took 7 full days (10,080 minutes) to extract, cleanse, and compile enterprise stakeholder data due to manual spreadsheet stitch-ups and unindexed raw query execution.',
-    architecturalSolution: 'Engineered an automated data pipeline utilizing tuned T-SQL stored procedures, scheduled batch extraction workers, and Power Query / VBA micro-services that eliminated human intermediary steps and parallelized data aggregation.',
+    architecturalSolution: 'Engineered an automated data pipeline utilizing tuned T-SQL stored procedures, scheduled batch extraction workers, and Power Query / VBA services that eliminated human intermediary steps and parallelized data aggregation.',
     engineeringFeat: 'Slashed executive reporting latency by 99.8%—collapsing delivery turnaround from 7 days down to 20 minutes. Enabled same-day tactical decision-making for executive and client stakeholders across nationwide operations.',
     engineeringLesson: 'Latency is often an architectural debt caused by manual verification loops. Automating the pipeline with deterministic validations unlocks massive velocity without sacrificing accuracy.',
     technologies: [
@@ -295,7 +295,7 @@ export const CURRICULUM_NODES: ArchitectureNode[] = [
       { label: 'POS Clusters Synced', value: '5 Databases', subtext: 'Real-time bidirectional event bus', trend: 'up', color: 'cyan' },
     ],
     contextProblem: 'Disparate retail operational stacks—consisting of external GS1 nutritional master databases, central ERP systems, and 5 physically isolated Point of Sale (POS) stores—relied on error-prone manual duplicate inputs.',
-    architecturalSolution: 'Designed and deployed distributed RESTful micro-services and C#/.NET middleware linking GS1 standards directly into the central ERP and broadcasting differential state updates out to 5 distributed POS databases.',
+    architecturalSolution: 'Designed and deployed distributed RESTful services and C#/.NET middleware linking GS1 standards directly into the central ERP and broadcasting differential state updates out to 5 distributed POS databases.',
     engineeringFeat: 'Eliminated all manual catalog entries across 30,000 active SKUs, delivering sub-second price and inventory synchronization for over 500,000 monthly customer checkouts, with complete disaster recovery orchestration.',
     engineeringLesson: 'Distributed consensus across physical retail nodes requires idempotent message contracts and robust offline-first fallback mechanisms to survive WAN disconnects.',
     technologies: [
@@ -330,7 +330,7 @@ export const CURRICULUM_NODES: ArchitectureNode[] = [
       businessValue: 'Eliminou divergências de preços e rupturas de estoque entre 5 lojas físicas, garantindo faturamento sem falhas em meio milhão de transações mensais.',
       engineeringFeat: 'Eliminou totalmente o retrabalho manual em 30.000 SKUs, entregando sincronização sub-segundo de preços e estoque para 500.000 transações/mês com plano completo de disaster recovery.',
       contextProblem: 'Sistemas isolados (catálogo GS1 nutricional, ERP central e 5 bancos de PDV em lojas físicas) dependiam de redigitação manual e causavam erros graves de caixa.',
-      architecturalSolution: 'Projetou micro-serviços RESTful em C#/.NET conectando o padrão GS1 ao ERP e distribuindo atualizações de estado com resiliência para os PDVs.',
+      architecturalSolution: 'Projetou serviços RESTful em C#/.NET conectando o padrão GS1 ao ERP e distribuindo atualizações de estado com resiliência para os PDVs.',
       engineeringLesson: 'Consenso distribuído entre nós físicos requer mensagens idempotentes e arquitetura offline-first para continuar vendendo se a internet cair.',
       metricDetails: [
         { label: 'Throughput Mensal', value: '500k+', subtext: 'Transações de varejo em tempo real', trend: 'up', color: 'cyan' },
