@@ -528,6 +528,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                     const ok = await install();
                     if (ok) return;
                   }
+                  setSettingsOpen(false);
                   setShowInstallGuide(true);
                 }}
                 className={`w-full flex items-center justify-between p-3.5 sm:p-4 rounded-2xl border transition-all cursor-pointer group ${
