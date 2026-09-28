@@ -4,7 +4,7 @@ import { AppLanguage, AppTheme } from '../../types';
 import { t } from '../../i18n/translations';
 import { useAuth } from '../../hooks/useAuth';
 import { GoogleLogo, GithubLogo } from '../atoms/SocialIcons';
-import thalesAvatar from '../../assets/images/thales_avatar_250x250.webp?inline';
+import thalesAvatar from '../../assets/images/thales_avatar_250x250.webp';
 
 interface ContactAuthModalProps {
   isOpen: boolean;

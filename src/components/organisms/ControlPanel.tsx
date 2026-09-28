@@ -23,7 +23,7 @@ import { t, LOCALIZED_LANGUAGE_NAMES } from '../../i18n/translations';
 import { SpeedDialContact } from '../molecules/SpeedDialContact';
 import { PWAInstallGuideModal } from '../molecules/PWAInstallGuideModal';
 
-import thalesAvatar from '../../assets/images/thales_avatar_250x250.webp?inline';
+import thalesAvatar from '../../assets/images/thales_avatar_250x250.webp';
 
 interface ControlPanelProps {
   systemState: SystemState;
@@ -261,7 +261,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             </div>
             <div className="min-w-0">
               <span className="font-sans font-bold text-[15px] sm:text-base tracking-tight block truncate text-zinc-900 dark:text-zinc-100 leading-snug">
-                Thales Everardo
+                Thales Everardo Albuquerque Reis
               </span>
               <div className="text-[11px] font-sans opacity-70 leading-tight flex items-center gap-1 truncate pt-0.5">
                 <span className="font-medium text-blue-600 dark:text-cyan-400 truncate">Staff Engineer</span>
