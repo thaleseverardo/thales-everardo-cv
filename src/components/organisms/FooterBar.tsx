@@ -22,7 +22,7 @@ export const FooterBar: React.FC<FooterBarProps> = ({ systemState, onOpenPrivacy
 
   return (
     <footer
-      className={`border-t relative z-20 py-3.5 sm:py-2.5 px-4 sm:px-8 select-none transition-colors backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4 text-xs w-full ${
+      className={`border-t relative z-20 py-3.5 sm:py-2.5 px-4 sm:px-8 select-none backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-4 text-xs w-full ${
         theme === 'dark'
           ? 'bg-[#111115]/95 border-zinc-800/80 text-zinc-400 backdrop-blur-md'
           : 'bg-white/95 border-zinc-200 text-zinc-600 shadow-xs backdrop-blur-md'

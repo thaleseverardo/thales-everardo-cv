@@ -21,7 +21,7 @@ export const ViewFilterToolbar: React.FC<ViewFilterToolbarProps> = ({
     <div className="hidden md:flex w-full px-5 sm:px-8 pt-4 pb-2 z-20 shrink-0">
       <div className="w-full flex items-center justify-between gap-3">
         {/* BARRA DE CATEGORIAS / LENTES */}
-        <div role="tablist" className="segmented-control divide-x divide-zinc-200 dark:divide-zinc-800">
+        <div role="tablist" className="segmented-control">
           {ALL_LENSES.map((lensKey) => {
             const isActive = profileLens === lensKey;
 
@@ -34,7 +34,7 @@ export const ViewFilterToolbar: React.FC<ViewFilterToolbarProps> = ({
                 onClick={() => updateState({ profileLens: lensKey })}
                 className={`segmented-btn ${isActive ? 'segmented-btn-active' : ''}`}
               >
-                <span className="opt-mono">
+                <span>
                   {lensKey === 'ALL'
                     ? t(language, 'lens.all')
                     : lensKey === 'ARCHITECTURE'

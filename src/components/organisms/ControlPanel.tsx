@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { flushSync } from 'react-dom';
 import {
   ArrowLeft,
   FileText,
@@ -32,13 +33,13 @@ interface ControlPanelProps {
 
 const GuestAvatarToken: React.FC<{ sizeClass?: string }> = ({ sizeClass = 'w-11 h-11' }) => (
   <div
-    className={`${sizeClass} rounded-2xl flex items-center justify-center shrink-0 relative overflow-hidden transition-all duration-300 ${
-      'bg-lienar-to-b from-slate-100 to-slate-200/90 border border-slate-300/80 shadow-xs dark:from-zinc-800/90 dark:via-zinc-850 dark:to-zinc-950 dark:border-white/10 dark:shadow-inner'
+    className={`${sizeClass} rounded-xl flex items-center justify-center shrink-0 relative overflow-hidden transition-all duration-300 ${
+      'bg-linear-to-b from-zinc-100 to-zinc-200/90 border border-zinc-300/80 shadow-xs dark:from-zinc-800/90 dark:via-zinc-850 dark:to-zinc-950 dark:border-white/10 dark:shadow-inner'
     }`}
   >
     {/* Linha de reflexo especular no topo */}
-    <div className="absolute inset-x-0 top-0 h-px bg-lienar-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
-    <svg className="w-5 h-5 text-slate-500 dark:text-zinc-400 drop-shadow-xs" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+    <svg className="w-5 h-5 text-zinc-500 dark:text-zinc-400 drop-shadow-xs" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
         d="M12 12a4 4 0 100-8 4 4 0 000 8z"
         fill="currentColor"
@@ -80,7 +81,7 @@ const UserAvatar: React.FC<{
 
   return (
     <div
-      className={`${sizeClass} rounded-full bg-lienar-to-tr from-blue-600 via-indigo-600 to-cyan-500 text-white font-sans font-bold ${textSizeClass} flex items-center justify-center shrink-0 border border-white/20 shadow-md shadow-blue-900/30 tracking-tight`}
+      className={`${sizeClass} rounded-full bg-linear-to-tr from-blue-700 via-blue-600 to-indigo-600 text-white font-sans font-bold ${textSizeClass} flex items-center justify-center shrink-0 border border-white/20 shadow-md shadow-blue-900/30 tracking-tight`}
     >
       {initial}
     </div>
@@ -162,8 +163,10 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
 
   const handleToggleTheme = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
-    updateState({ theme: nextTheme });
-      };
+    flushSync(() => {
+      updateState({ theme: nextTheme });
+    });
+  };
 
     const handleToggleViewLayout = (newLayout: ViewLayout) => {
     if (viewLayout === newLayout) return;
@@ -180,7 +183,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
     <>
       {/* 1. HEADER EXECUTIVO: IDENTIDADE + CURRÍCULO + MENU DE AJUSTES */}
       <header
-        className={`border-b sticky top-0 z-40 transition-colors select-none ${
+        className={`border-b sticky top-0 z-40 select-none ${
           theme === 'dark'
             ? 'bg-[#111115]/95 border-zinc-800/80 text-zinc-100 backdrop-blur-md'
             : 'bg-white/95 border-zinc-200 text-zinc-900 shadow-xs backdrop-blur-md'
@@ -306,7 +309,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
 
           <div
             ref={settingsPopoverRef}
-            className={`fixed md:absolute z-60 transition-all font-sans ${
+            className={`fixed md:absolute z-60 font-sans ${
               /* Mobile: Bottom Sheet Nativa com Altura Orgânica e Puxador */
               'inset-x-0 bottom-0 max-h-[85vh] rounded-t-3xl border-t border-zinc-200 dark:border-zinc-800 p-0 overflow-y-auto animate-in slide-in-from-bottom duration-200 shadow-2xl'
             } ${
@@ -478,9 +481,9 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                   )}
                 </div>
 
-                {/* SEÇÃO: APARÊNCIA COM CELESTIAL SWITCH */}
-                <div className="flex items-center justify-between py-2.5 px-1 border-t border-slate-100 dark:border-zinc-800/80">
-                  <span className="text-xs font-medium text-slate-600 dark:text-zinc-400">
+                {/* SEÇÃO: APARÊNCIA SLIM SWITCH (PADRÃO APPLE HIG / LINEAR) */}
+                <div className="flex items-center justify-between py-2.5 px-1 border-t border-zinc-100 dark:border-zinc-800/80">
+                  <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
                     {t(language, 'nav.theme')}
                   </span>
 
@@ -489,27 +492,24 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                     role="switch"
                     aria-checked={theme === 'dark'}
                     onClick={handleToggleTheme}
-                    className={`relative inline-flex h-7 w-14 shrink-0 cursor-pointer items-center rounded-full p-0.5 border transition-colors duration-300 focus:outline-hidden ${
+                    className={`relative inline-flex h-5.5 w-10.5 min-h-[1.375rem] max-h-[1.375rem] min-w-[2.625rem] max-w-[2.625rem] shrink-0 cursor-pointer items-center rounded-full p-0.5 border transition-colors duration-200 focus:outline-hidden touch-target-expand ${
                       theme === 'dark'
-                        ? 'bg-zinc-950 border-zinc-800 shadow-inner'
-                        : 'bg-slate-200/80 border-slate-300 shadow-inner'
+                        ? 'bg-zinc-900 border-zinc-700/90 shadow-inner'
+                        : 'bg-zinc-200 border-zinc-300/90 shadow-inner'
                     }`}
                     aria-label={theme === 'dark' ? t(language, 'nav.themeDark') : t(language, 'nav.themeLight')}
                   >
-                    <Sun className="w-3.5 h-3.5 text-amber-500/70 absolute left-1.5 pointer-events-none" />
-                    <Moon className="w-3.5 h-3.5 text-blue-400/80 absolute right-1.5 pointer-events-none" />
-
                     <span
-                      className={`pointer-events-none flex items-center justify-center h-6 w-6 transform rounded-full shadow-md transition-transform duration-300 ease-in-out z-10 ${
+                      className={`pointer-events-none flex items-center justify-center h-4.5 w-4.5 rounded-full shadow-xs transition-transform duration-200 ease-in-out ${
                         theme === 'dark'
-                          ? 'translate-x-7 bg-zinc-900 text-blue-400 border border-zinc-700/80'
-                          : 'translate-x-0 bg-white text-amber-500 border border-slate-200'
+                          ? 'translate-x-5 bg-zinc-950 text-blue-400 border border-zinc-700/80'
+                          : 'translate-x-0 bg-white text-amber-500 border border-zinc-200'
                       }`}
                     >
                       {theme === 'dark' ? (
-                        <Moon className="w-3 h-3 fill-current" />
+                        <Moon className="w-2.5 h-2.5 fill-current" />
                       ) : (
-                        <Sun className="w-3 h-3 fill-current" />
+                        <Sun className="w-2.5 h-2.5 fill-current" />
                       )}
                     </span>
                   </button>
@@ -563,12 +563,12 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
 
                 <div className="shrink-0">
                   {isInstalled ? (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/25">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                       <span>{t(language, 'pwa.statusBadgeInstalled')}</span>
                     </span>
                   ) : (
-                    <span className="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-sm transition-all group-hover:scale-105 active:scale-95">
+                    <span className="inline-flex items-center px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-xs transition-colors group-hover:bg-blue-500 active:scale-95">
                       {t(language, 'pwa.statusBadge')}
                     </span>
                   )}

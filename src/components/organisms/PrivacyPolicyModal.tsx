@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Trash2 } from 'lucide-react';
+import { X, Trash2, AlertTriangle } from 'lucide-react';
 import { AppLanguage, AppTheme } from '../../types';
 import { t } from '../../i18n/translations';
 import { useAuth } from '../../hooks/useAuth';
@@ -45,26 +45,26 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 font-sans animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-6 bg-black/80 sm:backdrop-blur-xs font-sans animate-in fade-in duration-150"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       <div
-        className={`w-full max-w-lg rounded-3xl shadow-2xl border flex flex-col max-h-[88vh] overflow-hidden transition-all ${
+        className={`w-full h-dvh sm:h-auto sm:max-h-[90vh] sm:max-w-lg rounded-none sm:rounded-2xl border-0 sm:border flex flex-col overflow-hidden transition-all shadow-2xl ${
           theme === 'dark'
-            ? 'bg-zinc-950 border-zinc-800 text-zinc-100 shadow-black/90'
-            : 'bg-white border-slate-200 text-slate-900 shadow-slate-300/40'
+            ? 'bg-zinc-950 sm:border-zinc-800 text-zinc-100 shadow-black/80'
+            : 'bg-white sm:border-zinc-200 text-zinc-900 shadow-zinc-300/40'
         }`}
       >
-        {/* CABEÇALHO EDITORIAL SÓBRIO (PADRÃO STRIPE / APPLE / LINEAR) */}
+        {/* CABEÇALHO (COM SUPORTE A SAFE AREA NO MOBILE) */}
         <div
-          className={`px-6 py-5 border-b flex items-center justify-between shrink-0 ${
-            theme === 'dark' ? 'border-zinc-800/80 bg-zinc-900/40' : 'border-slate-100 bg-slate-50/50'
+          className={`px-5 sm:px-6 pt-[max(1.125rem,env(safe-area-inset-top,0px))] pb-4 sm:py-4 border-b flex items-start justify-between gap-3 shrink-0 ${
+            theme === 'dark' ? 'border-zinc-800/80 bg-zinc-900/40' : 'border-zinc-100 bg-zinc-50/50'
           }`}
         >
-          <div>
-            <h2 className="text-base font-bold tracking-tight text-slate-900 dark:text-zinc-100 font-sans">
+          <div className="min-w-0 pr-2">
+            <h2 className="text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-100 leading-snug">
               {language === 'PT'
                 ? 'Governança de Dados e Privacidade'
                 : language === 'ES'
@@ -73,24 +73,30 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
                 ? 'Gouvernance des Données et Confidentialité'
                 : 'Data Governance & Privacy Policy'}
             </h2>
-            <p className="text-xs text-slate-500 dark:text-zinc-400 font-sans mt-0.5">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 font-sans mt-0.5 leading-normal">
               LGPD (Lei 13.709/2018) & GDPR Compliance • Minimal Data Ingestion
             </p>
           </div>
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-xl flex items-center justify-center text-slate-400 hover:text-slate-700 dark:text-zinc-500 dark:hover:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer shrink-0 mt-0.5"
             aria-label="Fechar"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* CONTEÚDO JURÍDICO EXECUTIVO */}
-        <div className="p-6 overflow-y-auto space-y-4 text-xs font-sans leading-relaxed text-slate-600 dark:text-zinc-300">
-          {/* DECLARAÇÃO DE RESPONSABILIDADE FORMAL */}
-          <p className="text-xs text-slate-500 dark:text-zinc-400 leading-relaxed">
+        {/* CONTEÚDO SCROLLÁVEL */}
+        <div className="p-5 sm:p-6 overflow-y-auto space-y-4 text-xs font-sans leading-relaxed text-zinc-600 dark:text-zinc-300 flex-1">
+          {/* DECLARAÇÃO DE RESPONSABILIDADE FORMAL EM CARD EDITORIAL */}
+          <div
+            className={`p-3.5 rounded-xl border text-xs leading-relaxed font-sans ${
+              theme === 'dark'
+                ? 'bg-zinc-900/50 border-zinc-800/70 text-zinc-300'
+                : 'bg-zinc-50 border-zinc-200/80 text-zinc-600'
+            }`}
+          >
             {language === 'PT'
               ? 'Este portfólio de arquitetura é mantido por Thales Everardo Albuquerque Reis (São Paulo, Brasil). O tratamento de dados pessoais neste ambiente é estritamente pautado pelos princípios de necessidade, transparência e segurança estabelecidos na legislação vigente.'
               : language === 'ES'
@@ -98,11 +104,12 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
               : language === 'FR'
               ? 'Ce portfolio d’architecture est géré par Thales Everardo Albuquerque Reis (São Paulo, Brésil). Le traitement des données personnelles dans cet environnement respecte scrupuleusement les principes de nécessité, de transparence et de sécurité.'
               : 'This architectural portfolio is maintained by Thales Everardo Albuquerque Reis (São Paulo, Brazil). Personal data processing adheres strictly to necessity, transparency, and data minimization standards under international law.'}
-          </p>
+          </div>
 
-          <div className="space-y-3.5 border-t border-slate-100 dark:border-zinc-800/80 pt-4">
+          {/* CLÁUSULAS JURÍDICAS */}
+          <div className="space-y-4 border-t border-zinc-100 dark:border-zinc-800/80 pt-4">
             <div>
-              <h3 className="font-semibold text-slate-900 dark:text-zinc-100 text-xs mb-1">
+              <h3 className="font-semibold text-[13px] text-zinc-900 dark:text-zinc-100 mb-1 leading-snug">
                 {language === 'PT'
                   ? '1. Dados Coletados e Autenticação Federada'
                   : language === 'ES'
@@ -111,7 +118,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
                   ? '1. Données Collectées et Authentification'
                   : '1. Collected Data & Federated Authentication'}
               </h3>
-              <p className="opacity-85">
+              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
                 {language === 'PT'
                   ? 'A navegação em todo o sistema é 100% aberta e anônima. Apenas ao solicitar acesso à Linha Direta de Contato (WhatsApp e e-mail pessoal), recebemos via OAuth (Google ou GitHub) exclusivamente: nome, endereço de e-mail e identificador de autenticação. Nenhuma senha de usuário é solicitada, processada ou armazenada neste sistema.'
                   : language === 'ES'
@@ -123,7 +130,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             </div>
 
             <div>
-              <h3 className="font-semibold text-slate-900 dark:text-zinc-100 text-xs mb-1">
+              <h3 className="font-semibold text-[13px] text-zinc-900 dark:text-zinc-100 mb-1 leading-snug">
                 {language === 'PT'
                   ? '2. Finalidade Legítima & Proteção Contra Automação'
                   : language === 'ES'
@@ -132,7 +139,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
                   ? '2. Finalité Légitime & Protection'
                   : '2. Legitimate Purpose & Anti-Bot Protection'}
               </h3>
-              <p className="opacity-85">
+              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
                 {language === 'PT'
                   ? 'A coleta ocorre unicamente para verificar a identidade de recrutadores, clientes e líderes técnicos, protegendo as informações de contato do profissional contra raspagem massiva por web scrapers e bots de spam. Base legal: Consentimento Expresso e Legítimo Interesse (Art. 7º, incisos I e IX da LGPD).'
                   : language === 'ES'
@@ -144,7 +151,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             </div>
 
             <div>
-              <h3 className="font-semibold text-slate-900 dark:text-zinc-100 text-xs mb-1">
+              <h3 className="font-semibold text-[13px] text-zinc-900 dark:text-zinc-100 mb-1 leading-snug">
                 {language === 'PT'
                   ? '3. Não Compartilhamento e Ausência de Rastreamento Comercial'
                   : language === 'ES'
@@ -153,7 +160,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
                   ? '3. Non-Partage et Zéro Pistage'
                   : '3. Zero Third-Party Sharing & Commercial Tracking'}
               </h3>
-              <p className="opacity-85">
+              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
                 {language === 'PT'
                   ? 'Seus dados jamais serão vendidos, transferidos ou compartilhados com terceiros, corretores de dados ou plataformas de publicidade. Não utilizamos cookies de rastreamento comportamental nem enviamos comunicações de marketing não solicitadas.'
                   : language === 'ES'
@@ -165,7 +172,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             </div>
 
             <div>
-              <h3 className="font-semibold text-slate-900 dark:text-zinc-100 text-xs mb-1">
+              <h3 className="font-semibold text-[13px] text-zinc-900 dark:text-zinc-100 mb-1 leading-snug">
                 {language === 'PT'
                   ? '4. Direitos do Titular & Exclusão Sob Demanda (Art. 18 LGPD)'
                   : language === 'ES'
@@ -174,7 +181,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
                   ? '4. Droits de l’Utilisateur et Droit à l’Oubli (RGPD)'
                   : '4. Data Subject Rights & Instant Erasure (GDPR Art. 17)'}
               </h3>
-              <p className="opacity-85">
+              <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
                 {language === 'PT'
                   ? 'Em estrita conformidade com o Artigo 18 da LGPD e Artigo 17 do GDPR (Direito ao Esquecimento), qualquer usuário autenticado pode a qualquer momento revogar sua sessão e expurgar definitivamente todos os registros associados com um único clique abaixo.'
                   : language === 'ES'
@@ -186,37 +193,64 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
             </div>
           </div>
 
-          {/* BOTÃO DE EXPURGO DE DADOS SOB DEMANDA (LGPD ART. 18) */}
+          {/* BOTÃO E ALERTA DE EXPURGO COM AVISO DE AÇÃO IRREVERSÍVEL */}
           {user && (
             <div className="pt-2">
               {confirmingRevoke ? (
-                <div className="p-3.5 rounded-2xl border border-rose-500/30 bg-rose-500/10 space-y-2.5 animate-in fade-in duration-150">
-                  <div className="font-semibold text-xs text-rose-600 dark:text-rose-400">
-                    {language === 'PT'
-                      ? 'Confirmar exclusão definitiva dos seus dados de sessão (Art. 18 LGPD)?'
-                      : 'Confirm permanent erasure of your session data (GDPR/LGPD)?'}
+                <div className="p-4 rounded-xl border border-rose-500/30 bg-rose-500/5 dark:bg-rose-500/10 space-y-3 animate-in fade-in duration-150">
+                  <div className="flex items-start gap-2.5">
+                    <AlertTriangle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
+                    <div className="space-y-1">
+                      <div className="font-bold text-xs text-rose-600 dark:text-rose-400 leading-snug">
+                        {language === 'PT'
+                          ? 'Confirmar exclusão definitiva dos seus dados?'
+                          : language === 'ES'
+                          ? '¿Confirmar eliminación definitiva de sus datos?'
+                          : language === 'FR'
+                          ? 'Confirmer la suppression définitive de vos données ?'
+                          : 'Confirm permanent erasure of your data?'}
+                      </div>
+                      <p className="text-[11px] text-rose-700/90 dark:text-rose-300/90 leading-relaxed font-sans">
+                        {language === 'PT'
+                          ? 'Atenção: essa ação é definitiva e não poderá ser desfeita. Todos os registros de autenticação e acesso serão permanentemente expurgados da base.'
+                          : language === 'ES'
+                          ? 'Atención: esta acción es definitiva y no se puede deshacer. Todos los registros de autenticación y acceso se eliminarán de forma permanente.'
+                          : language === 'FR'
+                          ? 'Attention : cette action est irréversible et ne peut pas être annulée. Tous les enregistrements d’accès et d’authentification seront définitivement purgés.'
+                          : 'Warning: this action is permanent and cannot be undone. All access and authentication records will be permanently purged from the database.'}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
+
+                  <div className="flex items-center gap-2 pt-1">
                     <button
                       type="button"
                       disabled={isPurging}
                       onClick={handleRevoke}
-                      className="flex-1 py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs transition-colors cursor-pointer active:scale-95 disabled:opacity-50"
+                      className="flex-1 h-8.5 px-3 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs transition-colors cursor-pointer active:scale-95 disabled:opacity-50 shadow-xs"
                     >
                       {isPurging
                         ? language === 'PT'
                           ? 'Excluindo da base...'
+                          : language === 'ES'
+                          ? 'Eliminando...'
+                          : language === 'FR'
+                          ? 'Suppression...'
                           : 'Erasing...'
                         : language === 'PT'
-                        ? 'Sim, excluir e revogar'
-                        : 'Yes, delete & revoke'}
+                        ? 'Sim, excluir definitivamente'
+                        : language === 'ES'
+                        ? 'Sí, eliminar definitivamente'
+                        : language === 'FR'
+                        ? 'Oui, supprimer définitivement'
+                        : 'Yes, permanently delete'}
                     </button>
                     <button
                       type="button"
                       onClick={() => setConfirmingRevoke(false)}
-                      className="py-2 px-3.5 rounded-xl border dark:border-zinc-700 border-slate-300 dark:bg-zinc-800 bg-white font-medium text-xs transition-colors cursor-pointer active:scale-95"
+                      className="h-8.5 px-4 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 font-medium text-xs hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors cursor-pointer active:scale-95"
                     >
-                      {language === 'PT' ? 'Cancelar' : 'Cancel'}
+                      {language === 'PT' ? 'Cancelar' : language === 'ES' ? 'Cancelar' : language === 'FR' ? 'Annuler' : 'Cancel'}
                     </button>
                   </div>
                 </div>
@@ -224,7 +258,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setConfirmingRevoke(true)}
-                  className="w-full py-2.5 px-3 rounded-xl border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/15 text-rose-600 dark:text-rose-400 font-semibold text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full h-9 px-3.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/40 hover:bg-rose-500/10 hover:border-rose-500/30 text-zinc-600 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 font-medium text-xs transition-colors flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>{t(language, 'auth.revokeData')}</span>
@@ -234,13 +268,13 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
           )}
         </div>
 
-        {/* RODAPÉ SÓBRIO E INSTITUCIONAL (SEM SELOS FALSOS OU BADGES MONOESPAÇADOS) */}
+        {/* RODAPÉ (COM SUPORTE A SAFE AREA NO MOBILE) */}
         <div
-          className={`px-6 py-4 border-t flex items-center justify-between shrink-0 ${
-            theme === 'dark' ? 'border-zinc-800/80 bg-zinc-900/40' : 'border-slate-100 bg-slate-50/50'
+          className={`px-5 sm:px-6 pt-3.5 pb-[max(1rem,env(safe-area-inset-bottom,0px))] sm:py-3.5 border-t flex items-center justify-between gap-3 shrink-0 ${
+            theme === 'dark' ? 'border-zinc-800/80 bg-zinc-900/30' : 'border-zinc-100 bg-zinc-50/50'
           }`}
         >
-          <div className="text-[11px] text-slate-500 dark:text-zinc-400 font-sans">
+          <div className="text-[11px] text-zinc-400 dark:text-zinc-500 font-sans truncate">
             {language === 'PT'
               ? 'Art. 18 LGPD & Art. 17 GDPR Assegurados'
               : 'LGPD & GDPR Privacy Standards'}
@@ -248,7 +282,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
 
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl text-xs font-semibold font-sans transition-all cursor-pointer bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-800 dark:text-zinc-100 active:scale-95"
+            className="h-8.5 px-4 rounded-lg border border-zinc-300 dark:border-zinc-700/80 bg-white dark:bg-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-700/80 text-zinc-800 dark:text-zinc-200 text-xs font-semibold font-sans transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0"
           >
             {language === 'PT' ? 'Fechar' : language === 'ES' ? 'Cerrar' : language === 'FR' ? 'Fermer' : 'Close'}
           </button>

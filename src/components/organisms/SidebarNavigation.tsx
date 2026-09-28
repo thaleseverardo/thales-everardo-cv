@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Layers, List, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Layers, List, FileText, ChevronLeft, ChevronRight, MessageSquare } from 'lucide-react';
 import { ViewLayout, AppLanguage, AppTheme } from '../../types';
 import { t, TranslationKey } from '../../i18n/translations';
 
@@ -8,6 +8,7 @@ interface SidebarNavigationProps {
   onSelectView: (layout: ViewLayout) => void;
   language: AppLanguage;
   theme: AppTheme;
+  onOpenContact?: () => void;
 }
 
 interface NavItemConfig {
@@ -45,6 +46,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
   onSelectView,
   language,
   theme,
+  onOpenContact,
 }) => {
   const sidebarRef = useRef<HTMLElement>(null);
 
@@ -94,7 +96,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
       <aside
         ref={sidebarRef}
         aria-label="Navegação de Vistas"
-        className={`hidden md:flex relative shrink-0 h-full select-none transition-all duration-200 ease-in-out flex-col print:hidden border-r z-30 overflow-hidden ${
+        className={`hidden md:flex relative shrink-0 h-full select-none transition-[width] duration-200 ease-in-out flex-col print:hidden border-r z-30 overflow-hidden ${
           isCollapsed
             ? 'w-14 sm:w-16 shadow-none'
             : 'w-60 sm:w-64 shadow-xl'
@@ -198,7 +200,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
           ========================================================================= */}
       <nav
         aria-label="Navegação Inferior Mobile"
-        className={`md:hidden fixed bottom-0 left-0 right-0 z-40 border-t flex items-center justify-around px-2 pt-1.5 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] backdrop-blur-xl transition-colors select-none ${
+        className={`md:hidden fixed bottom-0 left-0 right-0 z-40 border-t flex items-center justify-around px-2 pt-1.5 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] backdrop-blur-xl select-none ${
           theme === 'dark'
             ? 'bg-[#0d0d11]/95 border-zinc-800/80 text-zinc-400'
             : 'bg-white/95 border-zinc-200 text-zinc-600 shadow-lg'
@@ -230,6 +232,20 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
             </button>
           );
         })}
+
+        {/* 4ª ABA: CONTATO DIRETO NO MOBILE (COM O GRADIENTE ORIGINAL AZUL/ÍNDIGO DE ALTO IMPACTO) */}
+        <button
+          type="button"
+          onClick={() => onOpenContact?.()}
+          className="flex-1 flex flex-col items-center justify-center py-0.5 gap-0.5 transition-all cursor-pointer active:scale-95 group"
+        >
+          <div className="w-8 h-8 rounded-full bg-linear-to-tr from-blue-700 via-blue-600 to-indigo-600 text-white shadow-md shadow-blue-900/40 border border-white/25 flex items-center justify-center transition-transform group-hover:scale-105">
+            <MessageSquare className="w-4 h-4 text-white" strokeWidth={2} />
+          </div>
+          <span className="text-[10px] font-sans font-bold text-blue-600 dark:text-blue-400 tracking-tight">
+            {t(language, 'nav.contactButton')}
+          </span>
+        </button>
       </nav>
     </>
   );

@@ -30,6 +30,16 @@ const PrivacyPolicyModal = lazy(() =>
 function applyThemeDOM(theme: AppTheme) {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
+
+  // Supressão atômica de transições assíncronas no milissegundo do re-skinning (padrão Vercel / next-themes)
+  const style = document.createElement('style');
+  style.appendChild(
+    document.createTextNode(
+      '*, *::before, *::after { -webkit-transition: none !important; -moz-transition: none !important; -o-transition: none !important; -ms-transition: none !important; transition: none !important; }'
+    )
+  );
+  document.head.appendChild(style);
+
   if (theme === 'dark') {
     root.classList.add('dark');
     root.classList.remove('light');
@@ -37,6 +47,17 @@ function applyThemeDOM(theme: AppTheme) {
     root.classList.remove('dark');
     root.classList.add('light');
   }
+
+  // Força cálculo de estilo síncrono no mesmo frame
+  window.getComputedStyle(style).opacity;
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (document.head.contains(style)) {
+        document.head.removeChild(style);
+      }
+    });
+  });
 }
 
 function getInitialTheme(): AppTheme {
@@ -88,15 +109,14 @@ export default function App() {
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
 
   const updateState = useCallback((updates: Partial<SystemState>) => {
-    setSystemState((prev) => {
-      const next = { ...prev, ...updates };
-      if (updates.language) updateStoredPreferences({ language: updates.language });
-      if (updates.theme) {
-        updateStoredPreferences({ theme: updates.theme });
-        applyThemeDOM(updates.theme);
-      }
-      return next;
-    });
+    if (updates.theme) {
+      updateStoredPreferences({ theme: updates.theme });
+      applyThemeDOM(updates.theme);
+    }
+    if (updates.language) {
+      updateStoredPreferences({ language: updates.language });
+    }
+    setSystemState((prev) => ({ ...prev, ...updates }));
   }, []);
 
   useEffect(() => {
@@ -104,10 +124,6 @@ export default function App() {
       document.documentElement.lang = BCP47_TAGS[systemState.language] || 'en-US';
     }
   }, [systemState.language]);
-
-  useEffect(() => {
-    applyThemeDOM(systemState.theme);
-  }, [systemState.theme]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -123,7 +139,7 @@ export default function App() {
 
   return (
     <div
-      className={`h-dvh w-full flex flex-col font-sans  antialiased overflow-hidden transition-colors ${
+      className={`h-dvh w-full flex flex-col font-sans antialiased overflow-hidden ${
         systemState.theme === 'dark' ? 'bg-[#09090b] text-zinc-100' : 'bg-zinc-100/70 text-zinc-900'
       }`}
     >
@@ -152,12 +168,13 @@ export default function App() {
           onSelectView={(layout) => updateState({ viewLayout: layout })}
           language={systemState.language}
           theme={systemState.theme}
+          onOpenContact={() => setIsContactOpen(true)}
         />
 
         {/* CONTAINER COM SCROLL INTERNO DEDICADO (SEM NENHUM SCROLL HORIZONTAL DA JANELA) */}
         <div
           id="main-scroll-container"
-          className={`flex-1 min-w-0 h-full flex flex-col relative pb-[calc(6.5rem+env(safe-area-inset-bottom,0px))] md:pb-0 ${
+          className={`flex-1 min-w-0 h-full flex flex-col relative pb-[calc(4.25rem+env(safe-area-inset-bottom,0px))] md:pb-0 ${
             systemState.viewLayout === 'GRAPH'
               ? 'overflow-hidden'
               : 'overflow-y-auto overflow-x-hidden'

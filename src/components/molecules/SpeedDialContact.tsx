@@ -54,18 +54,19 @@ export const SpeedDialContact: React.FC<SpeedDialContactProps> = ({
 
   return (
     <>
-      {/* BACKDROP GLASS/BLUR COBRINDO 100% DO VIEWPORT (INCLUINDO HEADER E SIDEBAR) */}
+      {/* BACKDROP GLASS/BLUR (EXCLUSIVO DESKTOP) */}
       {isOpen && (
         <div
           onClick={() => onToggle(false)}
-          className="fixed inset-0 z-48 bg-black/60 dark:bg-black/75 backdrop-blur-md transition-all animate-in fade-in duration-200"
+          className="hidden md:block fixed inset-0 z-48 bg-black/60 dark:bg-black/75 backdrop-blur-md transition-all animate-in fade-in duration-200"
           aria-hidden="true"
         />
       )}
 
+      {/* FAB FLUTUANTE (EXCLUSIVO DESKTOP, TRANSFERIDO PARA BOTTOM BAR NO MOBILE) */}
       <div
         ref={containerRef}
-        className="fixed bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] md:bottom-8 right-4 sm:right-8 z-50 select-none group"
+        className="hidden md:block fixed md:bottom-8 right-4 sm:right-8 z-50 select-none group"
       >
         <div className="absolute -top-16 -left-16 w-38 h-38 pointer-events-none group-hover:pointer-events-auto rounded-tl-full" />
 

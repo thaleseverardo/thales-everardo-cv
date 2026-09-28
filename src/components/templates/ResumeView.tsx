@@ -158,7 +158,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-3.5 sm:px-6 pt-4 pb-24 sm:py-8 flex-1 animate-in fade-in duration-200">
+    <div className="w-full max-w-4xl mx-auto px-2 sm:px-6 pt-3 pb-20 sm:py-8 flex-1 animate-in fade-in duration-200">
       {/* 1. BARRA SUPERIOR DE AÇÕES EXECUTIVAS */}
       <div className="mb-6 flex items-center justify-end gap-2 print:hidden select-none">
         {/* GRUPO DE UTILITÁRIOS: COPIAR MARKDOWN + IMPRIMIR + COMPARTILHAR */}
@@ -368,21 +368,22 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
           data-nosnippet="true"
           className={`mb-6 rounded-xl border divide-y overflow-hidden transition-all print:hidden ${
             theme === 'dark'
-              ? 'bg-[#0e0e12]/80 border-zinc-800/80 divide-zinc-800/60 text-zinc-200 shadow-xs'
-              : 'bg-white border-zinc-200/90 divide-zinc-200/70 text-zinc-800 shadow-xs'
+              ? 'bg-zinc-950/80 border-zinc-800 divide-zinc-800/80 text-zinc-200 shadow-xs'
+              : 'bg-white border-zinc-200 divide-zinc-200 text-zinc-800 shadow-xs'
           }`}
         >
           {/* CABEÇALHO DO BLOCO: TÍTULO EXECUTIVO REFINADO */}
-          <div className="px-4 py-3 bg-zinc-100/40 dark:bg-zinc-900/50 flex items-center">
-            <h2 className="font-sans font-semibold text-sm text-zinc-900 dark:text-zinc-100 tracking-tight">
+          <div className="px-4 py-2.5 bg-zinc-50 dark:bg-zinc-900/60 flex items-center justify-between">
+            <h2 className="font-sans font-semibold text-xs text-zinc-900 dark:text-zinc-100 tracking-tight">
               {t(language, 'resume.gateTitle')}
             </h2>
+            <span className="text-[11px] font-mono text-zinc-400 dark:text-zinc-500">Linha Direta</span>
           </div>
 
           {/* LINHA 1: LINKEDIN COM CADEADO ABERTO (CANAL LIVRE / PÚBLICO) */}
           <div className="p-3.5 sm:px-4 sm:py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-start sm:items-center gap-2.5 pr-2 min-w-0">
-              <Unlock className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0 mt-0.5 sm:mt-0" strokeWidth={1.75} />
+              <Unlock className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5 sm:mt-0" strokeWidth={1.8} />
               <p className="font-sans text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed">
                 {t(language, 'resume.gateRow1')}
               </p>
@@ -391,10 +392,10 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
               href="https://br.linkedin.com/in/thaleseverardo"
               target="_blank"
               rel="noopener noreferrer"
-              className={`h-8.5 px-3.5 rounded-lg border font-sans font-medium text-xs transition-all flex items-center justify-center gap-1.5 shrink-0 cursor-pointer shadow-2xs active:scale-95 ${
+              className={`h-8 px-3 rounded-lg border font-sans font-medium text-xs transition-colors flex items-center justify-center gap-1.5 shrink-0 cursor-pointer shadow-2xs active:scale-95 ${
                 theme === 'dark'
-                  ? 'bg-zinc-800/80 hover:bg-zinc-700/80 border-zinc-700/80 text-zinc-200 hover:text-white'
-                  : 'bg-white hover:bg-zinc-100/80 border-zinc-300 text-zinc-700 hover:text-zinc-900'
+                  ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-700/80 text-zinc-200 hover:text-white'
+                  : 'bg-zinc-50 hover:bg-zinc-100 border-zinc-300 text-zinc-700 hover:text-zinc-900'
               }`}
             >
               <Linkedin className="w-3.5 h-3.5 text-[#0A66C2] shrink-0" />
@@ -406,7 +407,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
           {/* LINHA 2: LOGIN COM CADEADO FECHADO (CANAL PROTEGIDO POR CREDENCIAIS) */}
           <div className="p-3.5 sm:px-4 sm:py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-start sm:items-center gap-2.5 pr-2 min-w-0">
-              <Lock className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0 mt-0.5 sm:mt-0" strokeWidth={1.75} />
+              <Lock className="w-4 h-4 text-amber-500 shrink-0 mt-0.5 sm:mt-0" strokeWidth={1.8} />
               <p className="font-sans text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed">
                 {t(language, 'resume.gateRow2')}
               </p>
@@ -417,7 +418,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                 if (onOpenContact) onOpenContact();
                 else signInWithGoogle();
               }}
-              className="h-8.5 px-3.5 rounded-lg font-sans text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-900 shadow-xs transition-all flex items-center justify-center gap-1.5 shrink-0 cursor-pointer active:scale-95"
+              className="h-8 px-3.5 rounded-lg font-sans text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-900 shadow-xs transition-colors flex items-center justify-center gap-1.5 shrink-0 cursor-pointer active:scale-95"
             >
               <LogIn className="w-3.5 h-3.5" />
               <span>{t(language, 'resume.gateButton')}</span>
@@ -425,7 +426,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
           </div>
 
           {/* RODAPÉ DO BLOCO: PRIVACIDADE & LGPD */}
-          <div className="px-4 py-2 bg-zinc-100/30 dark:bg-zinc-950/30 flex items-center justify-end text-[11px] font-sans text-zinc-400 dark:text-zinc-500">
+          <div className="px-4 py-2 bg-zinc-50/60 dark:bg-zinc-900/30 flex items-center justify-end text-[11px] font-sans text-zinc-400 dark:text-zinc-500">
             <button
               type="button"
               onClick={onOpenPrivacy}
@@ -439,62 +440,70 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
 
       {/* 3. CORPO DO CV TIMBRADO (CONTAINER PURO DO DOCUMENTO EXECUTIVO TIER 3) */}
       <article
-        className={`w-full font-sans leading-relaxed text-sm print:border-none print:shadow-none print:p-0 print:text-black p-6 sm:p-10 rounded-2xl border transition-all ${
+        className={`w-full font-sans leading-relaxed text-sm print:border-none print:shadow-none print:p-0 print:text-black p-4 sm:p-10 rounded-xl sm:rounded-2xl border transition-all ${
           theme === 'dark'
             ? 'bg-[#0c0c0f]/80 border-zinc-800/80 text-zinc-200 shadow-xs'
             : 'bg-white border-zinc-200/90 text-zinc-800 shadow-xs'
         }`}
       >
-        {/* CABEÇALHO DO CURRÍCULO (INICIA DIRETAMENTE COM O NOME EXECUTIVO) */}
-        <div className="border-b pb-5 mb-6 dark:border-zinc-800 border-zinc-200 print:border-black">
-          <h1 className="text-2xl sm:text-3xl font-sans font-bold tracking-tight text-zinc-900 dark:text-zinc-100 print:text-black">
+        {/* CABEÇALHO DO CURRÍCULO (NOME E CARGOS RIGOROSAMENTE EM 1 LINHA CADA) */}
+        <div className="border-b pb-4 sm:pb-5 mb-6 dark:border-zinc-800 border-zinc-200 print:border-black overflow-hidden">
+          <h1 className="text-[clamp(0.95rem,4.3vw,1.75rem)] font-sans font-bold tracking-tight whitespace-nowrap text-zinc-900 dark:text-zinc-100 leading-tight print:text-black">
             {PROFILE_DATA.name.toUpperCase()}
           </h1>
-          <div className="text-sm sm:text-base font-sans font-semibold text-blue-600 dark:text-blue-400 mt-1 print:text-black">
+          <div className="text-[clamp(0.68rem,2.8vw,0.95rem)] font-sans font-semibold text-blue-600 dark:text-blue-400 mt-1 whitespace-nowrap tracking-tight leading-tight print:text-black">
             {getProfileTitle(language)}
           </div>
 
-          {/* LINHA DE CONTATO COM METADADOS MONOCROMÁTICOS E MÁSCARAS DISCRETAS */}
-          <div className="mt-3.5 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs font-mono">
+          {/* LINHA DE CONTATO RIGIDAMENTE TRAVADA HORIZONTALMENTE */}
+          <div className="mt-3.5 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-y-1.5 sm:gap-x-3 text-xs font-mono">
             {isAuthenticated ? (
               <>
-                <span className="flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300">
-                  <Mail className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
-                  <a href={`mailto:${email}`} className="hover:underline font-semibold select-all">
+                <a
+                  href={`mailto:${email}`}
+                  className="inline-flex items-center gap-2 h-7 min-h-0 text-zinc-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group cursor-pointer min-w-0"
+                >
+                  <Mail className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 shrink-0" />
+                  <span className="hover:underline font-semibold select-all truncate leading-none">
                     {email || t(language, 'resume.loading')}
-                  </a>
-                </span>
-                <span className="text-zinc-300 dark:text-zinc-700 select-none">•</span>
-                <span className="flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300">
-                  <Phone className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
-                  <a href={`https://wa.me/${phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="hover:underline font-semibold select-all">
+                  </span>
+                </a>
+                <span className="text-zinc-300 dark:text-zinc-700 select-none hidden sm:inline">•</span>
+                <a
+                  href={`https://wa.me/${phone.replace(/[^0-9]/g, '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 h-7 min-h-0 text-zinc-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group cursor-pointer min-w-0"
+                >
+                  <Phone className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 shrink-0" />
+                  <span className="hover:underline font-semibold select-all truncate leading-none">
                     {phone || t(language, 'resume.loading')}
-                  </a>
-                </span>
+                  </span>
+                </a>
               </>
             ) : (
               <>
                 <button
                   type="button"
                   onClick={() => (onOpenContact ? onOpenContact() : signInWithGoogle())}
-                  className="group inline-flex items-center gap-1.5 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                  className="group inline-flex items-center gap-2 h-7 min-h-0 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors cursor-pointer min-w-0 text-left"
                   title={t(language, 'resume.gateTitle')}
                 >
                   <Mail className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 shrink-0" />
-                  <span className="tracking-wide select-none font-medium text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-700 dark:group-hover:text-zinc-300">
+                  <span className="tracking-wide select-none font-medium text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 truncate leading-none">
                     thales••••••@•••••.com
                   </span>
                   <Lock className="w-3 h-3 text-zinc-400/70 dark:text-zinc-500/70 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 shrink-0" />
                 </button>
-                <span className="text-zinc-300 dark:text-zinc-700 select-none">•</span>
+                <span className="text-zinc-300 dark:text-zinc-700 select-none hidden sm:inline">•</span>
                 <button
                   type="button"
                   onClick={() => (onOpenContact ? onOpenContact() : signInWithGoogle())}
-                  className="group inline-flex items-center gap-1.5 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                  className="group inline-flex items-center gap-2 h-7 min-h-0 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors cursor-pointer min-w-0 text-left"
                   title={t(language, 'resume.gateTitle')}
                 >
-                  <Phone className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 shrink-0" />
-                  <span className="tracking-wide select-none font-medium text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-700 dark:group-hover:text-zinc-300">
+                  <Phone className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+                  <span className="tracking-wide select-none font-medium text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 truncate leading-none">
                     +55 11 9••••-••••
                   </span>
                   <Lock className="w-3 h-3 text-zinc-400/70 dark:text-zinc-500/70 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 shrink-0" />
@@ -502,16 +511,16 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
               </>
             )}
 
-            <span className="text-zinc-300 dark:text-zinc-700 select-none">•</span>
-            <span className="flex items-center gap-1.5 text-zinc-600 dark:text-zinc-400">
-              <MapPin className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
-              <span>{getProfileLocation(language)}</span>
-            </span>
             <span className="text-zinc-300 dark:text-zinc-700 select-none hidden sm:inline">•</span>
-            <span className="hidden sm:flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400">
+            <div className="inline-flex items-center gap-2 h-7 min-h-0 text-zinc-600 dark:text-zinc-400 min-w-0">
+              <MapPin className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+              <span className="truncate leading-none">{getProfileLocation(language)}</span>
+            </div>
+            <span className="text-zinc-300 dark:text-zinc-700 select-none hidden sm:inline">•</span>
+            <div className="hidden sm:flex items-center gap-2 h-7 min-h-0 text-zinc-500 dark:text-zinc-400 min-w-0">
               <Globe className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
-              <span>{t(language, 'resume.availability')}</span>
-            </span>
+              <span className="truncate leading-none">{t(language, 'resume.availability')}</span>
+            </div>
           </div>
         </div>
 
