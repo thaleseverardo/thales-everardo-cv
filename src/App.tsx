@@ -27,6 +27,21 @@ const PrivacyPolicyModal = lazy(() =>
   import('./components/organisms/PrivacyPolicyModal').then((m) => ({ default: m.PrivacyPolicyModal }))
 );
 
+function parseLanguageFromUrl(): AppLanguage | null {
+  if (typeof window === 'undefined') return null;
+  const hash = window.location.hash.toLowerCase();
+  const search = new URLSearchParams(window.location.search);
+  const langParam = search.get('lang')?.toUpperCase();
+  if (langParam && ['PT', 'EN', 'ES', 'FR'].includes(langParam)) {
+    return langParam as AppLanguage;
+  }
+  if (hash.includes('/pt') || hash.endsWith('pt')) return 'PT';
+  if (hash.includes('/en') || hash.endsWith('en')) return 'EN';
+  if (hash.includes('/es') || hash.endsWith('es')) return 'ES';
+  if (hash.includes('/fr') || hash.endsWith('fr')) return 'FR';
+  return null;
+}
+
 function applyThemeDOM(theme: AppTheme) {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
@@ -86,6 +101,26 @@ const ViewFallbackSkeleton: React.FC<{ theme: AppTheme }> = ({ theme }) => (
 export default function App() {
   const [systemState, setSystemState] = useState<SystemState>(() => {
     const isMobileScreen = typeof window !== 'undefined' && window.innerWidth < 768;
+    
+    // Detecção direta de rota e idioma na URL para indexação e acesso direto
+    let initialLayout: ViewLayout = isMobileScreen ? 'TIMELINE' : 'GRAPH';
+    const detectedLang = parseLanguageFromUrl();
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.toLowerCase();
+      const path = window.location.pathname.toLowerCase();
+      const search = new URLSearchParams(window.location.search);
+      if (
+        hash.includes('curriculo') ||
+        hash.includes('cv') ||
+        hash.includes('resume') ||
+        path.endsWith('/curriculo') ||
+        path.endsWith('/curriculo/') ||
+        search.get('view') === 'resume' ||
+        search.get('view') === 'curriculo'
+      ) {
+        initialLayout = 'RESUME';
+      }
+    }
 
     return {
       mode: 'DIGITAL_ARCHITECTURE',
@@ -95,10 +130,10 @@ export default function App() {
       isSyncActive: true,
       activeNodeId: null,
       systemHealth: 'HEALTHY',
-      language: detectLocalLanguage(),
+      language: detectedLang || detectLocalLanguage(),
       theme: getInitialTheme(),
       profileLens: 'ALL',
-      viewLayout: isMobileScreen ? 'TIMELINE' : 'GRAPH',
+      viewLayout: initialLayout,
       onboardingDismissed: true,
       searchTerm: '',
       selectedTag: null,
@@ -119,6 +154,55 @@ export default function App() {
     setSystemState((prev) => ({ ...prev, ...updates }));
   }, []);
 
+  // Sincronização de URL/Rota multilíngue com suporte a histórico do navegador (SEO Canônico)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+    const langCode = systemState.language.toLowerCase();
+    if (systemState.viewLayout === 'RESUME') {
+      const targetHash = `#/curriculo/${langCode}`;
+      if (window.location.hash !== targetHash) {
+        window.history.replaceState(null, '', `${base}/${targetHash}`);
+      }
+    } else if (systemState.viewLayout === 'TIMELINE') {
+      if (window.location.hash !== '#/timeline') {
+        window.history.replaceState(null, '', `${base}/#/timeline`);
+      }
+    } else {
+      if (window.location.hash.startsWith('#/curriculo') || window.location.hash === '#/timeline') {
+        window.history.replaceState(null, '', `${base}/`);
+      }
+    }
+  }, [systemState.viewLayout, systemState.language]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const hash = window.location.hash.toLowerCase();
+      const detectedLang = parseLanguageFromUrl();
+      if (hash.includes('curriculo') || hash.includes('cv') || hash.includes('resume')) {
+        updateState({
+          viewLayout: 'RESUME',
+          ...(detectedLang ? { language: detectedLang } : {}),
+        });
+      } else if (hash.includes('timeline')) {
+        updateState({
+          viewLayout: 'TIMELINE',
+          ...(detectedLang ? { language: detectedLang } : {}),
+        });
+      } else if (hash === '' || hash.includes('grafo') || hash.includes('graph')) {
+        updateState({
+          viewLayout: 'GRAPH',
+          ...(detectedLang ? { language: detectedLang } : {}),
+        });
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    window.addEventListener('hashchange', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('hashchange', handlePopState);
+    };
+  }, [updateState]);
   useEffect(() => {
     if (typeof document !== 'undefined') {
       document.documentElement.lang = BCP47_TAGS[systemState.language] || 'en-US';

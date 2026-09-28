@@ -40,6 +40,7 @@ export const TRANSLATIONS = {
     'sidebar.timelineDesc': 'Marcos em Produção',
     'sidebar.resume': 'Currículo',
     'sidebar.resumeDesc': 'Dossiê Executivo ATS',
+    'sidebar.portfolioGroup': 'Portfólio',
     'sidebar.collapse': 'Recolher menu',
     'sidebar.expand': 'Expandir menu',
 
@@ -283,6 +284,7 @@ export const TRANSLATIONS = {
     'sidebar.timelineDesc': 'Production Milestones',
     'sidebar.resume': 'Resume',
     'sidebar.resumeDesc': 'Executive ATS Dossier',
+    'sidebar.portfolioGroup': 'Portfolio',
     'sidebar.collapse': 'Collapse menu',
     'sidebar.expand': 'Expand menu',
 
@@ -520,6 +522,7 @@ export const TRANSLATIONS = {
     'sidebar.timelineDesc': 'Hitos en Producción',
     'sidebar.resume': 'Currículum',
     'sidebar.resumeDesc': 'Dossier Ejecutivo ATS',
+    'sidebar.portfolioGroup': 'Portafolio',
     'sidebar.collapse': 'Contraer menú',
     'sidebar.expand': 'Expandir menú',
 
@@ -757,6 +760,7 @@ export const TRANSLATIONS = {
     'sidebar.timelineDesc': 'Jalons en Production',
     'sidebar.resume': 'CV',
     'sidebar.resumeDesc': 'Dossier Exécutif ATS',
+    'sidebar.portfolioGroup': 'Portfolio',
     'sidebar.collapse': 'Réduire le menu',
     'sidebar.expand': 'Développer le menu',
 

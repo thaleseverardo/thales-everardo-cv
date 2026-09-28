@@ -18,7 +18,14 @@ interface NavItemConfig {
   descKey: TranslationKey;
 }
 
-const NAV_ITEMS: NavItemConfig[] = [
+const PRIMARY_ITEM: NavItemConfig = {
+  id: 'RESUME',
+  icon: FileText,
+  labelKey: 'sidebar.resume',
+  descKey: 'sidebar.resumeDesc',
+};
+
+const PORTFOLIO_ITEMS: NavItemConfig[] = [
   {
     id: 'GRAPH',
     icon: Layers,
@@ -31,13 +38,9 @@ const NAV_ITEMS: NavItemConfig[] = [
     labelKey: 'sidebar.timeline',
     descKey: 'sidebar.timelineDesc',
   },
-  {
-    id: 'RESUME',
-    icon: FileText,
-    labelKey: 'sidebar.resume',
-    descKey: 'sidebar.resumeDesc',
-  },
 ];
+
+const ALL_MOBILE_ITEMS: NavItemConfig[] = [PRIMARY_ITEM, ...PORTFOLIO_ITEMS];
 
 const SIDEBAR_STORAGE_KEY = 'thales_cv_sidebar_collapsed';
 
@@ -106,18 +109,13 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
             : 'bg-zinc-50/95 border-zinc-200 text-zinc-900'
         }`}
       >
-        {/* TOPO: TOGGLE MINIMALISTA */}
-        <div className="h-12 px-2.5 border-b border-zinc-100 dark:border-zinc-800/60 flex items-center justify-between shrink-0">
-          {!isCollapsed && (
-            <span className="px-2 text-[10px] font-mono font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 truncate">
-              {t(language, 'nav.tools')}
-            </span>
-          )}
+        {/* TOPO: TOGGLE MINIMALISTA (SEM O RÓTULO GENÉRICO 'FERRAMENTAS') */}
+        <div className="h-11 px-2.5 border-b border-zinc-100 dark:border-zinc-800/60 flex items-center justify-end shrink-0">
           <button
             type="button"
             onClick={toggleCollapse}
             className={`flex items-center justify-center rounded-lg transition-colors cursor-pointer text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 focus:outline-none ${
-              isCollapsed ? 'w-9 h-9 mx-auto' : 'w-7 h-7 ml-auto'
+              isCollapsed ? 'w-9 h-9 mx-auto' : 'w-7 h-7'
             }`}
             title={isCollapsed ? t(language, 'sidebar.expand') : t(language, 'sidebar.collapse')}
             aria-label={isCollapsed ? t(language, 'sidebar.expand') : t(language, 'sidebar.collapse')}
@@ -130,9 +128,11 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
           </button>
         </div>
 
-        {/* NAVEGAÇÃO DE ÍCONES DESKTOP */}
-        <div className="p-2 sm:p-2.5 space-y-1.5 pt-3 flex-1 overflow-y-auto overflow-x-hidden">
-          {NAV_ITEMS.map((item) => {
+        {/* NAVEGAÇÃO DESKTOP: CURRÍCULO EM 1º LUGAR + GRUPO PORTFÓLIO */}
+        <div className="p-2 sm:p-2.5 space-y-1 pt-2 flex-1 overflow-y-auto overflow-x-hidden">
+          {/* 1. CURRÍCULO (DESTAQUE NO TOPO) */}
+          {(() => {
+            const item = PRIMARY_ITEM;
             const Icon = item.icon;
             const isActive = viewLayout === item.id;
             const label = t(language, item.labelKey);
@@ -175,11 +175,74 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
                   <div className="min-w-0 flex-1 truncate">
                     <div
                       className={`text-xs font-semibold tracking-tight truncate leading-tight ${
-                        isActive
-                          ? theme === 'dark'
-                            ? 'text-zinc-100 font-bold'
-                            : 'text-zinc-900 font-bold'
-                          : ''
+                        isActive ? 'font-bold' : ''
+                      }`}
+                    >
+                      {label}
+                    </div>
+                    <div className="text-[10px] text-zinc-400 dark:text-zinc-500 truncate leading-normal pt-0.5">
+                      {desc}
+                    </div>
+                  </div>
+                )}
+              </button>
+            );
+          })()}
+
+          {/* DIVISOR DE SEÇÃO SEMÂNTICA: PORTFÓLIO */}
+          {!isCollapsed ? (
+            <div className="px-3 pt-4 pb-1 text-[10px] font-mono font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 select-none">
+              {t(language, 'sidebar.portfolioGroup')}
+            </div>
+          ) : (
+            <div className="my-2 border-t border-zinc-200/60 dark:border-zinc-800/60 mx-2" />
+          )}
+
+          {/* 2. ITENS AGRUPADOS NO PORTFÓLIO (GRAFO E LINHA DO TEMPO) */}
+          {PORTFOLIO_ITEMS.map((item) => {
+            const Icon = item.icon;
+            const isActive = viewLayout === item.id;
+            const label = t(language, item.labelKey);
+            const desc = t(language, item.descKey);
+
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => onSelectView(item.id)}
+                aria-current={isActive ? 'page' : undefined}
+                title={isCollapsed ? `${label} — ${desc}` : undefined}
+                className={`relative group flex items-center transition-all duration-150 cursor-pointer font-sans outline-none focus:outline-none ${
+                  isCollapsed
+                    ? 'w-10 h-10 sm:w-11 sm:h-11 mx-auto rounded-xl justify-center'
+                    : 'w-full h-11 px-3 rounded-xl gap-3 text-left'
+                } ${
+                  isActive
+                    ? theme === 'dark'
+                      ? 'bg-zinc-800/90 text-zinc-100 border border-white/10 shadow-inner'
+                      : 'bg-white text-zinc-900 border border-zinc-200 shadow-2xs'
+                    : theme === 'dark'
+                    ? 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-850/60 border border-transparent'
+                    : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/70 border border-transparent'
+                }`}
+              >
+                <div className="shrink-0 flex items-center justify-center">
+                  <Icon
+                    className={`w-5 h-5 transition-colors ${
+                      isActive
+                        ? theme === 'dark'
+                          ? 'text-blue-400'
+                          : 'text-blue-600'
+                        : 'opacity-75 group-hover:opacity-100'
+                    }`}
+                  />
+                </div>
+
+                {!isCollapsed && (
+                  <div className="min-w-0 flex-1 truncate">
+                    <div
+                      className={`text-xs font-semibold tracking-tight truncate leading-tight ${
+                        isActive ? 'font-bold' : ''
                       }`}
                     >
                       {label}
@@ -206,7 +269,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
             : 'bg-white/95 border-zinc-200 text-zinc-600 shadow-lg'
         }`}
       >
-        {NAV_ITEMS.map((item) => {
+        {ALL_MOBILE_ITEMS.map((item) => {
           const Icon = item.icon;
           const isActive = viewLayout === item.id;
           const label = t(language, item.labelKey);
