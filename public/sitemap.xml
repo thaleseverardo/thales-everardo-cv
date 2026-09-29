@@ -80,4 +80,70 @@
     <priority>0.90</priority>
   </url>
 
+  <!-- Hubs Canônicos de Conteúdo Técnico e Projetos -->
+  <url>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/articles/</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.92</priority>
+  </url>
+  <url>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/projects/</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.92</priority>
+  </url>
+
+  <!-- Technical Architecture Articles (Author: Thales Everardo Albuquerque Reis) -->
+  <url>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/articles/system-architecture-principles/</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.88</priority>
+  </url>
+  <url>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/articles/database-partitioning-distributed-systems/</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.88</priority>
+  </url>
+  <url>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/articles/fault-tolerant-distributed-systems/</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.88</priority>
+  </url>
+  <url>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/articles/reducing-latency-distributed-systems/</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.88</priority>
+  </url>
+  <url>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/articles/data-engineering-architecture-scalability/</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.88</priority>
+  </url>
+
+  <!-- Production Engineering Case Studies (Author: Thales Everardo Albuquerque Reis) -->
+  <url>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/projects/magalu-11tb-purge/</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/projects/gps-financial-latency/</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/projects/ambar-gs1-sync/</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
 </urlset>

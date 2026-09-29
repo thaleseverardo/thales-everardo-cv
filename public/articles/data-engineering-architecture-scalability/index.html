@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enterprise Data Engineering Architecture: Scalability, Reliability, and ACID Compliance — Thales Everardo Albuquerque Reis</title>
+    <meta name="description" content="Scalable data ingestion pipelines, message broker synchronization, and POS-to-ERP real-time consistency by Thales Everardo Albuquerque Reis." />
+    <meta name="keywords" content="Data Engineering, Scalability, ACID Compliance, RabbitMQ, Kafka, POS Integration, Thales Everardo Albuquerque Reis" />
+    <meta name="author" content="Thales Everardo Albuquerque Reis" />
+    <link rel="canonical" href="https://thaleseverardo.github.io/thales-everardo-cv/articles/data-engineering-architecture-scalability/" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://thaleseverardo.github.io/thales-everardo-cv/articles/data-engineering-architecture-scalability/" />
+    <meta property="og:title" content="Enterprise Data Engineering Architecture: Scalability, Reliability, and ACID Compliance" />
+    <meta property="og:description" content="Scalable data ingestion pipelines, message broker synchronization, and POS-to-ERP real-time consistency by Thales Everardo Albuquerque Reis." />
+    <meta property="og:image" content="https://thaleseverardo.github.io/thales-everardo-cv/og-image.png" />
+    <meta property="article:published_time" content="2026-07-20T08:00:00Z" />
+    <meta property="article:author" content="Thales Everardo Albuquerque Reis" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Enterprise Data Engineering Architecture: Scalability, Reliability, and ACID Compliance" />
+    <meta name="twitter:description" content="Scalable data ingestion pipelines, message broker synchronization, and POS-to-ERP real-time consistency by Thales Everardo Albuquerque Reis." />
+    <meta name="twitter:image" content="https://thaleseverardo.github.io/thales-everardo-cv/og-image.png" />
+
+    <!-- Schema.org TechArticle -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://thaleseverardo.github.io/thales-everardo-cv/articles/data-engineering-architecture-scalability/"
+      },
+      "headline": "Enterprise Data Engineering Architecture: Scalability, Reliability, and ACID Compliance",
+      "description": "Scalable data ingestion pipelines, message broker synchronization, and POS-to-ERP real-time consistency by Thales Everardo Albuquerque Reis.",
+      "image": [
+        "https://thaleseverardo.github.io/thales-everardo-cv/images/thales-everardo-albuquerque-reis-16x9.webp",
+        "https://thaleseverardo.github.io/thales-everardo-cv/images/thales-everardo-albuquerque-reis-1x1.webp"
+      ],
+      "datePublished": "2026-07-20T08:00:00Z",
+      "dateModified": "2026-07-20T08:00:00Z",
+      "author": {
+        "@type": "Person",
+        "@id": "https://thaleseverardo.github.io/thales-everardo-cv/#person",
+        "name": "Thales Everardo Albuquerque Reis",
+        "url": "https://thaleseverardo.github.io/thales-everardo-cv/"
+      },
+      "publisher": {
+        "@type": "Person",
+        "@id": "https://thaleseverardo.github.io/thales-everardo-cv/#person",
+        "name": "Thales Everardo Albuquerque Reis"
+      }
+    }
+    </script>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #09090b; color: #f4f4f5; margin: 0; padding: 2rem 1rem; line-height: 1.6; }
+      main { max-width: 820px; margin: 0 auto; }
+      header { border-bottom: 1px solid #27272a; padding-bottom: 1.5rem; margin-bottom: 2rem; }
+      h1 { font-size: 2rem; font-weight: 800; color: #fafafa; margin-bottom: 0.5rem; line-height: 1.25; }
+      h2 { font-size: 1.35rem; color: #60a5fa; margin-top: 2rem; border-bottom: 1px solid #18181b; padding-bottom: 0.3rem; }
+      .meta { font-size: 0.85rem; color: #a1a1aa; font-family: ui-monospace, monospace; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+      .meta a { color: #38bdf8; text-decoration: none; font-weight: 600; }
+      .meta a:hover { text-decoration: underline; }
+      .back-nav { margin-bottom: 1.5rem; font-size: 0.85rem; }
+      .back-nav a { color: #38bdf8; text-decoration: none; }
+      footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #27272a; font-size: 0.85rem; color: #71717a; text-align: center; }
+      footer a { color: #a1a1aa; text-decoration: none; margin: 0 0.5rem; }
+      footer a:hover { color: #fafafa; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <nav class="back-nav">
+        <a href="https://thaleseverardo.github.io/thales-everardo-cv/">← Back to Thales Everardo Albuquerque Reis Portfolio & Interactive Architecture</a>
+      </nav>
+      <header>
+        <h1>Enterprise Data Engineering Architecture: Scalability, Reliability, and ACID Compliance</h1>
+        <div class="meta">
+          <span>Author: <a href="https://thaleseverardo.github.io/thales-everardo-cv/">Thales Everardo Albuquerque Reis</a></span>
+          <span>•</span>
+          <span>Staff Software Engineer & Systems Architect</span>
+          <span>•</span>
+          <span>Published: 2026-07-20</span>
+        </div>
+      </header>
+      <article>
+        
+          <h2>1. Data Ingestion Under High Volumetric Pressure</h2>
+          <p>Processing hundreds of thousands of daily transactional records requires a decoupled ingestion buffer. Ingesting raw events directly into ACID relational stores causes resource starvation and dropped packets during traffic spikes.</p>
+          <h2>2. The GS1 Standard Messaging Broker</h2>
+          <p>By implementing a standard messaging broker bridging point-of-sale (POS) systems and central ERP endpoints, product catalogs and inventory states remain synchronised across distributed regional hubs in real time.</p>
+          <h2>3. Maintaining Global State with Local Resilience</h2>
+          <p>Offline-first SQLite local caching paired with resilient background sync queues guarantees that field endpoints continue operating seamlessly during connectivity outages, reconciling state bi-directionally upon reconnection with zero data loss.</p>
+        
+      </article>
+      <footer>
+        <p>© 2026 Thales Everardo Albuquerque Reis · Distributed Systems & Enterprise Software Architecture</p>
+        <p>
+          <a href="https://thaleseverardo.github.io/thales-everardo-cv/">Home</a>
+          <a href="https://thaleseverardo.github.io/thales-everardo-cv/#profilepage">Profile</a>
+          <a href="https://linkedin.com/in/thaleseverardo">LinkedIn</a>
+          <a href="https://github.com/thaleseverardo">GitHub</a>
+        </p>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -65,6 +65,8 @@ export default defineConfig(({ mode }) => {
             /\/llms\.txt$/,
             /\/llms-full\.txt$/,
             /\/resumes\/.*/,
+            /\/articles\/.*/,
+            /\/projects\/.*/,
           ],
           runtimeCaching: [
             {

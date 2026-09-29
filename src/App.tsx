@@ -20,6 +20,12 @@ const ExecutiveTimelineView = lazy(() =>
 const ResumeView = lazy(() =>
   import('./components/templates/ResumeView').then((m) => ({ default: m.ResumeView }))
 );
+const ArticlesView = lazy(() =>
+  import('./components/templates/ArticlesView').then((m) => ({ default: m.ArticlesView }))
+);
+const ProjectsView = lazy(() =>
+  import('./components/templates/ProjectsView').then((m) => ({ default: m.ProjectsView }))
+);
 const ContactAuthModal = lazy(() =>
   import('./components/organisms/ContactAuthModal').then((m) => ({ default: m.ContactAuthModal }))
 );
@@ -119,6 +125,10 @@ export default function App() {
         search.get('view') === 'curriculo'
       ) {
         initialLayout = 'RESUME';
+      } else if (hash.includes('artigos') || hash.includes('articles')) {
+        initialLayout = 'ARTICLES';
+      } else if (hash.includes('projetos') || hash.includes('projects')) {
+        initialLayout = 'PROJECTS';
       }
     }
 
@@ -168,8 +178,18 @@ export default function App() {
       if (window.location.hash !== '#/timeline') {
         window.history.replaceState(null, '', `${base}/#/timeline`);
       }
+    } else if (systemState.viewLayout === 'ARTICLES') {
+      const target = systemState.activeArticleSlug ? `#/artigos/${systemState.activeArticleSlug}` : '#/artigos';
+      if (window.location.hash !== target) {
+        window.history.replaceState(null, '', `${base}/${target}`);
+      }
+    } else if (systemState.viewLayout === 'PROJECTS') {
+      const target = systemState.activeProjectSlug ? `#/projetos/${systemState.activeProjectSlug}` : '#/projetos';
+      if (window.location.hash !== target) {
+        window.history.replaceState(null, '', `${base}/${target}`);
+      }
     } else {
-      if (window.location.hash.startsWith('#/curriculo') || window.location.hash === '#/timeline') {
+      if (window.location.hash.startsWith('#/curriculo') || window.location.hash === '#/timeline' || window.location.hash.startsWith('#/artigos') || window.location.hash.startsWith('#/projetos')) {
         window.history.replaceState(null, '', `${base}/`);
       }
     }
@@ -187,6 +207,22 @@ export default function App() {
       } else if (hash.includes('timeline')) {
         updateState({
           viewLayout: 'TIMELINE',
+          ...(detectedLang ? { language: detectedLang } : {}),
+        });
+      } else if (hash.includes('artigos') || hash.includes('articles')) {
+        const parts = hash.split('/');
+        const slug = parts[2] || null;
+        updateState({
+          viewLayout: 'ARTICLES',
+          activeArticleSlug: slug,
+          ...(detectedLang ? { language: detectedLang } : {}),
+        });
+      } else if (hash.includes('projetos') || hash.includes('projects')) {
+        const parts = hash.split('/');
+        const slug = parts[2] || null;
+        updateState({
+          viewLayout: 'PROJECTS',
+          activeProjectSlug: slug,
           ...(detectedLang ? { language: detectedLang } : {}),
         });
       } else if (hash === '' || hash.includes('grafo') || hash.includes('graph')) {
@@ -265,7 +301,7 @@ export default function App() {
           }`}
         >
           {/* BARRA DE FILTROS NA ÁREA AZUL (À DIREITA DA SIDEBAR, NUNCA INVADINDO A ÁREA VERDE) */}
-          {systemState.viewLayout !== 'RESUME' && (
+          {systemState.viewLayout !== 'RESUME' && systemState.viewLayout !== 'ARTICLES' && systemState.viewLayout !== 'PROJECTS' && (
             <ViewFilterToolbar
               systemState={systemState}
               updateState={updateState}
@@ -295,12 +331,26 @@ export default function App() {
                   selectedTag={systemState.selectedTag}
                   onClearFilter={() => updateState({ searchTerm: '', profileLens: 'ALL', selectedTag: null })}
                 />
-              ) : (
+              ) : systemState.viewLayout === 'RESUME' ? (
                 <ResumeView
                   language={systemState.language}
                   theme={systemState.theme}
                   onOpenContact={() => setIsContactOpen(true)}
                   onOpenPrivacy={() => setIsPrivacyOpen(true)}
+                />
+              ) : systemState.viewLayout === 'ARTICLES' ? (
+                <ArticlesView
+                  language={systemState.language}
+                  theme={systemState.theme}
+                  activeSlug={systemState.activeArticleSlug || null}
+                  onSelectArticle={(slug) => updateState({ activeArticleSlug: slug })}
+                />
+              ) : (
+                <ProjectsView
+                  language={systemState.language}
+                  theme={systemState.theme}
+                  activeSlug={systemState.activeProjectSlug || null}
+                  onSelectProject={(slug) => updateState({ activeProjectSlug: slug })}
                 />
               )}
             </Suspense>
@@ -347,6 +397,8 @@ export default function App() {
           />
         </Suspense>
       )}
+
+
     </div>
   );
 }

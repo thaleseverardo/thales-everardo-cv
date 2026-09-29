@@ -208,8 +208,8 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
 
             <div className="min-w-0 flex flex-col justify-center">
               <h1 className="font-sans font-bold text-[15px] sm:text-base tracking-tight text-zinc-900 dark:text-zinc-100 whitespace-nowrap">
-                <span>Thales Everardo </span>
-                {showFullName && <span className="text-zinc-500 dark:text-zinc-400 font-medium">Albuquerque Reis</span>}
+                <span>Thales Everardo</span>{" "}
+                <span className="text-zinc-500 dark:text-zinc-400 font-medium hidden lg:inline">Albuquerque Reis</span>
               </h1>
 
               <div className="text-xs font-sans opacity-70 leading-normal flex items-center gap-1.5 pt-0.5">

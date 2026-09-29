@@ -13,7 +13,7 @@ export type SystemMode = 'DIGITAL_ARCHITECTURE' | 'PHYSICAL_OPERATIONS';
 export type SystemHealth = 'HEALTHY' | 'DEGRADED' | 'CRITICAL';
 export type AppLanguage = 'PT' | 'EN' | 'ES' | 'FR';
 export type AppTheme = 'dark' | 'light';
-export type ViewLayout = 'GRAPH' | 'TIMELINE' | 'RESUME';
+export type ViewLayout = 'GRAPH' | 'TIMELINE' | 'RESUME' | 'ARTICLES' | 'PROJECTS';
 export type ProfileLens = 'ALL' | 'ARCHITECTURE' | 'DATA' | 'SOFTWARE_ENG' | 'DATABASE';
 export type NodeVisualShape = 'STREAM_PULSE' | 'PROCESSOR_CORE' | 'DATABASE_CYLINDER' | 'GATEWAY_SHIELD' | 'HEX_OPTIMIZER';
 
@@ -32,6 +32,8 @@ export interface SystemState {
   onboardingDismissed: boolean;
   searchTerm: string;
   selectedTag: string | null;
+  activeArticleSlug?: string | null;
+  activeProjectSlug?: string | null;
 }
 
 export interface MetricHighlight {

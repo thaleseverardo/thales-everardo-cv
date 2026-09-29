@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Layers, List, FileText, ChevronLeft, ChevronRight, MessageSquare } from 'lucide-react';
+import { Layers, List, FileText, ChevronLeft, ChevronRight, MessageSquare, BookOpen, FolderGit2 } from 'lucide-react';
 import { ViewLayout, AppLanguage, AppTheme } from '../../types';
 import { t, TranslationKey } from '../../i18n/translations';
 
@@ -255,6 +255,106 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
               </button>
             );
           })}
+
+          {/* DIVISOR DE SEÇÃO SEMÂNTICA: PUBLICAÇÕES & CONTEÚDO TÉCNICO */}
+          {!isCollapsed ? (
+            <div className="px-3 pt-4 pb-1 text-[10px] font-mono font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 select-none">
+              {t(language, 'sidebar.publicationsGroup')}
+            </div>
+          ) : (
+            <div className="my-2 border-t border-zinc-200/60 dark:border-zinc-800/60 mx-2" />
+          )}
+
+          {/* ESTUDOS DE CASO (RENDERIZA DIRETO NA ÁREA DE LEITURA COMO OS OUTROS) */}
+          <button
+            type="button"
+            onClick={() => onSelectView('PROJECTS')}
+            aria-current={viewLayout === 'PROJECTS' ? 'page' : undefined}
+            title={isCollapsed ? `${t(language, 'sidebar.caseStudies')} — ${t(language, 'sidebar.caseStudiesDesc')}` : undefined}
+            className={`relative group flex items-center transition-all duration-150 cursor-pointer font-sans outline-none focus:outline-none ${
+              isCollapsed
+                ? 'w-10 h-10 sm:w-11 sm:h-11 mx-auto rounded-xl justify-center'
+                : 'w-full h-11 px-3 rounded-xl gap-3 text-left'
+            } ${
+              viewLayout === 'PROJECTS'
+                ? theme === 'dark'
+                  ? 'bg-zinc-800/90 text-zinc-100 border border-white/10 shadow-inner'
+                  : 'bg-white text-zinc-900 border border-zinc-200 shadow-2xs'
+                : theme === 'dark'
+                ? 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-850/60 border border-transparent'
+                : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/70 border border-transparent'
+            }`}
+          >
+            <div className="shrink-0 flex items-center justify-center">
+              <FolderGit2
+                className={`w-5 h-5 transition-colors ${
+                  viewLayout === 'PROJECTS'
+                    ? 'text-emerald-500'
+                    : 'opacity-75 group-hover:opacity-100'
+                }`}
+              />
+            </div>
+            {!isCollapsed && (
+              <div className="min-w-0 flex-1 truncate">
+                <div className={`text-xs font-semibold tracking-tight truncate leading-tight ${viewLayout === 'PROJECTS' ? 'font-bold' : ''}`}>
+                  {t(language, 'sidebar.caseStudies')}
+                </div>
+                <div className="text-[10px] text-zinc-400 dark:text-zinc-500 truncate leading-normal pt-0.5">
+                  {t(language, 'sidebar.caseStudiesDesc')}
+                </div>
+              </div>
+            )}
+          </button>
+
+          {/* DIVISOR DE SEÇÃO SEMÂNTICA: PUBLICAÇÕES */}
+          {!isCollapsed ? (
+            <div className="px-3 pt-4 pb-1 text-[10px] font-mono font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 select-none">
+              {t(language, 'sidebar.publicationsGroup')}
+            </div>
+          ) : (
+            <div className="my-2 border-t border-zinc-200/60 dark:border-zinc-800/60 mx-2" />
+          )}
+
+          {/* ARTIGOS TÉCNICOS (RENDERIZA DIRETO NA ÁREA DE LEITURA) */}
+          <button
+            type="button"
+            onClick={() => onSelectView('ARTICLES')}
+            aria-current={viewLayout === 'ARTICLES' ? 'page' : undefined}
+            title={isCollapsed ? `${t(language, 'sidebar.articles')} — ${t(language, 'sidebar.articlesDesc')}` : undefined}
+            className={`relative group flex items-center transition-all duration-150 cursor-pointer font-sans outline-none focus:outline-none ${
+              isCollapsed
+                ? 'w-10 h-10 sm:w-11 sm:h-11 mx-auto rounded-xl justify-center'
+                : 'w-full h-11 px-3 rounded-xl gap-3 text-left'
+            } ${
+              viewLayout === 'ARTICLES'
+                ? theme === 'dark'
+                  ? 'bg-zinc-800/90 text-zinc-100 border border-white/10 shadow-inner'
+                  : 'bg-white text-zinc-900 border border-zinc-200 shadow-2xs'
+                : theme === 'dark'
+                ? 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-850/60 border border-transparent'
+                : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/70 border border-transparent'
+            }`}
+          >
+            <div className="shrink-0 flex items-center justify-center">
+              <BookOpen
+                className={`w-5 h-5 transition-colors ${
+                  viewLayout === 'ARTICLES'
+                    ? 'text-blue-500'
+                    : 'opacity-75 group-hover:opacity-100'
+                }`}
+              />
+            </div>
+            {!isCollapsed && (
+              <div className="min-w-0 flex-1 truncate">
+                <div className={`text-xs font-semibold tracking-tight truncate leading-tight ${viewLayout === 'ARTICLES' ? 'font-bold' : ''}`}>
+                  {t(language, 'sidebar.articles')}
+                </div>
+                <div className="text-[10px] text-zinc-400 dark:text-zinc-500 truncate leading-normal pt-0.5">
+                  {t(language, 'sidebar.articlesDesc')}
+                </div>
+              </div>
+            )}
+          </button>
         </div>
       </aside>
 
