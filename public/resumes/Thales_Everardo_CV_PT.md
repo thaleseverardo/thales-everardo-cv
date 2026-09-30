@@ -1,17 +1,19 @@
 # Thales Everardo
-**Engenheiro de Software Staff & Arquiteto de Sistemas**
+**Staff Software Engineer | Principal Systems Architect**
 
-Contact: Protected via Portfolio Auth Gate | São Paulo, SP - Brasil
-GitHub: https://github.com/thaleseverardo | LinkedIn: https://linkedin.com/in/thaleseverardo
+São Paulo, Brasil & Toronto, ON (Ex-Residente | Realocação para o Canadá)
+Email: Protected via Portfolio Auth Gate | Telefone: Protected via Portfolio Auth Gate
+LinkedIn: https://linkedin.com/in/thaleseverardo | GitHub: https://github.com/thaleseverardo
+Idiomas: Inglês (Fluente — Mais de 3 Anos de Experiência no Canadá) | Português (Nativo)
 
 ---
 
-## RESUMO EXECUTIVO
+## RESUMO PROFISSIONAL
 Arquiteto de Sistemas e Staff Software Engineer com mais de 15 anos de experiência em TI corporativa, sistemas de missão crítica e arquiteturas de alta disponibilidade e resiliência. Sólida atuação em diagnósticos profundos de sistemas, recuperação de incidentes sob SLAs inferiores a 1 hora para instituições financeiras Tier-1 e otimização de performance em bancos de dados corporativos, complementada por mais de 3 anos de liderança em TI e arquitetura de dados ERP em Toronto, Canadá. Atualmente dedicado ao desenvolvimento e arquitetura de produtos SaaS, aplicando padrões orientados a eventos (CQRS, Event Sourcing), segurança Zero-Trust e explorando a integração de recursos de IA.
 
 ---
 
-## EXPERIÊNCIA ARQUITETURAL EM PRODUÇÃO
+## EXPERIÊNCIA PROFISSIONAL
 ### [01] Consórcio Magalu — Engenheiro de Software Sênior / Arquiteto
 *05/2024 - Atual | São Paulo, Brasil*
 

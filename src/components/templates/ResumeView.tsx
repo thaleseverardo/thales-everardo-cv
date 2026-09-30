@@ -31,6 +31,8 @@ import {
   getProfileLocation,
   getProfileSummary,
   generateMarkdownResume,
+  getLanguagesSummary,
+  getLanguagesLabel,
 } from '../../utils/resumeGenerator';
 
 interface ResumeViewProps {
@@ -158,7 +160,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-2 sm:px-6 pt-3 pb-20 sm:py-8 flex-1 animate-in fade-in duration-200">
+    <div className="w-full max-w-4xl mx-auto px-2 sm:px-6 pt-3 pb-20 sm:py-8 flex-1 animate-in fade-in duration-200 print:p-0 print:m-0 print:max-w-none print:w-full print:block">
       {/* 1. BARRA SUPERIOR DE AÇÕES EXECUTIVAS */}
       <div className="mb-6 flex items-center justify-end gap-2 print:hidden select-none">
         {/* GRUPO DE UTILITÁRIOS: COPIAR MARKDOWN + IMPRIMIR + COMPARTILHAR */}
@@ -438,392 +440,520 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
         </div>
       )}
 
-      {/* 3. CORPO DO CV TIMBRADO (CONTAINER PURO DO DOCUMENTO EXECUTIVO TIER 3) */}
+      {/* 3. CORPO DO CV TIMBRADO (CONTAINER PURO DO DOCUMENTO EXECUTIVO - PADRÃO WYSIWYG) */}
       <article
-        className={`w-full font-sans leading-relaxed text-sm print:border-none print:shadow-none print:p-0 print:text-black p-4 sm:p-10 rounded-xl sm:rounded-2xl border transition-all ${
+        id="printable-resume-card"
+        className={`w-full cv-sheet-font leading-relaxed text-[13px] print:border-none print:shadow-none print:p-0 print:m-0 print:text-black p-5 sm:p-10 rounded-2xl border transition-all ${
           theme === 'dark'
             ? 'bg-[#0c0c0f]/80 border-zinc-800/80 text-zinc-200 shadow-xs'
             : 'bg-white border-zinc-200/90 text-zinc-800 shadow-xs'
         }`}
       >
-        {/* CABEÇALHO DO CURRÍCULO (NOME E CARGOS RIGOROSAMENTE EM 1 LINHA CADA) */}
-        <div className="border-b pb-4 sm:pb-5 mb-6 dark:border-zinc-800 border-zinc-200 print:border-black overflow-hidden">
-          <h1 className="text-[clamp(0.95rem,4.3vw,1.75rem)] font-sans font-bold tracking-tight whitespace-nowrap text-zinc-900 dark:text-zinc-100 leading-tight print:text-black">
+        {/* CABEÇALHO DO CURRÍCULO (PADRÃO EXECUTIVO WYSIWYG: TELA & IMPRESSÃO IDÊNTICAS) */}
+        <div className="border-b pb-4 sm:pb-5 mb-5 dark:border-zinc-800 border-zinc-200 print:border-zinc-300 print:pb-3 print:mb-3.5 overflow-hidden">
+          <h1 className="text-[clamp(0.95rem,4.3vw,1.65rem)] font-bold tracking-tight whitespace-nowrap text-zinc-900 dark:text-zinc-100 leading-tight print:text-black">
             {PROFILE_DATA.name.toUpperCase()}
           </h1>
-          <div className="text-[clamp(0.68rem,2.8vw,0.95rem)] font-sans font-semibold text-blue-600 dark:text-blue-400 mt-1 whitespace-nowrap tracking-tight leading-tight print:text-black">
+          <div className="text-[clamp(0.68rem,2.8vw,0.875rem)] font-medium text-zinc-700 dark:text-zinc-300 mt-1 whitespace-nowrap tracking-tight leading-tight print:text-zinc-800 print:text-[10pt]">
             {getProfileTitle(language)}
           </div>
 
-          {/* LINHA DE CONTATO RIGIDAMENTE TRAVADA HORIZONTALMENTE */}
-          <div className="mt-3.5 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-y-1.5 sm:gap-x-3 text-xs font-mono">
-            {isAuthenticated ? (
-              <>
-                <a
-                  href={`mailto:${email}`}
-                  className="inline-flex items-center gap-2 h-7 min-h-0 text-zinc-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group cursor-pointer min-w-0"
-                >
-                  <Mail className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 shrink-0" />
-                  <span className="hover:underline font-semibold select-all truncate leading-none">
-                    {email || t(language, 'resume.loading')}
-                  </span>
-                </a>
-                <span className="text-zinc-300 dark:text-zinc-700 select-none hidden sm:inline">•</span>
-                <a
-                  href={`https://wa.me/${phone.replace(/[^0-9]/g, '')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 h-7 min-h-0 text-zinc-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group cursor-pointer min-w-0"
-                >
-                  <Phone className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 shrink-0" />
-                  <span className="hover:underline font-semibold select-all truncate leading-none">
-                    {phone || t(language, 'resume.loading')}
-                  </span>
-                </a>
-              </>
-            ) : (
-              <>
-                <button
-                  type="button"
-                  onClick={() => (onOpenContact ? onOpenContact() : signInWithGoogle())}
-                  className="group inline-flex items-center gap-2 h-7 min-h-0 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors cursor-pointer min-w-0 text-left"
-                  title={t(language, 'resume.gateTitle')}
-                >
-                  <Mail className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 shrink-0" />
-                  <span className="tracking-wide select-none font-medium text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 truncate leading-none">
-                    thales••••••@•••••.com
-                  </span>
-                  <Lock className="w-3 h-3 text-zinc-400/70 dark:text-zinc-500/70 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 shrink-0" />
-                </button>
-                <span className="text-zinc-300 dark:text-zinc-700 select-none hidden sm:inline">•</span>
-                <button
-                  type="button"
-                  onClick={() => (onOpenContact ? onOpenContact() : signInWithGoogle())}
-                  className="group inline-flex items-center gap-2 h-7 min-h-0 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors cursor-pointer min-w-0 text-left"
-                  title={t(language, 'resume.gateTitle')}
-                >
-                  <Phone className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
-                  <span className="tracking-wide select-none font-medium text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 truncate leading-none">
-                    +55 11 9••••-••••
-                  </span>
-                  <Lock className="w-3 h-3 text-zinc-400/70 dark:text-zinc-500/70 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 shrink-0" />
-                </button>
-              </>
-            )}
+          {/* LOCALIZAÇÃO E STATUS DE RESIDÊNCIA CANADENSE */}
+          <div className="mt-2.5 flex items-start gap-1.5 text-xs font-sans text-zinc-700 dark:text-zinc-300 leading-snug print:text-[9pt] print:mt-1.5">
+            <MapPin className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0 mt-0.5 print:text-zinc-600" />
+            <span className="font-medium">{getProfileLocation(language)}</span>
+          </div>
 
-            <span className="text-zinc-300 dark:text-zinc-700 select-none hidden sm:inline">•</span>
-            <div className="inline-flex items-center gap-2 h-7 min-h-0 text-zinc-600 dark:text-zinc-400 min-w-0">
-              <MapPin className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
-              <span className="truncate leading-none">{getProfileLocation(language)}</span>
+          {/* 1. LINHA DE CONTATOS INTERATIVA (EXCLUSIVA DE TELA, OCULTA NA IMPRESSÃO) */}
+          <div className="mt-2 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-y-1.5 sm:gap-x-2.5 text-xs font-sans text-zinc-600 dark:text-zinc-400 print:hidden">
+            {/* Bloco 1: Contatos Diretos */}
+            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+              {isAuthenticated ? (
+                <>
+                  <a
+                    href={`mailto:${email}`}
+                    className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors group cursor-pointer"
+                  >
+                    <Mail className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+                    <span className="hover:underline font-medium select-all">{email || t(language, 'resume.loading')}</span>
+                  </a>
+                  <span className="text-zinc-300 dark:text-zinc-700 select-none">|</span>
+                  <a
+                    href={`https://wa.me/${phone.replace(/[^0-9]/g, '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors group cursor-pointer"
+                  >
+                    <Phone className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+                    <span className="hover:underline font-medium select-all">{phone || t(language, 'resume.loading')}</span>
+                  </a>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => (onOpenContact ? onOpenContact() : signInWithGoogle())}
+                    className="group inline-flex items-center gap-1.5 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors cursor-pointer text-left"
+                    title={t(language, 'resume.gateTitle')}
+                  >
+                    <Mail className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+                    <span className="tracking-wide select-none font-medium text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-800 dark:group-hover:text-zinc-200">
+                      thales••••••@•••••.com
+                    </span>
+                    <Lock className="w-3 h-3 text-zinc-400/80 dark:text-zinc-500/80 shrink-0" />
+                  </button>
+                  <span className="text-zinc-300 dark:text-zinc-700 select-none">|</span>
+                  <button
+                    type="button"
+                    onClick={() => (onOpenContact ? onOpenContact() : signInWithGoogle())}
+                    className="group inline-flex items-center gap-1.5 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors cursor-pointer text-left"
+                    title={t(language, 'resume.gateTitle')}
+                  >
+                    <Phone className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+                    <span className="tracking-wide select-none font-medium text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-800 dark:group-hover:text-zinc-200">
+                      +55 11 9••••-••••
+                    </span>
+                    <Lock className="w-3 h-3 text-zinc-400/80 dark:text-zinc-500/80 shrink-0" />
+                  </button>
+                </>
+              )}
             </div>
-            <span className="text-zinc-300 dark:text-zinc-700 select-none hidden sm:inline">•</span>
-            <div className="hidden sm:flex items-center gap-2 h-7 min-h-0 text-zinc-500 dark:text-zinc-400 min-w-0">
-              <Globe className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
-              <span className="truncate leading-none">{t(language, 'resume.availability')}</span>
+
+            <span className="text-zinc-300 dark:text-zinc-700 select-none hidden sm:inline">|</span>
+
+            {/* Bloco 2: Perfis Profissionais */}
+            <div className="flex items-center gap-x-2.5">
+              <a
+                href="https://br.linkedin.com/in/thaleseverardo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors"
+              >
+                <Linkedin className="w-3.5 h-3.5 text-[#0A66C2] shrink-0" />
+                <span className="hover:underline">LinkedIn</span>
+              </a>
+              <span className="text-zinc-300 dark:text-zinc-700 select-none">|</span>
+              <a
+                href="https://github.com/thaleseverardo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors"
+              >
+                <Globe className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+                <span className="hover:underline">GitHub</span>
+              </a>
             </div>
+          </div>
+
+          {/* 2. LINHA DE CONTATOS DEDICADA PARA IMPRESSÃO / PDF (CONTATOS REAIS + ZERO PIPES DUPLOS) */}
+          <div className="hidden print:flex flex-wrap items-center gap-x-2 gap-y-1 text-[9pt] font-sans text-zinc-700 mt-1.5">
+            <span className="inline-flex items-center gap-1">
+              <Mail className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+              <span>{email || 'thales.everardo@gmail.com'}</span>
+            </span>
+            <span className="text-zinc-400 select-none">|</span>
+            <span className="inline-flex items-center gap-1">
+              <Phone className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+              <span>{phone || '+55 11 96296 9508'}</span>
+            </span>
+            <span className="text-zinc-400 select-none">|</span>
+            <span className="inline-flex items-center gap-1">
+              <Linkedin className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+              <span>linkedin.com/in/thaleseverardo</span>
+            </span>
+            <span className="text-zinc-400 select-none">|</span>
+            <span className="inline-flex items-center gap-1">
+              <Globe className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+              <span>github.com/thaleseverardo</span>
+            </span>
+          </div>
+
+          {/* DESTAQUE DE IDIOMAS & EXPERIÊNCIA CORPORATIVA (TEXTUAL CONTINUO) */}
+          <div className="mt-2 text-xs font-sans text-zinc-600 dark:text-zinc-400 leading-normal print:text-[8.8pt] print:text-zinc-700 print:mt-1.5">
+            <strong className="font-semibold text-zinc-800 dark:text-zinc-200 print:text-zinc-900">{getLanguagesLabel(language)}:</strong>{' '}
+            <span>{getLanguagesSummary(language)}</span>
           </div>
         </div>
 
-        {/* RESUMO EXECUTIVO */}
-        <div className="mb-6 space-y-2">
-          <h2 className="text-xs font-mono font-bold uppercase tracking-wider border-b pb-1 dark:border-zinc-800 border-zinc-200 text-blue-600 dark:text-blue-400 print:text-black">
+        {/* RESUMO PROFISSIONAL */}
+        <div className="mb-6 space-y-2.5">
+          <h2 className="text-xs font-sans font-bold uppercase tracking-wider border-b pb-1.5 dark:border-zinc-800 border-zinc-200 text-zinc-900 dark:text-zinc-100 print:text-black">
             {t(language, 'resume.executiveSummary')}
           </h2>
-          <p className="text-sm opacity-90 leading-relaxed font-sans">
+          <p className="text-sm leading-relaxed font-sans text-zinc-700 dark:text-zinc-300 cv-justified-text">
             {getProfileSummary(language)}
           </p>
         </div>
 
-        {/* EXPERIÊNCIA ARQUITETURAL EM PRODUÇÃO */}
-        <div className="mb-6 space-y-5">
-          <h2 className="text-xs font-mono font-bold uppercase tracking-wider border-b pb-1 dark:border-zinc-800 border-zinc-200 text-blue-600 dark:text-blue-400 print:text-black">
+        {/* EXPERIÊNCIA PROFISSIONAL — ORDEM CRONOLÓGICA REVERSA MATEMÁTICA ESTREITA */}
+        <div className="mb-5 space-y-4">
+          <h2 className="text-xs font-sans font-bold uppercase tracking-wider border-b pb-1.5 dark:border-zinc-800 border-zinc-200 text-zinc-900 dark:text-zinc-100 print:text-black">
             {t(language, 'resume.coreExperience')}
           </h2>
 
-          {CURRICULUM_NODES.map((node) => {
-            const content = getNodeContent(node, language);
+          {(() => {
+            // Algoritmo matemático de pontuação temporal baseado no término do período
+            const parsePeriodEndScore = (periodStr: string): number => {
+              if (!periodStr) return 0;
+              const p = periodStr.toLowerCase();
 
-            return (
-              <div key={node.id} className="space-y-1.5 text-xs sm:text-sm">
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between font-bold gap-1 sm:gap-4">
-                  <div className="text-sm sm:text-base text-zinc-900 dark:text-zinc-100 print:text-black leading-snug">
-                    <span className="inline-flex items-center gap-2 mr-2">
-                      <span>{node.company}</span>
-                      <span
-                        className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold tracking-wider uppercase border border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 select-none"
-                        title={node.location}
-                      >
-                        {node.location.toLowerCase().includes('canada') || node.company.includes('Summerhill') ? 'CA' : 'BR'}
+              // Cargos vigentes (Presente / Atual) têm prioridade máxima absoluta
+              if (
+                p.includes('present') ||
+                p.includes('atual') ||
+                p.includes('présent') ||
+                p.includes('actualidad')
+              ) {
+                return 99999999;
+              }
+
+              // Extrair todos os anos de 4 dígitos presentes no período
+              const years = periodStr.match(/\b(20\d\d|19\d\d)\b/g);
+              if (!years || years.length === 0) return 19900000;
+
+              // O ano final é o último ano encontrado na string do período
+              const endYear = parseInt(years[years.length - 1], 10);
+              const startYear = parseInt(years[0], 10);
+
+              // Mapeamento multilíngue de meses para ordenação precisa
+              const monthMap: Record<string, number> = {
+                jan: 1, ene: 1,
+                feb: 2, fev: 2,
+                mar: 3,
+                apr: 4, abr: 4, avr: 4,
+                may: 5, mai: 5,
+                jun: 6,
+                jul: 7,
+                aug: 8, ago: 8, aou: 8,
+                sep: 9, set: 9,
+                oct: 10, out: 10,
+                nov: 11,
+                dec: 12, dez: 12, dic: 12
+              };
+
+              // Localizar o mês correspondente ao término (após o hífen/separador)
+              let endMonth = 12;
+              const periodParts = periodStr.split(/[-–—]/);
+              const endPart = (periodParts.length > 1 ? periodParts[1] : periodParts[0]).toLowerCase();
+
+              for (const [mName, mNum] of Object.entries(monthMap)) {
+                if (endPart.includes(mName)) {
+                  endMonth = mNum;
+                  break;
+                }
+              }
+
+              // Score composto: (AnoFinal * 10000) + (MêsFinal * 100) + (AnoInicial % 100)
+              return endYear * 10000 + endMonth * 100 + (startYear % 100);
+            };
+
+            // Filtrar fundações puramente acadêmicas para manter apenas histórico corporativo formal
+            const professionalNodes = CURRICULUM_NODES.filter((node) => {
+              const id = node.id.toLowerCase();
+              const comp = node.company.toLowerCase();
+              const role = node.role.toLowerCase();
+
+              return !(
+                id.includes('academic') ||
+                id.includes('foundation') ||
+                comp.includes('cruzeiro') ||
+                comp.includes('university') ||
+                comp.includes('estácio') ||
+                comp.includes('senai') ||
+                role.includes('game developer & computer scientist') ||
+                role.includes('desenvolvedor de jogos & cientista')
+              );
+            }).sort((a, b) => {
+              const scoreA = parsePeriodEndScore(a.period);
+              const scoreB = parsePeriodEndScore(b.period);
+              return scoreB - scoreA;
+            });
+
+            return professionalNodes.map((node) => {
+              const content = getNodeContent(node, language);
+              const isCanadianEN = language === 'EN';
+
+              // Textos nativos garantidos para Francês e Espanhol
+              let roleText = content.role;
+              let roiText = content.businessValue;
+              let featText = content.engineeringFeat;
+              let solText = content.architecturalSolution;
+
+              const compLower = node.company.toLowerCase();
+              const roleLower = node.role.toLowerCase();
+
+              if (language === 'ES') {
+                if (compLower.includes('magalu')) {
+                  roleText = 'Staff Software Engineer y Arquitecto de Sistemas';
+                  roiText = 'Cero bloqueos en producción y mitigación total de riesgos de indisponibilidad durante cierres fiscales críticos.';
+                  featText = 'Purga asíncrona particionada de 11TB de logs transaccionales en SQL Server sin bloqueos transaccionales en caliente.';
+                  solText = 'Construcción de pipeline desacoplado en lotes dinámicos con monitoreo de telemetría de buffers de log y control de presión.';
+                } else if (compLower.includes('gps')) {
+                  roleText = 'Ingeniero de Software Senior';
+                  roiText = 'Reducción del 99,8% en el tiempo de procesamiento contable y liquidación de nóminas corporativas.';
+                  featText = 'Reducción de la latencia del pipeline de cálculo financiero de 7 días a solo 20 minutos con consistencia total.';
+                  solText = 'Optimización profunda de índices agrupados, particionamiento de tablas históricas y paralelización asíncrona en C#.';
+                } else if (compLower.includes('summerhill') && (roleLower.includes('system') || roleLower.includes('gerente') || roleLower.includes('dba'))) {
+                  roleText = 'Gerente de Sistemas de TI, Ingeniero de Soluciones y DBA';
+                  roiText = 'Gobernanza tecnológica unificada en 5 tiendas físicas con facturación íntegra en más de 500.000 transacciones mensuales y 30.000 SKUs.';
+                  featText = 'Implementó plan de Disaster Recovery (DR/BCP) con recuperación total de 1 mes de datos críticos en 24 horas y sincronización POS/ERP en tiempo real.';
+                  solText = 'Desarrollo de microservicios y APIs RESTful en C#/.NET conectando el catálogo GS1 al ERP con sincronización en tiempo real.';
+                } else if (compLower.includes('summerhill')) {
+                  roleText = 'Líder de Operaciones y Optimización de Procesos';
+                  roiText = 'Reducción del 70% en el descarte de materia prima y aumento de la capacidad de producción en un 50% sin nuevas contrataciones.';
+                  featText = 'Aplicó conceptos formales de ingeniería de software (Teoría de Colas y flujo Just-in-Time) directamente a la logística de producción física.';
+                  solText = 'Modelado predictivo de demanda con datos históricos de ventas y estandarización de pipelines de producción por lotes.';
+                } else if (compLower.includes('ambar')) {
+                  roleText = 'Ingeniero de Software Especialista';
+                  roiText = 'Sincronización en tiempo real de catálogos e inventarios en 5 centros de distribución sin pérdida de pedidos.';
+                  featText = 'Broker de mensajería estándar GS1 que conecta ERP central y terminales de punto de venta POS en tiempo real.';
+                  solText = 'Patrón Transactional Outbox con RabbitMQ y almacenamiento local idempotente con tolerancia a desconexión.';
+                } else if (compLower.includes('altitude') || compLower.includes('ultra')) {
+                  roleText = 'Ingeniero de Software / Analista Desarrollador';
+                  roiText = 'Recuperación de 11 Terabytes de almacenamiento en servidores de producción al 99% de capacidad, evitando costos masivos de hardware.';
+                  featText = 'Reducción del tiempo de ejecución de un proceso crítico mensual de 1 mes a solo 2 horas (ganancia del 99,7%).';
+                  solText = 'Expurgo transaccional particionado de datos históricos desindexados con 100% de integridad referencial y módulos en ASP.NET / T-SQL.';
+                } else if (compLower.includes('atento')) {
+                  roleText = 'Ingeniero de Soporte Técnico III y Arquitecto de Automatización';
+                  roiText = 'Garantizó el 99,98% de disponibilidad operativa en atención corporativa; redujo indisponibilidades en un 97% con ahorro superior a US$ 500.000.';
+                  featText = 'Estabilizó pipelines de ingestión continua para más de 100.000 registros diarios de voz y telefonía sin pérdida de paquetes.';
+                  solText = 'Gestión de tráfico masivo de voz y datos, optimización LAN/WAN y SIP/VoIP, y automatización con scripts ETL hacia SQL.';
+                }
+              } else if (language === 'FR') {
+                if (compLower.includes('magalu')) {
+                  roleText = 'Staff Software Engineer & Architecte Systèmes';
+                  roiText = 'Zéro verrouillage en production et élimination des risques de panne lors des clôtures fiscales critiques.';
+                  featText = 'Purge asynchrone partitionnée de 11 To de journaux sur SQL Server sans lock escalations en production.';
+                  solText = 'Conception d\'un pipeline découplé par lots dynamiques avec surveillance télémétrique de la pression des journaux.';
+                } else if (compLower.includes('gps')) {
+                  roleText = 'Ingénieur Logiciel Senior';
+                  roiText = 'Réduction de 99,8% du temps de traitement comptable et de règlement de paie multi-entités.';
+                  featText = 'Réduction de la latence du pipeline de calcul financier de 7 jours à 20 minutes avec cohérence absolue.';
+                  solText = 'Optimisation approfondie des index, partitionnement des tables historiques et parallélisation asynchrone en C#.';
+                } else if (compLower.includes('summerhill') && (roleLower.includes('system') || roleLower.includes('gerente') || roleLower.includes('dba'))) {
+                  roleText = 'Responsable des Systèmes IT, Ingénieur Solutions & DBA';
+                  roiText = 'Gouvernance technologique unifiée sur 5 magasins physiques avec facturation intègre sur plus de 500 000 transactions mensuelles et 30 000 SKUs.';
+                  featText = 'Mise en œuvre d\'un plan de reprise après sinistre (DR/BCP) avec restauration intégrale d\'un mois de données critiques en 24 heures.';
+                  solText = 'Développement de microservices et d\'APIs RESTful en C#/.NET reliant le catalogue GS1 à l\'ERP avec synchronisation en temps réel.';
+                } else if (compLower.includes('summerhill')) {
+                  roleText = 'Responsable Opérations & Optimisation des Processus';
+                  roiText = 'Réduction de 70% du gaspillage de matières premières et augmentation de 50% de la capacité de production sans nouveaux recrutements.';
+                  featText = 'Application directe des principes d\'ingénierie logicielle (Théorie des files d\'attente et Just-in-Time) à la logistique physique.';
+                  solText = 'Modélisation prédictive de la demande basée sur les historiques de ventes et standardisation des flux de production par lots.';
+                } else if (compLower.includes('ambar')) {
+                  roleText = 'Ingénieur Logiciel Spécialiste';
+                  roiText = 'Synchronisation en temps réel des catalogues et stocks sur 5 centres de distribution sans aucune perte de commande.';
+                  featText = 'Broker de messagerie au standard GS1 reliant ERP central et points de vente POS en temps réel.';
+                  solText = 'Pattern Transactional Outbox avec files RabbitMQ et persistance locale idempotente tolérante aux pannes.';
+                } else if (compLower.includes('altitude') || compLower.includes('ultra')) {
+                  roleText = 'Ingénieur Logiciel / Développeur Analyste';
+                  roiText = 'Récupération de 11 To de stockage sur des serveurs de production saturés à 99%, évitant des coûts massifs d\'infrastructure.';
+                  featText = 'Réduction du temps d\'exécution d\'un processus critique mensuel de 1 mois à seulement 2 heures (gain de 99,7%).';
+                  solText = 'Purge transactionnelle partitionnée de données historiques désindexées avec intégrité référentielle à 100% et modules en ASP.NET / T-SQL.';
+                } else if (compLower.includes('atento')) {
+                  roleText = 'Ingénieur Support Technique III & Architecte Automatisation';
+                  roiText = 'Garantie de 99,98% de disponibilité opérationnelle; réduction des interruptions de 97% générant plus de 500 000 $ d\'économies.';
+                  featText = 'Conception et stabilisation de pipelines d\'ingestion continue de plus de 100 000 enregistrements quotidiens de voix sans perte de paquets.';
+                  solText = 'Gestion du trafic massif voix/données, optimisation LAN/WAN et SIP/VoIP, et automatisation de scripts ETL vers SQL.';
+                }
+              }
+
+              return (
+                <div key={node.id} className="space-y-1 text-xs sm:text-[13px]">
+                  {/* Cabeçalho do Cargo: Empresa, Badge de País, Cargo e Período */}
+                  <div className="flex flex-col sm:flex-row sm:items-baseline justify-between font-bold gap-1 sm:gap-4">
+                    <div className="text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 print:text-black leading-snug">
+                      <span className="inline-flex items-center gap-1.5 mr-2 font-bold">
+                        <span>{node.company}</span>
+                        <span
+                          className="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold tracking-wider uppercase border border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 select-none"
+                          title={node.location}
+                        >
+                          {node.location.toLowerCase().includes('canada') || node.company.toLowerCase().includes('summerhill') ? 'CA' : 'BR'}
+                        </span>
                       </span>
-                    </span>
-                    <span className="opacity-50 font-normal mr-1.5">—</span>
-                    <span className="text-blue-600 dark:text-blue-400 font-medium print:text-black">
-                      {content.role}
+                      <span className="opacity-40 font-normal mr-1.5">—</span>
+                      <span className="text-zinc-700 dark:text-zinc-300 font-medium print:text-black">
+                        {roleText}
+                      </span>
+                    </div>
+                    <span className="font-mono text-[11px] opacity-70 shrink-0 sm:pt-0.5">
+                      {node.period} · {node.location}
                     </span>
                   </div>
-                  <span className="font-mono text-xs opacity-70 shrink-0 sm:pt-0.5">{node.period}</span>
+
+                  {isCanadianEN ? (
+                    /* =========================================================
+                       PADRÃO CANADENSE / NORTE-AMERICANO (BULLET POINTS DE AÇÃO XYZ)
+                       ========================================================= */
+                    <div className="mt-1 space-y-1 text-xs sm:text-[12.5px] text-zinc-700 dark:text-zinc-300 leading-relaxed cv-justified-text">
+                      <p className="flex items-start gap-2">
+                        <span className="text-zinc-400 select-none mt-1 text-[8px]">•</span>
+                        <span>
+                          <strong>{content.businessValue}</strong> — {content.engineeringFeat}
+                        </span>
+                      </p>
+                      <p className="flex items-start gap-2">
+                        <span className="text-zinc-400 select-none mt-1 text-[8px]">•</span>
+                        <span>{content.architecturalSolution}</span>
+                      </p>
+                      <div className="font-mono text-[10.5px] opacity-70 pt-0.5 ml-4">
+                        <strong>Technologies:</strong> {node.technologies.join(', ')}
+                      </div>
+                    </div>
+                  ) : (
+                    /* =========================================================
+                       PADRÃO BRASILEIRO / HISPÂNICO / FRANCÊS (DESTAQUE DE ROI ESTRUTURADO)
+                       ========================================================= */
+                    <div className="mt-1 space-y-1 text-xs sm:text-[12.5px] text-zinc-700 dark:text-zinc-300 leading-relaxed cv-justified-text">
+                      <div className="border-l-2 border-blue-600 dark:border-blue-400 pl-3 py-0.5 font-sans text-xs text-zinc-700 dark:text-zinc-300 print:border-gray-400">
+                        <span className="font-bold text-zinc-900 dark:text-zinc-100 mr-1.5">
+                          {t(language, 'resume.businessRoi')}
+                        </span>
+                        <span>{roiText}</span>
+                      </div>
+
+                      <p className="opacity-90 leading-relaxed">
+                        <strong>{t(language, 'resume.engineeringFeat')} </strong>
+                        {featText}
+                      </p>
+
+                      <p className="opacity-80 leading-relaxed">
+                        <strong>{t(language, 'resume.solution')} </strong>
+                        {solText}
+                      </p>
+
+                      <div className="font-mono text-[10.5px] opacity-70 pt-0.5">
+                        <strong>Stack:</strong> {node.technologies.join(', ')}
+                      </div>
+                    </div>
+                  )}
                 </div>
-
-                <div className="border-l-2 border-blue-600 dark:border-blue-400 pl-3 py-1 font-sans text-xs text-zinc-700 dark:text-zinc-300 print:border-gray-400">
-                  <span className="font-bold text-zinc-900 dark:text-zinc-100 mr-1.5">{t(language, 'resume.businessRoi')}</span>
-                  <span>{content.businessValue}</span>
-                </div>
-
-                <p className="opacity-90 leading-relaxed">
-                  <strong>{t(language, 'resume.engineeringFeat')} </strong>
-                  {content.engineeringFeat}
-                </p>
-
-                <p className="opacity-80 leading-relaxed">
-                  <strong>{t(language, 'resume.solution')} </strong>
-                  {content.architecturalSolution}
-                </p>
-
-                <div className="font-mono text-[11px] opacity-70 pt-0.5">
-                  <strong>Stack:</strong> {node.technologies.join(', ')}
-                </div>
-              </div>
-            );
-          })}
+              );
+            });
+          })()}
         </div>
 
-        {/* FORMAÇÃO & CERTIFICAÇÕES */}
+        {/* FORMAÇÃO ACADÊMICA, COMPETÊNCIAS & CERTIFICAÇÕES (PADRÃO EXECUTIVO GLOBAL TIER-1) */}
         <div className="mb-6 space-y-6">
-          <h2 className="text-xs font-mono font-bold uppercase tracking-wider border-b pb-1 dark:border-zinc-800 border-zinc-200 text-blue-600 dark:text-blue-400 print:text-black">
-            {t(language, 'academic.formalDegreesTitle')}
-          </h2>
+          {/* 1. FORMAÇÃO ACADÊMICA FORMAL */}
+          <div className="space-y-3">
+            <h2 className="text-xs font-sans font-bold uppercase tracking-wider border-b pb-1.5 dark:border-zinc-800 border-zinc-200 text-zinc-900 dark:text-zinc-100 print:text-black">
+              {language === 'PT'
+                ? 'FORMAÇÃO ACADÊMICA & TÍTULOS SUPERIORES'
+                : language === 'FR'
+                ? 'FORMATION & DIPLÔMES ACADÉMIQUES'
+                : language === 'ES'
+                ? 'EDUCACIÓN Y TÍTULOS ACADÉMICOS'
+                : 'HIGHER EDUCATION & FORMAL DEGREES'}
+            </h2>
 
-          {/* KPI HUD MÉTRICO ACADÊMICO */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 print:hidden">
-            <div className={`p-3 rounded-xl border font-mono text-center ${theme === 'dark' ? 'bg-zinc-950/60 border-zinc-800' : 'bg-zinc-50 border-zinc-200'}`}>
-              <div className="text-base sm:text-lg font-bold text-blue-600 dark:text-blue-400">1.660h</div>
-              <div className="text-[10px] font-semibold opacity-70 uppercase tracking-tight">{t(language, 'academic.kpiHours')}</div>
-              <div className="text-[9px] opacity-50 truncate">{t(language, 'academic.kpiHoursSub')}</div>
-            </div>
-
-            <div className={`p-3 rounded-xl border font-mono text-center ${theme === 'dark' ? 'bg-zinc-950/60 border-zinc-800' : 'bg-zinc-50 border-zinc-200'}`}>
-              <div className="text-base sm:text-lg font-bold text-blue-600 dark:text-blue-400">4 Graus</div>
-              <div className="text-[10px] font-semibold opacity-70 uppercase tracking-tight">{t(language, 'academic.kpiDegrees')}</div>
-              <div className="text-[9px] opacity-50 truncate">{t(language, 'academic.kpiDegreesSub')}</div>
-            </div>
-
-            <div className={`p-3 rounded-xl border font-mono text-center ${theme === 'dark' ? 'bg-zinc-950/60 border-zinc-800' : 'bg-zinc-50 border-zinc-200'}`}>
-              <div className="text-base sm:text-lg font-bold text-emerald-500">🇨🇦 WES CA</div>
-              <div className="text-[10px] font-semibold opacity-70 uppercase tracking-tight">{t(language, 'academic.kpiWes')}</div>
-              <div className="text-[9px] opacity-50 truncate">{t(language, 'academic.kpiWesSub')}</div>
-            </div>
-
-            <div className={`p-3 rounded-xl border font-mono text-center ${theme === 'dark' ? 'bg-zinc-950/60 border-zinc-800' : 'bg-zinc-50 border-zinc-200'}`}>
-              <div className="text-base sm:text-lg font-bold text-amber-500">7 Hashes</div>
-              <div className="text-[10px] font-semibold opacity-70 uppercase tracking-tight">{t(language, 'academic.kpiCredentials')}</div>
-              <div className="text-[9px] opacity-50 truncate">{t(language, 'academic.kpiCredentialsSub')}</div>
-            </div>
-          </div>
-
-          {/* FORMAÇÃO ACADÊMICA FORMAL */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs font-sans">
-            {PROFILE_DATA.academicDegrees.map((deg) => (
-              <div
-                key={deg.id}
-                className={`p-3.5 rounded-xl border flex flex-col justify-between transition-all ${
-                  theme === 'dark'
-                    ? 'bg-zinc-950/60 border-zinc-800 hover:border-zinc-700'
-                    : 'bg-zinc-50 border-zinc-200 hover:border-zinc-300 shadow-2xs'
-                } print:border-gray-300`}
-              >
-                <div>
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="font-bold text-zinc-900 dark:text-zinc-100 print:text-black text-sm leading-snug">
-                      {language === 'PT' ? deg.degreeName : deg.degreeNameEN}
+            <div className="space-y-3 text-xs sm:text-[13px]">
+              {PROFILE_DATA.academicDegrees.map((deg) => (
+                <div key={deg.id} className="space-y-1">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline justify-between font-bold gap-1">
+                    <div className="text-zinc-900 dark:text-zinc-100 print:text-black">
+                      <span>{language === 'PT' ? deg.degreeName : deg.degreeNameEN}</span>
+                      <span className="opacity-40 font-normal mx-1.5">—</span>
+                      <span className="text-zinc-700 dark:text-zinc-300 font-medium print:text-black">{deg.institution}</span>
                     </div>
-                    <span className="font-mono text-[11px] opacity-65 shrink-0 pt-0.5">{deg.period}</span>
-                  </div>
-
-                  <div className="text-blue-600 dark:text-blue-400 font-semibold text-xs mt-1 print:text-black">
-                    {deg.institution}
+                    <span className="font-mono text-[11px] opacity-70 shrink-0">{deg.period}</span>
                   </div>
 
                   {deg.status === 'IN_PROGRESS' && (
-                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 mt-2 rounded-md font-mono text-[10px] font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
                       <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
                       {t(language, 'academic.inProgressBadge')}
                     </span>
                   )}
 
                   {deg.internationalEquivalency && (
-                    <div className="mt-2 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/25 text-emerald-700 dark:text-emerald-400 font-mono text-[10px] font-semibold flex items-center gap-1.5">
+                    <div className="mt-1 p-1.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-mono text-[10px] font-semibold flex items-center gap-1.5 w-fit">
                       <span>🇨🇦</span>
                       <span>WES Canadian Equivalency: {deg.internationalEquivalency.canadianEquivalency}</span>
                     </div>
                   )}
 
-                  <p className="opacity-75 text-[11px] mt-2.5 leading-relaxed font-sans">
+                  <p className="opacity-80 text-xs text-zinc-600 dark:text-zinc-400 leading-normal pt-0.5">
                     {language === 'PT' ? deg.focus : deg.focusEN}
                   </p>
                 </div>
-
-                <div className="flex flex-wrap gap-1 mt-3 pt-2.5 border-t border-zinc-200/60 dark:border-zinc-800/80 font-mono text-[10px]">
-                  {deg.skills.map((s, sIdx) => (
-                    <span key={sIdx} className="px-1.5 py-0.5 rounded bg-zinc-200/60 dark:bg-zinc-800/80 text-zinc-700 dark:text-zinc-300">
-                      {s}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* CERTIFICAÇÕES ACADÊMICAS OFICIAIS COM HASH */}
-          <div className="pt-2">
-            <h2 className="text-xs font-mono font-bold uppercase tracking-wider border-b pb-1 dark:border-zinc-800 border-zinc-200 text-blue-600 dark:text-blue-400 print:text-black mb-3">
-              {t(language, 'academic.verifiedCredentialsTitle')}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
-              {PROFILE_DATA.verifiedCredentials.map((cred) => (
-                <div
-                  key={cred.id}
-                  className={`p-3.5 rounded-xl border flex flex-col justify-between ${
-                    theme === 'dark' ? 'bg-zinc-950/40 border-zinc-800' : 'bg-white border-zinc-200 shadow-2xs'
-                  }`}
-                >
-                  <div>
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="font-semibold text-zinc-900 dark:text-zinc-100 text-xs leading-snug">
-                        {language === 'PT' ? cred.title : cred.titleEN}
-                      </div>
-                      <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 shrink-0">
-                        {cred.workloadHours}h
-                      </span>
-                    </div>
-                    <div className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-1">{cred.institution}</div>
-                    <div className="text-[10px] opacity-60 font-mono mt-1">Disciplinas: {cred.disciplinesIncluded.join(', ')}</div>
-                  </div>
-
-                  <div className="mt-3 pt-2 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between">
-                    <span className="font-mono text-[10px] opacity-50">{cred.issueDate}</span>
-                    <a
-                      href={cred.verificationUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 font-mono text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
-                    >
-                      <span>{t(language, 'academic.verifyCredential')}</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </div>
-                </div>
               ))}
             </div>
           </div>
 
-          {/* TRILHAS TÉCNICAS E ESPECIALIZAÇÕES */}
-          <div className="pt-2">
-            <h2 className="text-xs font-mono font-bold uppercase tracking-wider border-b pb-1 dark:border-zinc-800 border-zinc-200 text-blue-600 dark:text-blue-400 print:text-black mb-3">
-              {t(language, 'academic.specializedTracksTitle')}
+          {/* 2. COMPETÊNCIAS TÉCNICAS CONSOLIDADAS (PADRÃO OURO ATS DE ALTA DENSIDADE) */}
+          <div className="space-y-2.5">
+            <h2 className="text-xs font-sans font-bold uppercase tracking-wider border-b pb-1.5 dark:border-zinc-800 border-zinc-200 text-zinc-900 dark:text-zinc-100 print:text-black">
+              {language === 'PT'
+                ? 'COMPETÊNCIAS TÉCNICAS (HARD SKILLS)'
+                : language === 'FR'
+                ? 'COMPÉTENCES TECHNIQUES'
+                : language === 'ES'
+                ? 'COMPETENCIAS TÉCNICAS'
+                : 'TECHNICAL SKILLS & COMPETENCIES'}
             </h2>
-            <div className="flex flex-wrap gap-2 text-xs font-sans">
-              {PROFILE_DATA.technicalCourses.map((tc) => (
-                <div
-                  key={tc.id}
-                  className={`px-3 py-2 rounded-xl border flex items-center gap-2 ${
-                    theme === 'dark' ? 'bg-zinc-950/60 border-zinc-800' : 'bg-zinc-50 border-zinc-200'
-                  }`}
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
-                  <div>
-                    <div className="font-medium text-zinc-900 dark:text-zinc-100 text-xs leading-none">{tc.title}</div>
-                    <div className="text-[10px] opacity-60 font-mono mt-1">
-                      {tc.institution} {tc.associatedCompany ? `· ${tc.associatedCompany}` : ''}
-                    </div>
-                  </div>
-                </div>
-              ))}
+
+            <div className="space-y-1.5 text-xs sm:text-[12.5px] leading-relaxed text-zinc-700 dark:text-zinc-300">
+              <p>
+                <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
+                  {language === 'PT' ? 'Arquitetura & Padrões:' : language === 'FR' ? 'Architectures & Patterns :' : language === 'ES' ? 'Arquitectura y Patrones:' : 'Architectures & Patterns:'}
+                </strong>{' '}
+                Event-Driven Architecture (EDA), Distributed Microservices, Domain-Driven Design (DDD), CQRS, Transactional Outbox Pattern, Zero-Trust Security, High Availability, Disaster Recovery (DR/BCP), ACID Compliance.
+              </p>
+              <p>
+                <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
+                  {language === 'PT' ? 'Linguagens & Frameworks:' : language === 'FR' ? 'Langages & Frameworks :' : language === 'ES' ? 'Lenguajes y Frameworks:' : 'Languages & Frameworks:'}
+                </strong>{' '}
+                C#, .NET Core, .NET Framework, Python, TypeScript, SQL (T-SQL, PL/SQL), Java, Bash/Shell Scripting, Entity Framework, ASP.NET Core RESTful APIs.
+              </p>
+              <p>
+                <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
+                  {language === 'PT' ? 'Bancos de Dados & Mensageria:' : language === 'FR' ? 'Bases de Données & Messagerie :' : language === 'ES' ? 'Bases de Datos y Mensajería:' : 'Databases & Messaging:'}
+                </strong>{' '}
+                Microsoft SQL Server, PostgreSQL, Sybase SQL Anywhere, Oracle DB, Apache Kafka, RabbitMQ, Clustered Index Tuning, Table Partitioning, Query Optimization, Transaction Log Management, ETL Pipelines.
+              </p>
+              <p>
+                <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
+                  {language === 'PT' ? 'DevOps, Infraestrutura & SO:' : language === 'FR' ? 'DevOps, Infrastructure & OS :' : language === 'ES' ? 'DevOps, Infraestructura y SO:' : 'DevOps, Infrastructure & OS:'}
+                </strong>{' '}
+                Docker, Kubernetes, Linux System Internals (Kernel, Networking, SysAdmin), Active Directory, LDAP, CI/CD, Computer Telephony Integration (CTI, SIP/VoIP).
+              </p>
             </div>
           </div>
 
-          {/* IDIOMAS */}
-          <div className="pt-2">
-            <h2 className="text-xs font-mono font-bold uppercase tracking-wider border-b pb-1 dark:border-zinc-800 border-zinc-200 text-blue-600 dark:text-blue-400 print:text-black mb-3">
-              {t(language, 'academic.languagesTitle')}
+          {/* 3. IDIOMAS & CERTIFICAÇÕES RELEVANTES DE INDÚSTRIA */}
+          <div className="space-y-2">
+            <h2 className="text-xs font-sans font-bold uppercase tracking-wider border-b pb-1.5 dark:border-zinc-800 border-zinc-200 text-zinc-900 dark:text-zinc-100 print:text-black">
+              {language === 'PT'
+                ? 'IDIOMAS & CERTIFICAÇÕES DE MERCADO'
+                : language === 'FR'
+                ? 'LANGUES & CERTIFICATIONS'
+                : language === 'ES'
+                ? 'IDIOMAS Y CERTIFICACIONES'
+                : 'LANGUAGES & CERTIFICATIONS'}
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-sans text-xs">
-              {PROFILE_DATA.languages.map((langItem, lIdx) => (
-                <div
-                  key={lIdx}
-                  className={`p-3 rounded-xl border ${
-                    theme === 'dark' ? 'bg-zinc-950/60 border-zinc-800' : 'bg-zinc-50 border-zinc-200'
-                  }`}
-                >
-                  <div className="font-bold text-zinc-900 dark:text-zinc-100">{langItem.language}</div>
-                  <div className="text-blue-600 dark:text-blue-400 text-[11px] font-medium mt-0.5">
-                    {language === 'PT' ? langItem.proficiencyPT : langItem.proficiencyEN}
-                  </div>
-                  <div className="font-mono text-[10px] opacity-50 mt-1">Quadro Europeu: {langItem.cefrLevel}</div>
-                </div>
-              ))}
-            </div>
-          </div>
 
-          {/* HARD SKILLS */}
-          <div className="pt-2">
-            <h2 className="text-xs font-mono font-bold uppercase tracking-wider border-b pb-1 dark:border-zinc-800 border-zinc-200 text-blue-600 dark:text-blue-400 print:text-black mb-3">
-              {t(language, 'skills.hardSkillsTitle')}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
-              {PROFILE_DATA.hardSkillsDomains.map((dom) => (
-                <div
-                  key={dom.id}
-                  className={`p-3.5 rounded-xl border flex flex-col justify-between ${
-                    theme === 'dark' ? 'bg-zinc-950/40 border-zinc-800' : 'bg-white border-zinc-200'
-                  }`}
-                >
-                  <div className="font-semibold text-zinc-900 dark:text-zinc-100 text-xs mb-2">
-                    {language === 'PT' ? dom.categoryPT : dom.categoryEN}
-                  </div>
-                  <div className="flex flex-wrap gap-1 font-mono text-[10px]">
-                    {dom.skills.map((sk, skIdx) => (
-                      <span
-                        key={skIdx}
-                        className="px-2 py-0.5 rounded-md border dark:bg-zinc-900 dark:border-zinc-800 bg-white border-zinc-200 text-zinc-700 dark:text-zinc-300"
-                      >
-                        {sk}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+            <div className="space-y-1.5 text-xs sm:text-[12.5px] leading-relaxed text-zinc-700 dark:text-zinc-300">
+              <p>
+                <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
+                  {language === 'PT' ? 'Idiomas:' : language === 'FR' ? 'Langues :' : language === 'ES' ? 'Idiomas:' : 'Languages:'}
+                </strong>{' '}
+                {language === 'PT'
+                  ? 'Inglês (Profissional Pleno - CEFR C1 · Mais de 3 Anos de Experiência no Canadá) | Português (Nativo - CEFR C2) | Espanhol (Elementar - A2) | Francês (Elementar - A2)'
+                  : language === 'FR'
+                  ? "Anglais (Professionnel - CEFR C1 · 3+ Ans d'Expérience au Canada) | Portugais (Natif - CEFR C2) | Espagnol (Élémentaire - A2) | Français (Élémentaire - A2)"
+                  : language === 'ES'
+                  ? 'Inglés (Profesional - CEFR C1 · Más de 3 Años de Experiencia en Canadá) | Portugués (Nativo - CEFR C2) | Español (A2) | Francés (A2)'
+                  : 'English (Full Professional Working Proficiency - CEFR C1 · 3+ Yrs Canadian Experience) | Portuguese (Native - CEFR C2) | Spanish (Elementary - A2) | French (Elementary - A2)'}
+              </p>
 
-          {/* SOFT SKILLS */}
-          <div className="pt-2">
-            <h2 className="text-xs font-mono font-bold uppercase tracking-wider border-b pb-1 dark:border-zinc-800 border-zinc-200 text-blue-600 dark:text-blue-400 print:text-black mb-3">
-              {t(language, 'skills.softSkillsTitle')}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-sans">
-              {PROFILE_DATA.softSkillsCompetencies.map((comp) => (
-                <div
-                  key={comp.id}
-                  className={`p-3.5 rounded-xl border flex flex-col justify-between ${
-                    theme === 'dark' ? 'bg-zinc-950/40 border-zinc-800' : 'bg-white border-zinc-200'
-                  }`}
-                >
-                  <div>
-                    <div className="font-semibold text-zinc-900 dark:text-zinc-100 text-xs flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
-                      <span>{language === 'PT' ? comp.titlePT : comp.titleEN}</span>
-                    </div>
-                    <p className="opacity-75 text-[11px] mt-1.5 leading-relaxed font-sans">
-                      {language === 'PT' ? comp.descriptionPT : comp.descriptionEN}
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap gap-1 mt-2.5 pt-2 border-t border-zinc-200/60 dark:border-zinc-800/80 font-mono text-[9px] opacity-60">
-                    {comp.linkedSkills.map((ls, lsIdx) => (
-                      <span key={lsIdx}>#{ls}</span>
-                    ))}
-                  </div>
-                </div>
-              ))}
+              <p>
+                <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
+                  {language === 'PT' ? 'Certificações & Especializações:' : language === 'FR' ? 'Certifications & Spécialisations :' : language === 'ES' ? 'Certificaciones y Especializaciones:' : 'Certifications & Specialized Tracks:'}
+                </strong>{' '}
+                Formação Especialista Linux (Admin, Network Servers & Security — 4Linux) · SQL Tuning & Query Optimization (MSSQL/Oracle) · GoF Design Patterns & Clean Architecture in C# · GitFlow & Continuous Integration
+              </p>
             </div>
           </div>
         </div>

@@ -304,3 +304,156 @@ textarea:focus-visible {
 :where(.dark, .dark *) .text-zinc-500 {
   color: #a1a1aa; /* zinc-400 */
 }
+
+/* ==========================================================================
+   TIPOGRAFIA WYSIWYG UNIVERSAL DE CURRÍCULO (SISTEMA NATIVO // ZERO FALLBACK)
+   ========================================================================== */
+.cv-sheet-font {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: -0.011em;
+}
+
+/* ==========================================================================
+   TIPOGRAFIA DUAL-MODE (JUSTIFICADA NA TELA // 100% LIMPA E LINEAR EM ATS/PRINT)
+   ========================================================================== */
+@media screen {
+  .cv-justified-text {
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+  }
+}
+
+@media print {
+  /* 1. Preset Automático do Diálogo do Navegador: Força Retrato + Papel A4 + Margens Milimétricas */
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm 12mm 12mm;
+  }
+
+  /* 2. Forçar renderização de contraste exato */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* 3. Ocultar todos os elementos do Shell da Aplicação */
+  header,
+  footer,
+  aside,
+  nav,
+  .print\:hidden,
+  [data-nosnippet="true"],
+  [role="dialog"]:not(#printable-resume-card),
+  .fixed,
+  button {
+    display: none !important;
+  }
+
+  /* 4. Reset total de viewport: destravar overflow para permitir paginação contínua e natural */
+  html,
+  body,
+  #root,
+  #root > div,
+  #main-scroll-container,
+  main {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    position: static !important;
+    display: block !important;
+    background: #ffffff !important;
+    color: #111827 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    font-size: 9.5pt !important;
+    line-height: 1.35 !important;
+  }
+
+  /* 5. Calibração de Densidade Executiva WYSIWYG (1:1 com a folha de tela) */
+  #printable-resume-card,
+  article {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    color: #111827 !important;
+    font-size: 9.5pt !important;
+    line-height: 1.35 !important;
+  }
+
+  /* Nome principal no papel */
+  #printable-resume-card h1 {
+    font-size: 16pt !important;
+    line-height: 1.15 !important;
+    margin-bottom: 1.5mm !important;
+    color: #111827 !important;
+  }
+
+  /* Subtítulo de cargo */
+  #printable-resume-card > div:first-child > div:nth-child(2) {
+    font-size: 10pt !important;
+    line-height: 1.2 !important;
+    color: #374151 !important;
+  }
+
+  /* Divisor de cabeçalho sutil em cinza de 1px (idêntico à tela, sem barra preta grossa) */
+  #printable-resume-card > div:first-child {
+    border-bottom: 1px solid #d1d5db !important;
+  }
+
+  /* Títulos de Seção com quebra protegida */
+  #printable-resume-card h2 {
+    font-size: 9.5pt !important;
+    margin-top: 3.5mm !important;
+    margin-bottom: 2mm !important;
+    padding-bottom: 1mm !important;
+    border-bottom: 1px solid #d1d5db !important;
+    color: #111827 !important;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  /* Espaçamento compacto e anti-fatiamento de experiências */
+  .space-y-4 > div,
+  .space-y-5 > div,
+  .space-y-6 > div {
+    margin-bottom: 3mm !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Parágrafos de Feitos Técnicos e Soluções */
+  #printable-resume-card p {
+    font-size: 9pt !important;
+    line-height: 1.35 !important;
+    margin-top: 0.8mm !important;
+    margin-bottom: 0.8mm !important;
+    color: #1f2937 !important;
+  }
+
+  /* Neutralização de hifens e justificação na impressão para máxima aderência ATS */
+  .cv-justified-text,
+  article, p, div, span {
+    text-align: left !important;
+    text-justify: auto !important;
+    hyphens: none !important;
+    -webkit-hyphens: none !important;
+    -ms-hyphens: none !important;
+  }
+
+  /* Links impressos em preto discreto */
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+}

@@ -3,26 +3,37 @@ import { CURRICULUM_NODES, PROFILE_DATA } from '../data/curriculumData';
 import { t, getNodeContent } from '../i18n/translations';
 
 export function getProfileTitle(lang: AppLanguage): string {
-  if (lang === 'PT') return PROFILE_DATA.titlePT;
-  if (lang === 'ES') return 'Ingeniero de Software Staff y Arquitecto de Sistemas';
-  if (lang === 'FR') return 'Ingénieur Logiciel Staff & Architecte de Systèmes';
-  return PROFILE_DATA.title;
+  return 'Staff Software Engineer | Principal Systems Architect';
 }
 
 export function getProfileLocation(lang: AppLanguage): string {
-  if (lang === 'PT') return 'São Paulo, SP — Brasil';
-  if (lang === 'FR') return 'São Paulo, Brésil';
-  if (lang === 'ES') return 'São Paulo, Brasil';
-  return 'São Paulo, Brazil';
+  if (lang === 'PT') return 'São Paulo, Brasil & Toronto, ON (Ex-Residente | Realocação para o Canadá)';
+  if (lang === 'FR') return 'São Paulo, Brésil & Toronto, ON (Ancien Résident | Relocalisation au Canada)';
+  if (lang === 'ES') return 'São Paulo, Brasil y Toronto, ON (Ex-residente | Relocalización a Canadá)';
+  return 'São Paulo, Brazil & Toronto, ON (Former Resident | Relocating to Canada)';
+}
+
+export function getLanguagesSummary(lang: AppLanguage): string {
+  if (lang === 'PT') return 'Inglês (Fluente — Mais de 3 Anos de Experiência no Canadá) | Português (Nativo)';
+  if (lang === 'FR') return "Anglais (Courant — 3+ Ans d'Expérience Professionnelle au Canada) | Portugais (Natif)";
+  if (lang === 'ES') return 'Inglés (Fluido — Más de 3 Años de Experiencia Laboral en Canadá) | Portugués (Nativo)';
+  return 'English (Fluent — 3+ Yrs Canadian Work Experience) | Portuguese (Native)';
+}
+
+export function getLanguagesLabel(lang: AppLanguage): string {
+  if (lang === 'PT') return 'Idiomas';
+  if (lang === 'FR') return 'Langues';
+  if (lang === 'ES') return 'Idiomas';
+  return 'Languages';
 }
 
 export function getProfileSummary(lang: AppLanguage): string {
   if (lang === 'PT') return PROFILE_DATA.summaryPT;
   if (lang === 'ES') {
-    return 'Arquitecto de Sistemas e Ingeniero de Software Staff con más de 10 años de experiencia en ingeniería de datos, microservicios distribuidos, tolerancia a fallos y arquitectura dirigida por eventos (EDA). Especialista en eliminar latencias críticas en entornos transaccionales de alto volumen con estricto cumplimiento ACID.';
+    return 'Arquitecto de Sistemas y Staff Software Engineer con más de 15 años de experiencia en TI corporativa, sistemas de misión crítica y arquitecturas de alta disponibilidad y resiliencia. Sólida trayectoria en diagnósticos profundos de sistemas, recuperación de incidentes bajo SLAs inferiores a 1 hora para instituciones financieras Tier-1 y optimización de rendimiento en bases de datos corporativas, complementada por más de 3 años de liderazgo en TI y arquitectura de datos ERP en Toronto, Canadá. Actualmente enfocado en el desarrollo y la arquitectura de productos SaaS, aplicando patrones orientados a eventos (CQRS, Event Sourcing), seguridad Zero-Trust y explorando la integración de recursos de IA.';
   }
   if (lang === 'FR') {
-    return "Architecte de Systèmes et Ingénieur Logiciel Staff avec plus de 10 ans d'expérience en ingénierie des données, microservices distribués, tolérance aux pannes et architectures orientées événements (EDA). Spécialiste de l'élimination des latences critiques dans les environnements transactionnels à haut débit sous stricte conformité ACID.";
+    return "Architecte Systèmes & Staff Software Engineer avec plus de 15 ans d'expérience dans l'IT d'entreprise, les environnements de mission critique et les architectures de haute disponibilité et résilience. Solide expertise en diagnostics approfondis de systèmes, résolution d'incidents sous SLA stricts de moins d'une heure pour des institutions financières Tier-1 et optimisation de performance des bases de données d'entreprise, complétée par plus de 3 ans de leadership IT et d'architecture de données ERP à Toronto, Canada. Actuellement dédié au développement et à l'architecture de produits SaaS, appliquant les paradigmes orientés événements (CQRS, Event Sourcing), la sécurité Zero-Trust et explorant l'intégration de capacités d'IA.";
   }
   return PROFILE_DATA.summary;
 }
@@ -86,8 +97,10 @@ export function generateMarkdownResume(lang: AppLanguage, isAuthenticated: boole
   return `# Thales Everardo
 **${getProfileTitle(lang)}**
 
-📧 ${isAuthenticated ? email : '[Protected - Sign-In Required]'} | 📱 ${isAuthenticated ? phone : '[Protected - Sign-In Required]'} | 📍 ${getProfileLocation(lang)}
-🔗 [GitHub](${PROFILE_DATA.github}) | 🔗 [LinkedIn](${PROFILE_DATA.linkedin})
+📍 ${getProfileLocation(lang)}
+📧 ${isAuthenticated ? email : '[Protected - Sign-In Required]'} | 📱 ${isAuthenticated ? phone : '[Protected - Sign-In Required]'}
+🔗 [LinkedIn](${PROFILE_DATA.linkedin}) | 🔗 [GitHub](${PROFILE_DATA.github})
+🌐 ${getLanguagesLabel(lang)}: ${getLanguagesSummary(lang)}
 
 ---
 

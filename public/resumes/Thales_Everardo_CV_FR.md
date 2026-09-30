@@ -1,17 +1,19 @@
 # Thales Everardo
-**Ingénieur Logiciel Staff & Architecte de Systèmes**
+**Staff Software Engineer | Principal Systems Architect**
 
-Email: [Protected - Login Required] | Tél: [Available via Portfolio Handshake] | São Paulo, Brésil
-GitHub: https://github.com/thaleseverardo | LinkedIn: https://linkedin.com/in/thaleseverardo
+São Paulo, Brésil & Toronto, ON (Ancien Résident | Relocalisation au Canada)
+Email: Protected via Portfolio Auth Gate | Tél: Protected via Portfolio Auth Gate
+LinkedIn: https://linkedin.com/in/thaleseverardo | GitHub: https://github.com/thaleseverardo
+Langues: Anglais (Courant — 3+ Ans d'Expérience Professionnelle au Canada) | Portugais (Natif)
 
 ---
 
 ## RÉSUMÉ PROFESSIONNEL
-Architecte de Systèmes et Ingénieur Logiciel Staff avec plus de 10 ans d'expérience en ingénierie des données, microservices distribués, tolérance aux pannes et architectures orientées événements (EDA). Spécialiste de l'élimination des latences critiques dans les environnements transactionnels à haut débit sous stricte conformité ACID.
+Architecte Systèmes & Staff Software Engineer avec plus de 15 ans d'expérience dans l'IT d'entreprise, les environnements de mission critique et les architectures de haute disponibilité et résilience. Solide expertise en diagnostics approfondis de systèmes, résolution d'incidents sous SLA stricts de moins d'une heure pour des institutions financières Tier-1 et optimisation de performance des bases de données d'entreprise, complétée par plus de 3 ans de leadership IT et d'architecture de données ERP à Toronto, Canada. Actuellement dédié au développement et à l'architecture de produits SaaS, appliquant les paradigmes orientés événements (CQRS, Event Sourcing), la sécurité Zero-Trust et explorant l'intégration de capacités d'IA.
 
 ---
 
-## EXPÉRIENCE ARCHITECTURALE EN PRODUCTION
+## EXPÉRIENCE PROFESSIONNELLE
 ### [01] Consórcio Magalu — Ingénieur Logiciel Senior / Architecte
 *05/2024 - Présent | São Paulo, Brésil*
 

@@ -10,8 +10,8 @@ export const LOCALIZED_LANGUAGE_NAMES: Record<AppLanguage, Record<AppLanguage, s
 export const TRANSLATIONS = {
   PT: {
     // Header & Navegação
-    'nav.staffTitle': 'Engenheiro de Software Staff',
-    'nav.architectTitle': 'Arquiteto de Sistemas',
+    'nav.staffTitle': 'Staff Software Engineer',
+    'nav.architectTitle': 'Principal Systems Architect',
     'nav.filterPlaceholder': 'Filtrar por stack, banco ou arquitetura...',
     'nav.graphView': 'Grafo',
     'nav.timelineView': 'Linha do Tempo',
@@ -167,8 +167,8 @@ export const TRANSLATIONS = {
     'resume.copied': 'COPIADO',
     'resume.print': 'IMPRIMIR',
     'resume.savePdf': 'BAIXAR PDF',
-    'resume.executiveSummary': 'RESUMO EXECUTIVO',
-    'resume.coreExperience': 'EXPERIÊNCIA ARQUITETURAL EM PRODUÇÃO',
+    'resume.executiveSummary': 'RESUMO PROFISSIONAL',
+    'resume.coreExperience': 'EXPERIÊNCIA PROFISSIONAL',
     'resume.educationCert': 'FORMAÇÃO ACADÊMICA & CERTIFICAÇÕES',
     'resume.businessRoi': 'Impacto Comercial:',
     'resume.engineeringFeat': 'Feito Técnico:',
@@ -260,7 +260,7 @@ export const TRANSLATIONS = {
   EN: {
     // Header & Navigation
     'nav.staffTitle': 'Staff Software Engineer',
-    'nav.architectTitle': 'Systems Architect',
+    'nav.architectTitle': 'Principal Systems Architect',
     'nav.filterPlaceholder': 'Filter by stack, database or architecture...',
     'nav.graphView': 'Graph',
     'nav.timelineView': 'Timeline',
@@ -411,7 +411,7 @@ export const TRANSLATIONS = {
     'resume.print': 'PRINT',
     'resume.savePdf': 'DOWNLOAD PDF',
     'resume.executiveSummary': 'PROFESSIONAL SUMMARY',
-    'resume.coreExperience': 'CORE ARCHITECTURAL EXPERIENCE',
+    'resume.coreExperience': 'PROFESSIONAL EXPERIENCE',
     'resume.educationCert': 'EDUCATION & CERTIFICATIONS',
     'resume.businessRoi': 'Business ROI:',
     'resume.engineeringFeat': 'Engineering Feat:',
@@ -502,8 +502,8 @@ export const TRANSLATIONS = {
   },
   ES: {
     // Header & Navegación
-    'nav.staffTitle': 'Ingeniero de Software Staff',
-    'nav.architectTitle': 'Arquitecto de Sistemas',
+    'nav.staffTitle': 'Staff Software Engineer',
+    'nav.architectTitle': 'Principal Systems Architect',
     'nav.filterPlaceholder': 'Filtrar por stack, base de datos o arquitectura...',
     'nav.graphView': 'Grafo',
     'nav.timelineView': 'Cronología',
@@ -653,8 +653,8 @@ export const TRANSLATIONS = {
     'resume.copied': 'COPIADO',
     'resume.print': 'IMPRIMIR',
     'resume.savePdf': 'DESCARGAR PDF',
-    'resume.executiveSummary': 'RESUMEN PROFESIONAL',
-    'resume.coreExperience': 'EXPERIENCIA ARQUITETÓNICA EN PRODUCCIÓN',
+    'resume.executiveSummary': 'PERFIL PROFESIONAL',
+    'resume.coreExperience': 'EXPERIENCIA PROFESIONAL',
     'resume.educationCert': 'EDUCACIÓN Y CERTIFICACIONES',
     'resume.businessRoi': 'Impacto Comercial:',
     'resume.engineeringFeat': 'Logro Técnico:',
@@ -745,8 +745,8 @@ export const TRANSLATIONS = {
   },
   FR: {
     // Header & Navigation
-    'nav.staffTitle': 'Ingénieur Logiciel Staff',
-    'nav.architectTitle': 'Architecte Systèmes',
+    'nav.staffTitle': 'Staff Software Engineer',
+    'nav.architectTitle': 'Principal Systems Architect',
     'nav.filterPlaceholder': 'Filtrer par stack, base de données ou architecture...',
     'nav.graphView': 'Graphe',
     'nav.timelineView': 'Chronologie',
@@ -898,7 +898,7 @@ export const TRANSLATIONS = {
     'resume.print': 'IMPRIMIR',
     'resume.savePdf': 'TÉLÉCHARGER PDF',
     'resume.executiveSummary': 'RÉSUMÉ PROFESSIONNEL',
-    'resume.coreExperience': 'EXPÉRIENCE ARCHITECTURALE EN PRODUCTION',
+    'resume.coreExperience': 'EXPÉRIENCE PROFESSIONNELLE',
     'resume.educationCert': 'FORMATION & CERTIFICATIONS',
     'resume.businessRoi': 'Impact Commercial :',
     'resume.engineeringFeat': 'Prouesse Technique :',

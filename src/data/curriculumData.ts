@@ -464,8 +464,8 @@ export const CURRICULUM_NODES: ArchitectureNode[] = [
 
 export const PROFILE_DATA = {
   name: 'Thales Everardo Albuquerque Reis',
-  title: 'Staff Software Engineer & Systems Architect',
-  titlePT: 'Engenheiro de Software Staff & Arquiteto de Sistemas',
+  title: 'Staff Software Engineer | Principal Systems Architect',
+  titlePT: 'Staff Software Engineer | Principal Systems Architect',
   location: 'São Paulo, Brazil',
   email: 'email@gmail.com',
   github: 'https://github.com/thaleseverardo',

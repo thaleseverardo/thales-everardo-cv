@@ -260,11 +260,11 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               />
             </div>
             <div className="min-w-0">
-              <span className="font-sans font-bold text-[15px] sm:text-base tracking-tight block truncate text-zinc-900 dark:text-zinc-100 leading-snug">
-                Thales Everardo Albuquerque Reis
+              <span className="font-sans font-bold text-[15px] sm:text-base tracking-tight block text-zinc-900 dark:text-zinc-100 leading-snug truncate">
+                Thales Everardo
               </span>
               <div className="text-[11px] font-sans opacity-70 leading-tight flex items-center gap-1 truncate pt-0.5">
-                <span className="font-medium text-blue-600 dark:text-cyan-400 truncate">Staff Engineer</span>
+                <span className="font-medium text-blue-600 dark:text-cyan-400">Staff Engineer</span>
                 <span className="opacity-40">•</span>
                 <span className="truncate">{t(language, 'nav.architectTitle')}</span>
               </div>

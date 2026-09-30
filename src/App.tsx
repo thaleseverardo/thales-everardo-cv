@@ -106,29 +106,28 @@ const ViewFallbackSkeleton: React.FC<{ theme: AppTheme }> = ({ theme }) => (
 
 export default function App() {
   const [systemState, setSystemState] = useState<SystemState>(() => {
-    const isMobileScreen = typeof window !== 'undefined' && window.innerWidth < 768;
-    
-    // Detecção direta de rota e idioma na URL para indexação e acesso direto
-    let initialLayout: ViewLayout = isMobileScreen ? 'TIMELINE' : 'GRAPH';
+    // Currículo oficial como página inicial padrão absoluta (Recruiter-First)
+    let initialLayout: ViewLayout = 'RESUME';
     const detectedLang = parseLanguageFromUrl();
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.toLowerCase();
-      const path = window.location.pathname.toLowerCase();
       const search = new URLSearchParams(window.location.search);
-      if (
-        hash.includes('curriculo') ||
-        hash.includes('cv') ||
-        hash.includes('resume') ||
-        path.endsWith('/curriculo') ||
-        path.endsWith('/curriculo/') ||
-        search.get('view') === 'resume' ||
-        search.get('view') === 'curriculo'
-      ) {
-        initialLayout = 'RESUME';
+      if (hash.includes('grafo') || hash.includes('graph') || search.get('view') === 'graph' || search.get('view') === 'grafo') {
+        initialLayout = 'GRAPH';
+      } else if (hash.includes('timeline') || search.get('view') === 'timeline') {
+        initialLayout = 'TIMELINE';
       } else if (hash.includes('artigos') || hash.includes('articles')) {
         initialLayout = 'ARTICLES';
       } else if (hash.includes('projetos') || hash.includes('projects')) {
         initialLayout = 'PROJECTS';
+      } else if (
+        hash.includes('curriculo') ||
+        hash.includes('cv') ||
+        hash.includes('resume') ||
+        search.get('view') === 'resume' ||
+        search.get('view') === 'curriculo'
+      ) {
+        initialLayout = 'RESUME';
       }
     }
 
@@ -174,6 +173,10 @@ export default function App() {
       if (window.location.hash !== targetHash) {
         window.history.replaceState(null, '', `${base}/${targetHash}`);
       }
+    } else if (systemState.viewLayout === 'GRAPH') {
+      if (window.location.hash !== '#/grafo') {
+        window.history.replaceState(null, '', `${base}/#/grafo`);
+      }
     } else if (systemState.viewLayout === 'TIMELINE') {
       if (window.location.hash !== '#/timeline') {
         window.history.replaceState(null, '', `${base}/#/timeline`);
@@ -187,10 +190,6 @@ export default function App() {
       const target = systemState.activeProjectSlug ? `#/projetos/${systemState.activeProjectSlug}` : '#/projetos';
       if (window.location.hash !== target) {
         window.history.replaceState(null, '', `${base}/${target}`);
-      }
-    } else {
-      if (window.location.hash.startsWith('#/curriculo') || window.location.hash === '#/timeline' || window.location.hash.startsWith('#/artigos') || window.location.hash.startsWith('#/projetos')) {
-        window.history.replaceState(null, '', `${base}/`);
       }
     }
   }, [systemState.viewLayout, systemState.language]);
@@ -225,9 +224,15 @@ export default function App() {
           activeProjectSlug: slug,
           ...(detectedLang ? { language: detectedLang } : {}),
         });
-      } else if (hash === '' || hash.includes('grafo') || hash.includes('graph')) {
+      } else if (hash.includes('grafo') || hash.includes('graph')) {
         updateState({
           viewLayout: 'GRAPH',
+          ...(detectedLang ? { language: detectedLang } : {}),
+        });
+      } else {
+        // Raiz ou ausência de rota: Currículo como padrão absoluto
+        updateState({
+          viewLayout: 'RESUME',
           ...(detectedLang ? { language: detectedLang } : {}),
         });
       }
