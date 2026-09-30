@@ -7,7 +7,7 @@ GitHub: https://github.com/thaleseverardo | LinkedIn: https://linkedin.com/in/th
 ---
 
 ## EXECUTIVE SUMMARY
-Systems Architect and Staff Software Engineer with over 10 years of experience in data engineering, distributed microservices, fault-tolerant computing, and event-driven architectures (EDA). Specialist in eliminating critical latencies in high-throughput transactional environments under strict ACID compliance.
+Systems Architect & Staff Software Engineer with 15+ years of experience across enterprise IT, mission-critical environments, and high-availability, resilient architectures. Proven track record in deep systems diagnostics, sub-1-hour SLA incident recovery for Tier-1 financial institutions, and enterprise database performance tuning (SQL Server/PostgreSQL), complemented by 3+ years of local IT leadership and ERP data architecture in Toronto, ON. Currently focused on SaaS product architecture and engineering, leveraging event-driven paradigms (CQRS, Event Sourcing), Zero-Trust security, and exploring AI-driven integrations.
 
 ---
 

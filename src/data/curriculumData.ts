@@ -471,9 +471,9 @@ export const PROFILE_DATA = {
   github: 'https://github.com/thaleseverardo',
   linkedin: 'https://linkedin.com/in/thaleseverardo',
   summary:
-    'Systems Architect and Staff Software Engineer with over 10 years of experience in data engineering, distributed microservices, fault-tolerant computing, and event-driven architectures (EDA). Specialist in eliminating critical latencies in high-throughput transactional environments under strict ACID compliance.',
+    'Systems Architect & Staff Software Engineer with 15+ years of experience across enterprise IT, mission-critical environments, and high-availability, resilient architectures. Proven track record in deep systems diagnostics, sub-1-hour SLA incident recovery for Tier-1 financial institutions, and enterprise database performance tuning, complemented by 3+ years of local IT leadership and ERP data architecture in Toronto, ON. Currently focused on SaaS product architecture and engineering, leveraging event-driven paradigms (CQRS, Event Sourcing), Zero-Trust security, and exploring AI-driven integrations.',
   summaryPT:
-    'Arquiteto de Sistemas e Engenheiro de Software Staff com mais de 10 anos de experiência em engenharia de dados, microsserviços distribuídos, computação tolerante a falhas e arquiteturas orientadas a eventos (EDA). Especialista na eliminação de latências críticas em ambientes com alta volumetria transacional e conformidade ACID.',
+    'Arquiteto de Sistemas e Staff Software Engineer com mais de 15 anos de experiência em TI corporativa, sistemas de missão crítica e arquiteturas de alta disponibilidade e resiliência. Sólida atuação em diagnósticos profundos de sistemas, recuperação de incidentes sob SLAs inferiores a 1 hora para instituições financeiras Tier-1 e otimização de performance em bancos de dados corporativos, complementada por mais de 3 anos de liderança em TI e arquitetura de dados ERP em Toronto, Canadá. Atualmente dedicado ao desenvolvimento e arquitetura de produtos SaaS, aplicando padrões orientados a eventos (CQRS, Event Sourcing), segurança Zero-Trust e explorando a integração de recursos de IA.',
 
   // ==========================================
   // KPIS DE FORMAÇÃO & CERTIFICAÇÃO AUDITADA

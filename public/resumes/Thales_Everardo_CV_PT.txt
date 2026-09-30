@@ -5,7 +5,7 @@ GitHub: https://github.com/thaleseverardo | LinkedIn: https://linkedin.com/in/th
 ============================================================
 RESUMO EXECUTIVO
 ============================================================
-Arquiteto de Sistemas e Engenheiro de Software Staff com mais de 10 anos de experiência em engenharia de dados, microsserviços distribuídos, computação tolerante a falhas e arquiteturas orientadas a eventos (EDA). Especialista na eliminação de latências críticas em ambientes com alta volumetria transacional e conformidade ACID.
+Arquiteto de Sistemas e Staff Software Engineer com mais de 15 anos de experiência em TI corporativa, sistemas de missão crítica e arquiteturas de alta disponibilidade e resiliência. Sólida atuação em diagnósticos profundos de sistemas, recuperação de incidentes sob SLAs inferiores a 1 hora para instituições financeiras Tier-1 e otimização de performance em bancos de dados corporativos, complementada por mais de 3 anos de liderança em TI e arquitetura de dados ERP em Toronto, Canadá. Atualmente dedicado ao desenvolvimento e arquitetura de produtos SaaS, aplicando padrões orientados a eventos (CQRS, Event Sourcing), segurança Zero-Trust e explorando a integração de recursos de IA.
 
 ============================================================
 EXPERIÊNCIA ARQUITETURAL EM PRODUÇÃO
