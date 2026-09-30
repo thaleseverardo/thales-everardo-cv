@@ -549,12 +549,12 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
           <div className="hidden print:flex flex-wrap items-center gap-x-2 gap-y-1 text-[9pt] font-sans text-zinc-700 mt-1.5">
             <span className="inline-flex items-center gap-1">
               <Mail className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
-              <span>{email || 'thales.everardo@gmail.com'}</span>
+              <span>{email || 'thales••••••@•••••.com'}</span>
             </span>
             <span className="text-zinc-400 select-none">|</span>
             <span className="inline-flex items-center gap-1">
               <Phone className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
-              <span>{phone || '+55 11 96296 9508'}</span>
+              <span>{phone || '+55 11 9••••-••••'}</span>
             </span>
             <span className="text-zinc-400 select-none">|</span>
             <span className="inline-flex items-center gap-1">
@@ -849,36 +849,56 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
             </h2>
 
             <div className="space-y-3 text-xs sm:text-[13px]">
-              {PROFILE_DATA.academicDegrees.map((deg) => (
-                <div key={deg.id} className="space-y-1">
-                  <div className="flex flex-col sm:flex-row sm:items-baseline justify-between font-bold gap-1">
-                    <div className="text-zinc-900 dark:text-zinc-100 print:text-black">
-                      <span>{language === 'PT' ? deg.degreeName : deg.degreeNameEN}</span>
-                      <span className="opacity-40 font-normal mx-1.5">—</span>
-                      <span className="text-zinc-700 dark:text-zinc-300 font-medium print:text-black">{deg.institution}</span>
+              {PROFILE_DATA.academicDegrees.map((deg) => {
+                const degreeTitle =
+                  language === 'PT'
+                    ? deg.degreeName
+                    : language === 'FR'
+                    ? deg.degreeNameFR || deg.degreeNameEN
+                    : language === 'ES'
+                    ? deg.degreeNameES || deg.degreeNameEN
+                    : deg.degreeNameEN;
+
+                const degreeFocus =
+                  language === 'PT'
+                    ? deg.focus
+                    : language === 'FR'
+                    ? deg.focusFR || deg.focusEN
+                    : language === 'ES'
+                    ? deg.focusES || deg.focusEN
+                    : deg.focusEN;
+
+                return (
+                  <div key={deg.id} className="space-y-1">
+                    <div className="flex flex-col sm:flex-row sm:items-baseline justify-between font-bold gap-1">
+                      <div className="text-zinc-900 dark:text-zinc-100 print:text-black">
+                        <span>{degreeTitle}</span>
+                        <span className="opacity-40 font-normal mx-1.5">—</span>
+                        <span className="text-zinc-700 dark:text-zinc-300 font-medium print:text-black">{deg.institution}</span>
+                      </div>
+                      <span className="font-mono text-[11px] opacity-70 shrink-0">{deg.period}</span>
                     </div>
-                    <span className="font-mono text-[11px] opacity-70 shrink-0">{deg.period}</span>
+
+                    {deg.status === 'IN_PROGRESS' && (
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                        {t(language, 'academic.inProgressBadge')}
+                      </span>
+                    )}
+
+                    {deg.internationalEquivalency && (
+                      <div className="mt-1 p-1.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-mono text-[10px] font-semibold flex items-center gap-1.5 w-fit">
+                        <span>🇨🇦</span>
+                        <span>WES Canadian Equivalency: {deg.internationalEquivalency.canadianEquivalency}</span>
+                      </div>
+                    )}
+
+                    <p className="opacity-80 text-xs text-zinc-600 dark:text-zinc-400 leading-normal pt-0.5">
+                      {degreeFocus}
+                    </p>
                   </div>
-
-                  {deg.status === 'IN_PROGRESS' && (
-                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-                      {t(language, 'academic.inProgressBadge')}
-                    </span>
-                  )}
-
-                  {deg.internationalEquivalency && (
-                    <div className="mt-1 p-1.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-mono text-[10px] font-semibold flex items-center gap-1.5 w-fit">
-                      <span>🇨🇦</span>
-                      <span>WES Canadian Equivalency: {deg.internationalEquivalency.canadianEquivalency}</span>
-                    </div>
-                  )}
-
-                  <p className="opacity-80 text-xs text-zinc-600 dark:text-zinc-400 leading-normal pt-0.5">
-                    {language === 'PT' ? deg.focus : deg.focusEN}
-                  </p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
@@ -895,29 +915,41 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
             </h2>
 
             <div className="space-y-1.5 text-xs sm:text-[12.5px] leading-relaxed text-zinc-700 dark:text-zinc-300">
-              <p>
-                <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
-                  {language === 'PT' ? 'Arquitetura & Padrões:' : language === 'FR' ? 'Architectures & Patterns :' : language === 'ES' ? 'Arquitectura y Patrones:' : 'Architectures & Patterns:'}
-                </strong>{' '}
-                Event-Driven Architecture (EDA), Distributed Microservices, Domain-Driven Design (DDD), CQRS, Transactional Outbox Pattern, Zero-Trust Security, High Availability, Disaster Recovery (DR/BCP), ACID Compliance.
+              <p className="flex items-start gap-1.5">
+                <span className="text-zinc-400 select-none shrink-0">•</span>
+                <span>
+                  <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
+                    {language === 'PT' ? 'Arquitetura & Padrões:' : language === 'FR' ? 'Architectures & Patterns :' : language === 'ES' ? 'Arquitectura y Patrones:' : 'Architectures & Patterns:'}
+                  </strong>{' '}
+                  Event-Driven Architecture (EDA), Distributed Microservices, Domain-Driven Design (DDD), CQRS, Transactional Outbox Pattern, Zero-Trust Security, High Availability, Disaster Recovery (DR/BCP), ACID Compliance.
+                </span>
               </p>
-              <p>
-                <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
-                  {language === 'PT' ? 'Linguagens & Frameworks:' : language === 'FR' ? 'Langages & Frameworks :' : language === 'ES' ? 'Lenguajes y Frameworks:' : 'Languages & Frameworks:'}
-                </strong>{' '}
-                C#, .NET Core, .NET Framework, Python, TypeScript, SQL (T-SQL, PL/SQL), Java, Bash/Shell Scripting, Entity Framework, ASP.NET Core RESTful APIs.
+              <p className="flex items-start gap-1.5">
+                <span className="text-zinc-400 select-none shrink-0">•</span>
+                <span>
+                  <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
+                    {language === 'PT' ? 'Linguagens & Frameworks:' : language === 'FR' ? 'Langages & Frameworks :' : language === 'ES' ? 'Lenguajes y Frameworks:' : 'Languages & Frameworks:'}
+                  </strong>{' '}
+                  C#, .NET Core, .NET Framework, Python, TypeScript, SQL (T-SQL, PL/SQL), Java, Bash/Shell Scripting, Entity Framework, ASP.NET Core RESTful APIs.
+                </span>
               </p>
-              <p>
-                <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
-                  {language === 'PT' ? 'Bancos de Dados & Mensageria:' : language === 'FR' ? 'Bases de Données & Messagerie :' : language === 'ES' ? 'Bases de Datos y Mensajería:' : 'Databases & Messaging:'}
-                </strong>{' '}
-                Microsoft SQL Server, PostgreSQL, Sybase SQL Anywhere, Oracle DB, Apache Kafka, RabbitMQ, Clustered Index Tuning, Table Partitioning, Query Optimization, Transaction Log Management, ETL Pipelines.
+              <p className="flex items-start gap-1.5">
+                <span className="text-zinc-400 select-none shrink-0">•</span>
+                <span>
+                  <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
+                    {language === 'PT' ? 'Bancos de Dados & Mensageria:' : language === 'FR' ? 'Bases de Données & Messagerie :' : language === 'ES' ? 'Bases de Datos y Mensajería:' : 'Databases & Messaging:'}
+                  </strong>{' '}
+                  Microsoft SQL Server, PostgreSQL, Sybase SQL Anywhere, Oracle DB, Apache Kafka, RabbitMQ, Clustered Index Tuning, Table Partitioning, Query Optimization, Transaction Log Management, ETL Pipelines.
+                </span>
               </p>
-              <p>
-                <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
-                  {language === 'PT' ? 'DevOps, Infraestrutura & SO:' : language === 'FR' ? 'DevOps, Infrastructure & OS :' : language === 'ES' ? 'DevOps, Infraestructura y SO:' : 'DevOps, Infrastructure & OS:'}
-                </strong>{' '}
-                Docker, Kubernetes, Linux System Internals (Kernel, Networking, SysAdmin), Active Directory, LDAP, CI/CD, Computer Telephony Integration (CTI, SIP/VoIP).
+              <p className="flex items-start gap-1.5">
+                <span className="text-zinc-400 select-none shrink-0">•</span>
+                <span>
+                  <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
+                    {language === 'PT' ? 'DevOps, Infraestrutura & SO:' : language === 'FR' ? 'DevOps, Infrastructure & OS :' : language === 'ES' ? 'DevOps, Infraestructura y SO:' : 'DevOps, Infrastructure & OS:'}
+                  </strong>{' '}
+                  Docker, Kubernetes, Linux System Internals (Kernel, Networking, SysAdmin), Active Directory, LDAP, CI/CD, Computer Telephony Integration (CTI, SIP/VoIP).
+                </span>
               </p>
             </div>
           </div>
@@ -952,7 +984,13 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                 <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
                   {language === 'PT' ? 'Certificações & Especializações:' : language === 'FR' ? 'Certifications & Spécialisations :' : language === 'ES' ? 'Certificaciones y Especializaciones:' : 'Certifications & Specialized Tracks:'}
                 </strong>{' '}
-                Formação Especialista Linux (Admin, Network Servers & Security — 4Linux) · SQL Tuning & Query Optimization (MSSQL/Oracle) · GoF Design Patterns & Clean Architecture in C# · GitFlow & Continuous Integration
+                {language === 'PT'
+                  ? 'Formação Especialista Linux (Admin, Network Servers & Security — 4Linux) · SQL Tuning & Otimização de Queries (MSSQL/Oracle) · Padrões de Projeto GoF e Clean Architecture em C# · GitFlow & Integração Contínua'
+                  : language === 'FR'
+                  ? 'Certification Spécialiste Linux (Admin, Serveurs Réseau & Sécurité — 4Linux) · Tuning SQL & Optimisation de Requêtes (MSSQL/Oracle) · Design Patterns GoF & Clean Architecture en C# · GitFlow & Intégration Continue'
+                  : language === 'ES'
+                  ? 'Certificación Especialista Linux (Admin, Servidores de Red y Seguridad — 4Linux) · SQL Tuning y Optimización de Consultas (MSSQL/Oracle) · Patrones de Diseño GoF y Clean Architecture en C# · GitFlow e Integración Continua'
+                  : 'Linux Specialist Certification (Admin, Network Servers & Security — 4Linux) · SQL Tuning & Query Optimization (MSSQL/Oracle) · GoF Design Patterns & Clean Architecture in C# · GitFlow & Continuous Integration'}
               </p>
             </div>
           </div>
