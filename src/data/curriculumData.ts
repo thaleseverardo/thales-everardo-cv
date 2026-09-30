@@ -500,7 +500,7 @@ export const PROFILE_DATA = {
       degreeNameFR: 'Licence en Informatique / Science Informatique',
       level: 'BACHELOR',
       status: 'IN_PROGRESS',
-      period: '2024 – 2026',
+      period: 'Concluded',
       startYear: 2024,
       endYear: 2026,
       expectedYear: 2026,
@@ -807,7 +807,7 @@ export const PROFILE_DATA = {
 
     // Campo retrocompatível com chamadas legadas
   education: [
-    { degree: 'Bachelor of Science in Computer Science', degreePT: 'Bacharelado em Ciência da Computação (Previsão 2026)', institution: 'Universidade Estácio', period: '2024 – 2026', focus: 'Distributed Systems, Parallel Computing, Compilers, Graph Algorithms', focusPT: 'Sistemas Distribuídos, Computação Paralela, Compiladores, Algoritmos em Grafos' },
+    { degree: 'Bachelor of Science in Computer Science', degreePT: 'Bacharelado em Ciência da Computação (Previsão 2026)', institution: 'Universidade Estácio', period: 'Concluded', focus: 'Distributed Systems, Parallel Computing, Compilers, Graph Algorithms', focusPT: 'Sistemas Distribuídos, Computação Paralela, Compiladores, Algoritmos em Grafos' },
     { degree: 'Postgraduate Degree in Interactive Systems & Unity 3D', degreePT: 'Pós-Graduação em Sistemas Interativos & Unity 3D', institution: 'Pontifícia Universidade Católica de São Paulo (PUC-SP)', period: '2016', focus: 'Software Architecture in C#, .NET Framework, System Mechanics, Simulation', focusPT: 'Arquitetura de Software em C#, .NET Framework, Mecânicas de Sistemas' },
     { degree: 'Associate Degree in Game Development (WES Canadian Equivalency)', degreePT: 'Graduação Tecnológica em Jogos Digitais (🇨🇦 WES Equivalência Canadá)', institution: 'Universidade Cruzeiro do Sul', period: '2013 – 2014', focus: 'Framerate Optimization, Vector Math, Memory Management, C#, T-SQL', focusPT: 'Otimização de Memória, Matemática Vetorial, Física de Sistemas, C#' },
     { degree: 'Computer Science (Core Foundations)', degreePT: 'Ciência da Computação (Ciclo Fundamental)', institution: 'Universidade Cruzeiro do Sul', period: '2005 – 2008', focus: 'Data Structures, Advanced Algorithms, Database Theory, T-SQL, Java', focusPT: 'Estruturas de Dados, Algoritmos, Teoria de Banco de Dados, T-SQL' },

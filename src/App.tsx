@@ -26,6 +26,9 @@ const ArticlesView = lazy(() =>
 const ProjectsView = lazy(() =>
   import('./components/templates/ProjectsView').then((m) => ({ default: m.ProjectsView }))
 );
+const MobileContactModal = lazy(() =>
+  import('./components/molecules/MobileContactModal').then((m) => ({ default: m.MobileContactModal }))
+);
 const ContactAuthModal = lazy(() =>
   import('./components/organisms/ContactAuthModal').then((m) => ({ default: m.ContactAuthModal }))
 );
@@ -41,10 +44,14 @@ function parseLanguageFromUrl(): AppLanguage | null {
   if (langParam && ['PT', 'EN', 'ES', 'FR'].includes(langParam)) {
     return langParam as AppLanguage;
   }
-  if (hash.includes('/pt') || hash.endsWith('pt')) return 'PT';
-  if (hash.includes('/en') || hash.endsWith('en')) return 'EN';
-  if (hash.includes('/es') || hash.endsWith('es')) return 'ES';
-  if (hash.includes('/fr') || hash.endsWith('fr')) return 'FR';
+  // Isola segmentos de rota limpos para evitar que palavras terminadas em 'es' (ex: principles) ativem espanhol
+  const segments = hash.replace(/^#\/?/, '').split('?')[0].split('/');
+  for (const seg of segments) {
+    if (seg === 'pt') return 'PT';
+    if (seg === 'en') return 'EN';
+    if (seg === 'es') return 'ES';
+    if (seg === 'fr') return 'FR';
+  }
   return null;
 }
 
@@ -99,7 +106,7 @@ const ViewFallbackSkeleton: React.FC<{ theme: AppTheme }> = ({ theme }) => (
   >
     <div className="w-9 h-9 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mb-3" />
     <span className="text-[11px] font-mono font-semibold tracking-wider text-slate-500 dark:text-zinc-400">
-      CARREGANDO ARQUITETURA...
+      LOADING ARCHITECTURE...
     </span>
   </div>
 );
@@ -150,6 +157,7 @@ export default function App() {
   });
 
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const [isMobileContactOpen, setIsMobileContactOpen] = useState(false);
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
 
   const updateState = useCallback((updates: Partial<SystemState>) => {
@@ -253,14 +261,15 @@ export default function App() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        if (isContactOpen) setIsContactOpen(false);
+        if (isMobileContactOpen) setIsMobileContactOpen(false);
+        else if (isContactOpen) setIsContactOpen(false);
         else if (isPrivacyOpen) setIsPrivacyOpen(false);
         else if (systemState.activeNodeId) updateState({ activeNodeId: null });
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isContactOpen, isPrivacyOpen, systemState.activeNodeId, updateState]);
+  }, [isMobileContactOpen, isContactOpen, isPrivacyOpen, systemState.activeNodeId, updateState]);
 
   return (
     <div
@@ -293,7 +302,7 @@ export default function App() {
           onSelectView={(layout) => updateState({ viewLayout: layout })}
           language={systemState.language}
           theme={systemState.theme}
-          onOpenContact={() => setIsContactOpen(true)}
+          onOpenContact={() => setIsMobileContactOpen(true)}
         />
 
         {/* CONTAINER COM SCROLL INTERNO DEDICADO (SEM NENHUM SCROLL HORIZONTAL DA JANELA) */}
@@ -381,11 +390,28 @@ export default function App() {
         }}
       />
 
+      {isMobileContactOpen && (
+        <Suspense fallback={null}>
+          <MobileContactModal
+            isOpen={isMobileContactOpen}
+            onClose={() => setIsMobileContactOpen(false)}
+            onOpenAuth={() => setIsContactOpen(true)}
+            language={systemState.language}
+            theme={systemState.theme}
+          />
+        </Suspense>
+      )}
+
       {isContactOpen && (
         <Suspense fallback={null}>
           <ContactAuthModal
             isOpen={isContactOpen}
             onClose={() => setIsContactOpen(false)}
+            onSuccess={() => {
+              if (typeof window !== 'undefined' && window.innerWidth < 768) {
+                setIsMobileContactOpen(true);
+              }
+            }}
             language={systemState.language}
             theme={systemState.theme}
           />

@@ -98,7 +98,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
           ========================================================================= */}
       <aside
         ref={sidebarRef}
-        aria-label="Navegação de Vistas"
+        aria-label={t(language, 'sidebar.navAriaLabel')}
         className={`hidden md:flex relative shrink-0 h-full select-none transition-[width] duration-200 ease-in-out flex-col print:hidden border-r z-30 overflow-hidden ${
           isCollapsed
             ? 'w-14 sm:w-16 shadow-none'
@@ -362,7 +362,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
           2. MOBILE BOTTOM TAB BAR (< 768px) - PADRÃO NATIVO iOS / SPOTIFY / LINEAR
           ========================================================================= */}
       <nav
-        aria-label="Navegação Inferior Mobile"
+        aria-label={t(language, 'sidebar.mobileNavAriaLabel')}
         className={`md:hidden fixed bottom-0 left-0 right-0 z-40 border-t flex items-center justify-around px-2 pt-1.5 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] backdrop-blur-xl select-none ${
           theme === 'dark'
             ? 'bg-[#0d0d11]/95 border-zinc-800/80 text-zinc-400'

@@ -17,11 +17,13 @@ export const AuthContactGate: React.FC<AuthContactGateProps> = ({ language, them
   const email = contact?.email || '';
   const phone = contact?.phone || '';
 
-  const handleCopy = (text: string, field: 'email' | 'phone') => {
+  const handleCopy = async (text: string, field: 'email' | 'phone') => {
     if (!text) return;
-    navigator.clipboard.writeText(text);
-    setCopiedField(field);
-    setTimeout(() => setCopiedField(null), 2000);
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedField(field);
+      setTimeout(() => setCopiedField(null), 2000);
+    } catch {}
   };
 
   if (!isAuthenticated) {
@@ -200,7 +202,7 @@ export const AuthContactGate: React.FC<AuthContactGateProps> = ({ language, them
               await revokeAccessAndPurgeUserData(user);
             }}
             className="hover:underline text-[10px] text-zinc-500 hover:text-rose-500 transition-colors cursor-pointer"
-            title="Excluir dados da sessão conforme Art. 18 da LGPD"
+            title={t(language, 'auth.revokeDataTooltip')}
           >
             {t(language, 'auth.revokeData')}
           </button>

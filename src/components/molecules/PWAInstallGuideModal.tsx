@@ -21,17 +21,26 @@ export const PWAInstallGuideModal: React.FC<PWAInstallGuideModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-70 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 font-sans animate-in fade-in duration-150">
+    <div
+      role="dialog"
+      aria-modal="true"
+      className="fixed inset-0 z-70 flex items-center justify-center p-0 md:p-4 bg-black/80 font-sans animate-in fade-in duration-150"
+    >
       <div
-        className={`w-full max-w-sm rounded-2xl p-5 shadow-2xl border ${
+        className={`w-full h-dvh md:h-auto md:max-h-[90vh] md:max-w-sm rounded-none md:rounded-2xl border-0 md:border flex flex-col overflow-hidden shadow-2xl ${
           theme === 'dark'
-            ? 'bg-zinc-950 border-zinc-800 text-zinc-100 shadow-black/90'
-            : 'bg-white border-zinc-200 text-zinc-900 shadow-zinc-300/40'
+            ? 'bg-zinc-950 md:border-zinc-800 text-zinc-100 shadow-black/90'
+            : 'bg-white md:border-zinc-200 text-zinc-900 shadow-zinc-300/40'
         }`}
       >
-        <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-zinc-800/80">
+        {/* CABEÇALHO COM SAFE-AREA */}
+        <div className="px-4 md:px-5 pt-[max(1rem,env(safe-area-inset-top,0px))] pb-3 md:py-3.5 border-b border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between shrink-0">
           <h3 className="text-sm font-bold flex items-center gap-2">
-            {isIOS ? <Smartphone className="w-4 h-4 text-emerald-500" /> : <DownloadCloud className="w-4 h-4 text-blue-600 dark:text-blue-400" />}
+            {isIOS ? (
+              <Smartphone className="w-4 h-4 text-emerald-500" />
+            ) : (
+              <DownloadCloud className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            )}
             <span>{isIOS ? t(language, 'pwa.iosTitle') : t(language, 'pwa.guideTitle')}</span>
           </h3>
           <button
@@ -43,7 +52,8 @@ export const PWAInstallGuideModal: React.FC<PWAInstallGuideModalProps> = ({
           </button>
         </div>
 
-        <div className="mt-4 space-y-3 text-xs">
+        {/* CORPO DE INSTRUÇÕES */}
+        <div className="p-4 sm:p-5 flex-1 overflow-y-auto space-y-3 text-xs">
           {isIOS ? (
             <>
               <div className="flex items-start gap-3 p-3 rounded-xl bg-zinc-50 border border-zinc-200 dark:bg-zinc-900/60 dark:border-zinc-800/80">
@@ -71,12 +81,15 @@ export const PWAInstallGuideModal: React.FC<PWAInstallGuideModalProps> = ({
           )}
         </div>
 
-        <button
-          onClick={onClose}
-          className="mt-5 w-full rounded-xl bg-blue-600 py-2.5 text-xs font-semibold text-white hover:bg-blue-500 transition-colors cursor-pointer"
-        >
-          {t(language, 'pwa.iosGotIt')}
-        </button>
+        {/* RODAPÉ COM SAFE-AREA */}
+        <div className="p-4 pb-[max(1rem,env(safe-area-inset-bottom,0px))] border-t border-zinc-100 dark:border-zinc-800/80 shrink-0">
+          <button
+            onClick={onClose}
+            className="w-full rounded-xl bg-blue-600 py-2.5 text-xs font-semibold text-white hover:bg-blue-500 transition-colors cursor-pointer shadow-xs active:scale-95"
+          >
+            {t(language, 'pwa.iosGotIt')}
+          </button>
+        </div>
       </div>
     </div>
   );

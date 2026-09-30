@@ -35,7 +35,7 @@ export function useAuth() {
     try {
       await signOutUser();
     } catch (e) {
-      console.warn('Aviso durante encerramento de sessão:', e);
+      console.warn('Warning during session sign-out:', e);
     }
   }, []);
 

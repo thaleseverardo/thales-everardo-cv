@@ -44,27 +44,38 @@ export const SystemCanvas: React.FC<SystemCanvasProps> = ({
   const isPT = language === 'PT';
 
   useEffect(() => {
-    const handleResize = () => {
-      if (containerRef.current) {
-        const clientWidth = containerRef.current.clientWidth || 1000;
-        const isMobile = clientWidth < 768;
-        const clientHeight = isMobile
-          ? 110 + CURRICULUM_NODES.length * 185
-          : Math.max(containerRef.current.clientHeight || 650, 560);
+    const el = containerRef.current;
+    if (!el) return;
 
-        setContainerSize({
-          width: clientWidth,
-          height: clientHeight,
-        });
-      }
+    const updateDimensions = () => {
+      const clientWidth = el.clientWidth || 1000;
+      // Sincroniza estritamente com o breakpoint do App Shell (768px de viewport real)
+      const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : clientWidth < 768;
+      const clientHeight = isMobile
+        ? 110 + CURRICULUM_NODES.length * 185
+        : Math.max(el.clientHeight || 650, 560);
+
+      setContainerSize({
+        width: clientWidth,
+        height: clientHeight,
+      });
     };
 
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    updateDimensions();
+
+    const observer = new ResizeObserver(() => {
+      updateDimensions();
+    });
+    observer.observe(el);
+
+    window.addEventListener('resize', updateDimensions);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', updateDimensions);
+    };
   }, []);
 
-  const isSmallScreen = containerSize.width < 768;
+  const isSmallScreen = typeof window !== 'undefined' ? window.innerWidth < 768 : containerSize.width < 768;
 
   const nodeCoordinates = useMemo(() => {
     const coords: Record<string, { x: number; y: number }> = {};

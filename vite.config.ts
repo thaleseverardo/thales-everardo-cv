@@ -138,7 +138,8 @@ export default defineConfig(({ mode }) => {
       },
     },
     esbuild: {
-      drop: isProd ? ['console', 'debugger'] : [],
+      drop: isProd ? ['debugger'] : [],
+      pure: isProd ? ['console.log'] : [],
       legalComments: 'none',
     },
     build: {

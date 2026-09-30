@@ -69,13 +69,20 @@ export function generateMarkdownResume(lang: AppLanguage, isAuthenticated: boole
   const degrees = PROFILE_DATA.academicDegrees.map((d) => {
     const name = lang === 'PT' ? d.degreeName : d.degreeNameEN;
     const focus = lang === 'PT' ? d.focus : d.focusEN;
-    const wes = d.internationalEquivalency ? `\n  🇨🇦 ${d.internationalEquivalency.badgeText}` : '';
+    const wesLabel = lang === 'PT' 
+      ? 'Equivalência WES Canadá' 
+      : lang === 'FR' 
+      ? 'Équivalence WES Canada' 
+      : lang === 'ES' 
+      ? 'Equivalencia WES Canadá' 
+      : 'WES Canadian Equivalency';
+    const wes = d.internationalEquivalency ? `\n  - ${wesLabel}: ${d.internationalEquivalency.canadianEquivalency}` : '';
     return `- **${name}** (${d.period}) — *${d.institution}*${wes}\n  ${focus}`;
   }).join('\n');
 
   const credentials = PROFILE_DATA.verifiedCredentials.map((c) => {
     const title = lang === 'PT' ? c.title : c.titleEN;
-    return `- **${title}** (${c.workloadHours}h) — *${c.institution}*\n  Hash Oficial: [${c.verificationUrl}](${c.verificationUrl})`;
+    return `- **${title}** (${c.workloadHours}h) — *${c.institution}*\n  ${lang === 'PT' ? 'Hash Oficial' : lang === 'FR' ? 'Hash Officiel' : lang === 'ES' ? 'Hash Oficial' : 'Official Hash'}: [${c.verificationUrl}](${c.verificationUrl})`;
   }).join('\n');
 
   const hardSkills = PROFILE_DATA.hardSkillsDomains.map((d) => {
@@ -94,11 +101,20 @@ export function generateMarkdownResume(lang: AppLanguage, isAuthenticated: boole
     return `- **${l.language}:** ${prof} (${l.cefrLevel})`;
   }).join('\n');
 
+const protectedNotice =
+    lang === 'PT'
+      ? '[Protegido - Autenticação Necessária]'
+      : lang === 'ES'
+      ? '[Protegido - Requiere Autenticación]'
+      : lang === 'FR'
+      ? '[Protégé - Authentification Requise]'
+      : '[Protected - Sign-In Required]';
+
   return `# Thales Everardo
 **${getProfileTitle(lang)}**
 
 📍 ${getProfileLocation(lang)}
-📧 ${isAuthenticated ? email : '[Protected - Sign-In Required]'} | 📱 ${isAuthenticated ? phone : '[Protected - Sign-In Required]'}
+📧 ${isAuthenticated ? email : protectedNotice} | 📱 ${isAuthenticated ? phone : protectedNotice}
 🔗 [LinkedIn](${PROFILE_DATA.linkedin}) | 🔗 [GitHub](${PROFILE_DATA.github})
 🌐 ${getLanguagesLabel(lang)}: ${getLanguagesSummary(lang)}
 

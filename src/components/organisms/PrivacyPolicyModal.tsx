@@ -32,12 +32,36 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
         alert(
           language === 'PT'
             ? 'Registros de sessão e credenciais expurgados definitivamente da base de dados.'
+            : language === 'ES'
+            ? 'Registros de sesión y credenciales purgados definitivamente de la base de datos.'
+            : language === 'FR'
+            ? 'Enregistrements de session et identifiants définitivement purgés de la base de données.'
             : 'Session records and credentials permanently erased from the database.'
         );
+        onClose();
+      } else {
+        alert(
+          language === 'PT'
+            ? 'Não foi possível concluir o expurgo de dados. Por favor, confirme a autenticação e tente novamente.'
+            : language === 'ES'
+            ? 'No fue posible completar la purga de datos. Vuelva a autenticarse e inténtelo de nuevo.'
+            : language === 'FR'
+            ? 'Impossible de finaliser la purge des données. Veuillez vous réauthentifier et réessayer.'
+            : 'Unable to complete data purge. Please re-authenticate and try again.'
+        );
       }
+    } catch {
+      alert(
+        language === 'PT'
+          ? 'Erro de comunicação ao solicitar exclusão. Tente novamente.'
+          : language === 'ES'
+          ? 'Error de comunicación al solicitar la eliminación. Inténtelo de nuevo.'
+          : language === 'FR'
+          ? 'Erreur de communication lors de la demande de suppression. Veuillez réessayer.'
+          : 'Communication error during purge request. Please try again.'
+      );
     } finally {
       setIsPurging(false);
-      onClose();
     }
   };
 
@@ -45,21 +69,21 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-6 bg-black/80 sm:backdrop-blur-xs font-sans animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-6 bg-black/80 md:backdrop-blur-xs font-sans animate-in fade-in duration-150"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       <div
-        className={`w-full h-dvh sm:h-auto sm:max-h-[90vh] sm:max-w-lg rounded-none sm:rounded-2xl border-0 sm:border flex flex-col overflow-hidden transition-all shadow-2xl ${
+        className={`w-full h-dvh md:h-auto md:max-h-[90vh] md:max-w-lg rounded-none md:rounded-2xl border-0 md:border flex flex-col overflow-hidden transition-all shadow-2xl ${
           theme === 'dark'
-            ? 'bg-zinc-950 sm:border-zinc-800 text-zinc-100 shadow-black/80'
-            : 'bg-white sm:border-zinc-200 text-zinc-900 shadow-zinc-300/40'
+            ? 'bg-zinc-950 md:border-zinc-800 text-zinc-100 shadow-black/80'
+            : 'bg-white md:border-zinc-200 text-zinc-900 shadow-zinc-300/40'
         }`}
       >
         {/* CABEÇALHO (COM SUPORTE A SAFE AREA NO MOBILE) */}
         <div
-          className={`px-5 sm:px-6 pt-[max(1.125rem,env(safe-area-inset-top,0px))] pb-4 sm:py-4 border-b flex items-start justify-between gap-3 shrink-0 ${
+          className={`px-5 md:px-6 pt-[max(1.125rem,env(safe-area-inset-top,0px))] pb-4 md:py-4 border-b flex items-start justify-between gap-3 shrink-0 ${
             theme === 'dark' ? 'border-zinc-800/80 bg-zinc-900/40' : 'border-zinc-100 bg-zinc-50/50'
           }`}
         >
@@ -81,7 +105,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({
           <button
             onClick={onClose}
             className="w-8 h-8 rounded-lg flex items-center justify-center text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer shrink-0 mt-0.5"
-            aria-label="Fechar"
+            aria-label={t(language, 'auth.close')}
           >
             <X className="w-4 h-4" />
           </button>

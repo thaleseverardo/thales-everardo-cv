@@ -50,7 +50,7 @@ if (typeof window !== 'undefined' && app) {
       try {
         analytics = getAnalytics(app);
       } catch (e) {
-        console.warn('Analytics não inicializado:', e);
+        console.warn('Analytics not initialized:', e);
       }
     }
   });
@@ -113,7 +113,7 @@ export async function signInWithGoogle(): Promise<AuthUser> {
   try {
     const result = await signInWithPopup(auth, provider);
     const user = mapFirebaseUser(result.user);
-    if (!user) throw new Error('Falha ao processar login do Google.');
+    if (!user) throw new Error('Failed to process Google sign-in.');
     currentUser = user;
     listeners.forEach((cb) => cb(currentUser));
     logAnalyticsEvent('auth_success', { provider: 'google.com' });
@@ -121,9 +121,9 @@ export async function signInWithGoogle(): Promise<AuthUser> {
   } catch (err) {
     const error = err as AuthError;
     if (error?.code === 'auth/popup-closed-by-user') {
-      console.warn('Login cancelado pelo usuário.');
+      console.warn('Sign-in cancelled by user.');
     } else {
-      console.error('Erro na autenticação do Google:', error);
+      console.error('Google authentication error:', error);
     }
     logAnalyticsEvent('auth_failure', { provider: 'google.com', errorCode: error?.code || 'unknown' });
     throw error;
@@ -143,7 +143,7 @@ export async function signInWithGithub(): Promise<AuthUser> {
   try {
     const result = await signInWithPopup(auth, provider);
     const user = mapFirebaseUser(result.user);
-    if (!user) throw new Error('Falha ao processar login do GitHub.');
+    if (!user) throw new Error('Failed to process GitHub sign-in.');
     currentUser = user;
     listeners.forEach((cb) => cb(currentUser));
     logAnalyticsEvent('auth_success', { provider: 'github.com' });
@@ -151,11 +151,11 @@ export async function signInWithGithub(): Promise<AuthUser> {
   } catch (err) {
     const error = err as AuthError;
     if (error?.code === 'auth/popup-closed-by-user') {
-      console.warn('Login cancelado pelo usuário.');
+      console.warn('Sign-in cancelled by user.');
     } else if (error?.code === 'auth/account-exists-with-different-credential') {
       // Erro tratado no modal de UI
     } else {
-      console.error('Erro na autenticação do GitHub:', error);
+      console.error('GitHub authentication error:', error);
     }
     logAnalyticsEvent('auth_failure', { provider: 'github.com', errorCode: error?.code || 'unknown' });
     throw error;
@@ -168,7 +168,7 @@ export async function signOutUser(): Promise<void> {
       await signOut(auth);
     }
   } catch (err) {
-    console.warn("Aviso ao encerrar sessão Firebase:", err);
+    console.warn("Warning during Firebase sign-out:", err);
   }
   currentUser = null;
   listeners.forEach((cb) => {
@@ -198,17 +198,17 @@ export async function fetchProtectedContact(user: AuthUser | null): Promise<Cont
         }
       } else {
         console.warn(
-          "[Firestore Warning] Documento 'portfolio/contacts' não encontrado. Verifique se a coleção é 'portfolio' e o documento é 'contacts'."
+          "[Firestore Warning] Document 'portfolio/contacts' not found. Verify collection is 'portfolio' and document is 'contacts'."
         );
       }
     } catch (err) {
       const error = err as { code?: string };
       if (error?.code === 'permission-denied') {
         console.error(
-          "[Firestore Permission Denied] As regras de segurança do Firestore bloquearam a leitura. Permita a leitura com: allow read: if request.auth != null; no Firebase Console."
+          "[Firestore Permission Denied] Firestore security rules blocked read. Allow read with: allow read: if request.auth != null; in Firebase Console."
         );
       } else {
-        console.error("[Firestore Error] Falha ao carregar contatos protegidos:", err);
+        console.error("[Firestore Error] Failed to load protected contacts:", err);
       }
     }
   }
@@ -270,14 +270,14 @@ export async function revokeAccessAndPurgeUserData(user?: AuthUser | null): Prom
         listeners.forEach((cb) => cb(null));
         return true;
       } catch (reauthErr) {
-        console.warn("Usuário cancelou a confirmação de segurança ou falha na reautenticação:", reauthErr);
+        console.warn("User cancelled security confirmation or re-authentication failed:", reauthErr);
         await signOut(auth);
         currentUser = null;
         listeners.forEach((cb) => cb(null));
         return false;
       }
     } else {
-      console.error("Erro inesperado na exclusão do usuário:", err);
+      console.error("Unexpected error during user deletion:", err);
       await signOut(auth);
       currentUser = null;
       listeners.forEach((cb) => cb(null));

@@ -278,29 +278,29 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
             <div className="space-y-3 font-mono text-xs">
               <div className="p-3.5 rounded-xl bg-zinc-950 border border-zinc-800 text-zinc-300 space-y-2.5">
                 <div className="text-[11px] font-bold text-amber-500 tracking-wider uppercase flex items-center gap-1.5">
-                  <span>[POST-MORTEM & DECISÃO ARQUITETURAL // ADR]</span>
+                  <span>{t(language, 'inspector.adrTitle')}</span>
                 </div>
                 <div className="text-[11px] text-zinc-400">
-                  <span className="text-zinc-500 font-bold">SUBSYSTEM:</span> {node.id} ({node.company})
+                  <span className="text-zinc-500 font-bold">{t(language, 'inspector.subsystemLabel')}</span> {node.id} ({node.company})
                 </div>
                 <div className="pt-1.5 border-t border-zinc-800/80 space-y-2 leading-relaxed">
                   <div>
-                    <span className="text-rose-400 font-bold">CAUSA-RAIZ / DESAFIO:</span>
+                    <span className="text-rose-400 font-bold">{t(language, 'inspector.rootCause')}</span>
                     <p className="text-zinc-300 font-sans text-xs mt-0.5">{content.contextProblem}</p>
                   </div>
                   <div>
-                    <span className="text-blue-400 font-bold">CONTRAMEDIDA ARQUITETURAL:</span>
+                    <span className="text-blue-400 font-bold">{t(language, 'inspector.countermeasure')}</span>
                     <p className="text-zinc-300 font-sans text-xs mt-0.5">{content.architecturalSolution}</p>
                   </div>
                   <div>
-                    <span className="text-emerald-400 font-bold">RESULTADO EM PRODUÇÃO:</span>
+                    <span className="text-emerald-400 font-bold">{t(language, 'inspector.productionOutcome')}</span>
                     <p className="text-zinc-300 font-sans text-xs mt-0.5">{content.businessValue}</p>
                   </div>
                 </div>
               </div>
 
               <div className="p-3 rounded-xl border dark:bg-zinc-900/40 dark:border-zinc-800 bg-slate-50 border-slate-200 text-[11px] font-sans text-slate-600 dark:text-zinc-400">
-                <strong>Critério de Aceitação de Arquitetura:</strong> A solução opera em conformidade estrita com garantias ACID e idempotência de eventos, mitigando qualquer necessidade de intervenção manual em janelas críticas.
+                <strong>{t(language, 'inspector.acceptanceCriteriaLabel')}</strong> {t(language, 'inspector.acceptanceCriteria')}
               </div>
             </div>
           )}

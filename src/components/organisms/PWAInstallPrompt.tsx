@@ -54,10 +54,9 @@ export const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ language, th
     }
 
     if (isInstallable) {
-      const outcome = await install();
-      if (outcome) {
-        setVisible(false);
-      }
+      await install();
+      setVisible(false);
+      updateSessionPreferences({ pwaDismissed: true });
     } else {
       setShowIOSGuide(true);
     }

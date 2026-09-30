@@ -92,20 +92,28 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
     setShowDownloadMenu(false);
   };
 
-  const handleCopyMarkdown = () => {
-    navigator.clipboard.writeText(generateMarkdownResume(language, isAuthenticated, email, phone));
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopyMarkdown = async () => {
+    try {
+      await navigator.clipboard.writeText(generateMarkdownResume(language, isAuthenticated, email, phone));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Ignora falha de permissão sem gerar falso positivo
+    }
   };
 
-  const handleCopyPdfLink = () => {
+  const handleCopyPdfLink = async () => {
     const pdfUrl = getAbsoluteDocUrl('pdf');
-    navigator.clipboard.writeText(pdfUrl);
-    setCopiedLink(true);
-    setTimeout(() => {
-      setCopiedLink(false);
+    try {
+      await navigator.clipboard.writeText(pdfUrl);
+      setCopiedLink(true);
+      setTimeout(() => {
+        setCopiedLink(false);
+        setShowShareMenu(false);
+      }, 1800);
+    } catch {
       setShowShareMenu(false);
-    }, 1800);
+    }
   };
 
   const handleShareWhatsApp = () => {
@@ -125,7 +133,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
     setShowShareMenu(false);
   };
 
-  const handleShareEmail = () => {
+  const handleShareEmail = async () => {
     const pdfUrl = getAbsoluteDocUrl('pdf');
     const subject = t(language, 'resume.shareEmailSubject');
     const body = t(language, 'resume.shareEmailBody').replace('{url}', pdfUrl);
@@ -138,12 +146,16 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
     anchor.click();
     document.body.removeChild(anchor);
 
-    navigator.clipboard.writeText(pdfUrl);
-    setEmailCopiedFeedback(true);
-    setTimeout(() => {
-      setEmailCopiedFeedback(false);
+    try {
+      await navigator.clipboard.writeText(pdfUrl);
+      setEmailCopiedFeedback(true);
+      setTimeout(() => {
+        setEmailCopiedFeedback(false);
+        setShowShareMenu(false);
+      }, 1800);
+    } catch {
       setShowShareMenu(false);
-    }, 1800);
+    }
   };
 
   const handleNativeShare = async () => {
@@ -322,8 +334,8 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                         <FileCheck className="w-4 h-4" />
                       </div>
                       <div>
-                        <div className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">PDF Oficial</div>
-                        <div className="text-[11px] text-zinc-500 dark:text-zinc-400">Documento Timbrado (.pdf)</div>
+                        <div className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">{t(language, 'resume.formatPdfTitle')}</div>
+                        <div className="text-[11px] text-zinc-500 dark:text-zinc-400">{t(language, 'resume.formatPdfSub')}</div>
                       </div>
                     </div>
                   </button>
@@ -337,8 +349,8 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                         <FileText className="w-4 h-4" />
                       </div>
                       <div>
-                        <div className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">Texto Puro</div>
-                        <div className="text-[11px] text-zinc-500 dark:text-zinc-400">ATS Machine-readable (.txt)</div>
+                        <div className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">{t(language, 'resume.formatTxtTitle')}</div>
+                        <div className="text-[11px] text-zinc-500 dark:text-zinc-400">{t(language, 'resume.formatTxtSub')}</div>
                       </div>
                     </div>
                   </button>
@@ -352,8 +364,8 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                         <FileCode className="w-4 h-4" />
                       </div>
                       <div>
-                        <div className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">Markdown</div>
-                        <div className="text-[11px] text-zinc-500 dark:text-zinc-400">CommonMark Source (.md)</div>
+                        <div className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">{t(language, 'resume.formatMdTitle')}</div>
+                        <div className="text-[11px] text-zinc-500 dark:text-zinc-400">{t(language, 'resume.formatMdSub')}</div>
                       </div>
                     </div>
                   </button>
@@ -379,7 +391,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
             <h2 className="font-sans font-semibold text-xs text-zinc-900 dark:text-zinc-100 tracking-tight">
               {t(language, 'resume.gateTitle')}
             </h2>
-            <span className="text-[11px] font-mono text-zinc-400 dark:text-zinc-500">Linha Direta</span>
+            <span className="text-[11px] font-mono text-zinc-400 dark:text-zinc-500">{t(language, 'resume.directLine')}</span>
           </div>
 
           {/* LINHA 1: LINKEDIN COM CADEADO ABERTO (CANAL LIVRE / PÚBLICO) */}
@@ -636,10 +648,16 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
               const periodParts = periodStr.split(/[-–—]/);
               const endPart = (periodParts.length > 1 ? periodParts[1] : periodParts[0]).toLowerCase();
 
-              for (const [mName, mNum] of Object.entries(monthMap)) {
-                if (endPart.includes(mName)) {
-                  endMonth = mNum;
-                  break;
+              // Suporte a formatos numéricos (ex: 02/2024 ou 2/2024)
+              const numMatch = endPart.match(/\b(0?[1-9]|1[0-2])\/\d{4}\b/);
+              if (numMatch) {
+                endMonth = parseInt(numMatch[1], 10);
+              } else {
+                for (const [mName, mNum] of Object.entries(monthMap)) {
+                  if (endPart.includes(mName)) {
+                    endMonth = mNum;
+                    break;
+                  }
                 }
               }
 
@@ -863,9 +881,9 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                   language === 'PT'
                     ? deg.focus
                     : language === 'FR'
-                    ? deg.focusFR || deg.focusEN
+                    ? (deg as any).focusFR || deg.focusEN
                     : language === 'ES'
-                    ? deg.focusES || deg.focusEN
+                    ? (deg as any).focusES || deg.focusEN
                     : deg.focusEN;
 
                 return (
@@ -879,17 +897,20 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                       <span className="font-mono text-[11px] opacity-70 shrink-0">{deg.period}</span>
                     </div>
 
-                    {deg.status === 'IN_PROGRESS' && (
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-                        {t(language, 'academic.inProgressBadge')}
-                      </span>
-                    )}
+
 
                     {deg.internationalEquivalency && (
-                      <div className="mt-1 p-1.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-mono text-[10px] font-semibold flex items-center gap-1.5 w-fit">
-                        <span>🇨🇦</span>
-                        <span>WES Canadian Equivalency: {deg.internationalEquivalency.canadianEquivalency}</span>
+                      <div className="text-[11.5px] font-sans leading-tight text-zinc-600 dark:text-zinc-400 print:text-zinc-700 pt-0.5">
+                        <span className="font-semibold text-zinc-800 dark:text-zinc-200 print:text-black">
+                          {language === 'PT'
+                            ? 'Equivalência Acadêmica Canadense (WES):'
+                            : language === 'FR'
+                            ? 'Équivalence Académique Canadienne (WES) :'
+                            : language === 'ES'
+                            ? 'Equivalencia Académica Canadiense (WES):'
+                            : 'Canadian Educational Credential (WES):'}
+                        </span>{' '}
+                        <span className="italic">{deg.internationalEquivalency.canadianEquivalency}</span>
                       </div>
                     )}
 

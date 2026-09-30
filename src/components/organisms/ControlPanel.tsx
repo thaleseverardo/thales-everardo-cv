@@ -112,19 +112,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   const settingsPopoverRef = useRef<HTMLDivElement>(null);
 
   const leftColRef = useRef<HTMLDivElement>(null);
-  const [showFullName, setShowFullName] = useState(true);
-
-  useEffect(() => {
-    if (!leftColRef.current) return;
-    const observer = new ResizeObserver((entries) => {
-      const entry = entries[0];
-      if (entry) {
-        setShowFullName(entry.contentRect.width >= 320);
-      }
-    });
-    observer.observe(leftColRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     const handleSettingsClickOutside = (event: MouseEvent | TouchEvent) => {
@@ -310,24 +297,20 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           <div
             ref={settingsPopoverRef}
             className={`fixed md:absolute z-60 font-sans ${
-              /* Mobile: Bottom Sheet Nativa com Altura Orgânica e Puxador */
-              'inset-x-0 bottom-0 max-h-[85vh] rounded-t-3xl border-t border-zinc-200 dark:border-zinc-800 p-0 overflow-y-auto animate-in slide-in-from-bottom duration-200 shadow-2xl'
+              /* Mobile: Tela Cheia Padronizada */
+              'inset-0 h-dvh w-full rounded-none border-0 p-0 overflow-y-auto animate-in fade-in duration-150'
             } ${
               /* Desktop: Dropdown flutuante ancorado no topo */
               'md:inset-auto md:top-20 md:right-8 md:w-87.5 md:h-auto md:max-h-none md:rounded-3xl md:border md:p-3.5 md:shadow-2xl md:shadow-black/80 md:animate-in md:fade-in md:zoom-in-95'
             } ${
               theme === 'dark'
-                ? 'bg-[#0e0e12] md:bg-zinc-900 md:border-zinc-800 text-zinc-100'
+                ? 'bg-zinc-950 md:bg-zinc-900 md:border-zinc-800 text-zinc-100'
                 : 'bg-white md:border-zinc-200 text-zinc-900'
             }`}
           >
-            {/* PUXADOR TÁTIL DO BOTTOM SHEET (EXCLUSIVO MOBILE) */}
-            <div className="md:hidden pt-3 pb-1 flex justify-center">
-              <div className="w-10 h-1 rounded-full bg-zinc-300 dark:bg-zinc-700" />
-            </div>
-            {/* CABEÇALHO NATIVO DA PÁGINA (EXCLUSIVO MOBILE) */}
+            {/* CABEÇALHO NATIVO PADRONIZADO COM SAFE-AREA */}
             <div
-              className={`md:hidden sticky top-0 z-20 h-14 px-4 border-b flex items-center justify-between backdrop-blur-md shrink-0 select-none ${
+              className={`md:hidden sticky top-0 z-20 pt-[max(0.75rem,env(safe-area-inset-top,0px))] pb-3 px-4 border-b flex items-center justify-between backdrop-blur-md shrink-0 select-none ${
                 theme === 'dark' ? 'bg-zinc-950/95 border-zinc-800 text-zinc-100' : 'bg-white/95 border-slate-200 text-slate-900 shadow-2xs'
               }`}
             >
@@ -339,7 +322,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                     ? 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:text-white'
                     : 'bg-slate-50 border-slate-200 text-slate-700 hover:text-slate-900'
                 }`}
-                aria-label="Voltar"
+                aria-label={t(language, 'nav.back')}
               >
                 <ArrowLeft className="w-4 h-4" />
               </button>
