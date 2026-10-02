@@ -195,7 +195,7 @@ const protectedNotice =
 
 📍 ${getProfileLocation(lang)}
 📧 ${isAuthenticated ? email : protectedNotice} | 📱 ${isAuthenticated ? phone : protectedNotice}
-🔗 [LinkedIn](https://thaleseverardo.github.io/thales-everardo-cv/linkedin?src=cv_markdown) | 💻 [GitHub](https://thaleseverardo.github.io/thales-everardo-cv/github?src=cv_markdown) | 🌐 [Portfólio](https://thaleseverardo.github.io/thales-everardo-cv/portfolio?src=cv_markdown)
+🔗 [LinkedIn](https://linkedin.com/in/thaleseverardo) | 💻 [GitHub](https://github.com/thaleseverardo) | 🌐 [Portfólio](https://thaleseverardo.github.io/thales-everardo-cv/)
 🌐 ${getLanguagesLabel(lang)}: ${getLanguagesSummary(lang)}
 
 ---

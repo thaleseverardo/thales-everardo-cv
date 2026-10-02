@@ -3,6 +3,10 @@ Allow: /
 Allow: /llms.txt
 Allow: /llms-full.txt
 Allow: /resumes/
+Disallow: /linkedin/
+Disallow: /github/
+Disallow: /portfolio/
+Disallow: /portifolio/
 
 # Google & Gemini AI Crawlers
 User-agent: Googlebot

@@ -706,9 +706,10 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
               </p>
             </div>
             <a
-              href={getTrackingUrl("linkedin", "gate_web")}
+              href="https://linkedin.com/in/thaleseverardo"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="me noopener noreferrer"
+              onClick={() => logAnalyticsEvent('social_outbound', { platform: 'linkedin', source: 'gate_web' })}
               className={`h-8 px-3 rounded-lg border font-sans font-medium text-xs transition-colors flex items-center justify-center gap-1.5 shrink-0 cursor-pointer shadow-2xs active:scale-95 ${
                 theme === 'dark'
                   ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-700/80 text-zinc-200 hover:text-white'
@@ -837,12 +838,13 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
 
             <span className="text-zinc-300 dark:text-zinc-700 select-none hidden sm:inline">|</span>
 
-            {/* Bloco 2: Perfis Profissionais (Rastreados via Bridge Pages) */}
+            {/* Bloco 2: Perfis Profissionais (URLs Canônicas com rel="me" para Knowledge Graph) */}
             <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
               <a
-                href={getTrackingUrl("linkedin", "cv_web")}
+                href="https://linkedin.com/in/thaleseverardo"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="me noopener noreferrer"
+                onClick={() => logAnalyticsEvent('social_outbound', { platform: 'linkedin', source: 'cv_web' })}
                 className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors"
               >
                 <Linkedin className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
@@ -850,9 +852,10 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
               </a>
               <span className="text-zinc-300 dark:text-zinc-700 select-none">|</span>
               <a
-                href={getTrackingUrl("github", "cv_web")}
+                href="https://github.com/thaleseverardo"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="me noopener noreferrer"
+                onClick={() => logAnalyticsEvent('social_outbound', { platform: 'github', source: 'cv_web' })}
                 className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors"
               >
                 <Github className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
@@ -860,9 +863,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
               </a>
               <span className="text-zinc-300 dark:text-zinc-700 select-none">|</span>
               <a
-                href={getTrackingUrl("portfolio", "cv_web")}
-                target="_blank"
-                rel="noopener noreferrer"
+                href="https://thaleseverardo.github.io/thales-everardo-cv/"
                 className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors"
               >
                 <Globe className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
@@ -884,7 +885,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
             </span>
             <span className="text-zinc-400 select-none">|</span>
             <a
-              href={getTrackingUrl("linkedin", "cv_pdf")}
+              href="https://linkedin.com/in/thaleseverardo"
               className="inline-flex items-center gap-1 text-inherit no-underline"
             >
               <Linkedin className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
@@ -892,7 +893,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
             </a>
             <span className="text-zinc-400 select-none">|</span>
             <a
-              href={getTrackingUrl("github", "cv_pdf")}
+              href="https://github.com/thaleseverardo"
               className="inline-flex items-center gap-1 text-inherit no-underline"
             >
               <Github className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
@@ -900,11 +901,11 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
             </a>
             <span className="text-zinc-400 select-none">|</span>
             <a
-              href={getTrackingUrl("portfolio", "cv_pdf")}
+              href="https://thaleseverardo.github.io/thales-everardo-cv/"
               className="inline-flex items-center gap-1 text-inherit no-underline"
             >
               <Globe className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
-              <span>thaleseverardo.github.io/.../portfolio</span>
+              <span>thaleseverardo.github.io/thales-everardo-cv</span>
             </a>
           </div>
 
