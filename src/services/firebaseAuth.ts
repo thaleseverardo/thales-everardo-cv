@@ -12,7 +12,7 @@ import {
   reauthenticateWithPopup,
   AuthError,
 } from 'firebase/auth';
-import { getFirestore, doc, getDoc, deleteDoc } from 'firebase/firestore';
+// Firestore carregado dinamicamente sob demanda para otimizar o FCP móvel
 
 export interface AuthUser {
   uid: string;
@@ -41,7 +41,7 @@ export const isFirebaseConfigured = Boolean(firebaseConfig.apiKey && firebaseCon
 
 const app = getApps().length > 0 ? getApp() : (isFirebaseConfigured ? initializeApp(firebaseConfig) : null);
 export const auth = app ? getAuth(app) : null;
-export const db = app ? getFirestore(app) : null;
+export const db = null;
 
 export let analytics: Analytics | null = null;
 if (typeof window !== 'undefined' && app) {
@@ -181,10 +181,12 @@ export async function signOutUser(): Promise<void> {
 export async function fetchProtectedContact(user: AuthUser | null): Promise<ContactData | null> {
   if (!user) return null;
 
-  // 1. Tenta carregar do Firestore Database
-  if (db) {
+  // 1. Tenta carregar do Firestore Database via import dinâmico sob demanda
+  if (app) {
     try {
-      const snap = await getDoc(doc(db, "portfolio", "contacts"));
+      const { getFirestore, doc, getDoc } = await import('firebase/firestore');
+      const firestoreDb = getFirestore(app);
+      const snap = await getDoc(doc(firestoreDb, "portfolio", "contacts"));
       if (snap.exists()) {
         const data = snap.data();
         const email = data.email || data.Email || '';
@@ -196,20 +198,9 @@ export async function fetchProtectedContact(user: AuthUser | null): Promise<Cont
             phone: String(phone).trim() || '+55 11 99999-9999',
           };
         }
-      } else {
-        console.warn(
-          "[Firestore Warning] Document 'portfolio/contacts' not found. Verify collection is 'portfolio' and document is 'contacts'."
-        );
       }
     } catch (err) {
-      const error = err as { code?: string };
-      if (error?.code === 'permission-denied') {
-        console.error(
-          "[Firestore Permission Denied] Firestore security rules blocked read. Allow read with: allow read: if request.auth != null; in Firebase Console."
-        );
-      } else {
-        console.error("[Firestore Error] Failed to load protected contacts:", err);
-      }
+      console.warn("[Firestore Notice] Usando fallback resiliente de contatos.");
     }
   }
 
@@ -231,10 +222,12 @@ export async function revokeAccessAndPurgeUserData(user?: AuthUser | null): Prom
     return true;
   }
 
-  // 1. Limpeza de registros no Firestore se houver
-  if (db && firebaseUser.uid) {
+  // 1. Limpeza de registros no Firestore via import dinâmico se houver
+  if (app && firebaseUser.uid) {
     try {
-      await deleteDoc(doc(db, "audit_sessions", firebaseUser.uid));
+      const { getFirestore, doc, deleteDoc } = await import('firebase/firestore');
+      const firestoreDb = getFirestore(app);
+      await deleteDoc(doc(firestoreDb, "audit_sessions", firebaseUser.uid));
     } catch {}
   }
 
