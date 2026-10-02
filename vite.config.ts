@@ -157,23 +157,16 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id) {
+            // 1. Módulos pesados carregados estritamente sob demanda
             if (id.includes('node_modules/jspdf') || id.includes('node_modules/html-to-image')) {
               return 'vendor-pdf';
-            }
-            if (id.includes('node_modules/firebase/auth')) {
-              return 'vendor-firebase-auth';
             }
             if (id.includes('node_modules/firebase/firestore')) {
               return 'vendor-firebase-db';
             }
-            if (id.includes('node_modules/firebase')) {
-              return 'vendor-firebase-core';
-            }
-            if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
-              return 'vendor-react';
-            }
-            if (id.includes('node_modules/lucide-react')) {
-              return 'vendor-icons';
+            // 2. Vendor unificado para evitar disputa de banda HTTP no 4G móvel
+            if (id.includes('node_modules/')) {
+              return 'vendor-core';
             }
           },
         },
