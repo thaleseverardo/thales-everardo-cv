@@ -38,13 +38,26 @@ const PrivacyPolicyModal = lazy(() =>
 
 function parseLanguageFromUrl(): AppLanguage | null {
   if (typeof window === 'undefined') return null;
-  const hash = window.location.hash.toLowerCase();
+
+  // 1. Detecção por subdiretório físico estático gerado pelo SSG: /pt/, /en/, etc.
+  const pathname = window.location.pathname.toLowerCase();
+  const pathSegments = pathname.split('/').filter(Boolean);
+  for (const seg of pathSegments) {
+    if (seg === 'pt') return 'PT';
+    if (seg === 'en') return 'EN';
+    if (seg === 'es') return 'ES';
+    if (seg === 'fr') return 'FR';
+  }
+
+  // 2. Detecção por parâmetro de URL (?lang=pt)
   const search = new URLSearchParams(window.location.search);
   const langParam = search.get('lang')?.toUpperCase();
   if (langParam && ['PT', 'EN', 'ES', 'FR'].includes(langParam)) {
     return langParam as AppLanguage;
   }
-  // Isola segmentos de rota limpos para evitar que palavras terminadas em 'es' (ex: principles) ativem espanhol
+
+  // 3. Detecção por hash (#/curriculo/pt)
+  const hash = window.location.hash.toLowerCase();
   const segments = hash.replace(/^#\/?/, '').split('?')[0].split('/');
   for (const seg of segments) {
     if (seg === 'pt') return 'PT';

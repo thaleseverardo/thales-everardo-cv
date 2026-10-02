@@ -14,27 +14,27 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://thaleseverardo.github.io/thales-everardo-cv/?lang=en"/>
   </url>
 
-  <!-- URLs Canônicas de Idioma para Indexação Direta -->
+  <!-- URLs Canônicas de Idioma para Indexação Direta & Sitelinks -->
   <url>
-    <loc>https://thaleseverardo.github.io/thales-everardo-cv/?lang=pt</loc>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/pt/</loc>
     <lastmod>2026-06-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://thaleseverardo.github.io/thales-everardo-cv/?lang=en</loc>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/en/</loc>
     <lastmod>2026-06-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://thaleseverardo.github.io/thales-everardo-cv/?lang=es</loc>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/es/</loc>
     <lastmod>2026-06-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://thaleseverardo.github.io/thales-everardo-cv/?lang=fr</loc>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/fr/</loc>
     <lastmod>2026-06-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
