@@ -17,9 +17,7 @@ const SystemCanvas = lazy(() =>
 const ExecutiveTimelineView = lazy(() =>
   import('./components/templates/ExecutiveTimelineView').then((m) => ({ default: m.ExecutiveTimelineView }))
 );
-const ResumeView = lazy(() =>
-  import('./components/templates/ResumeView').then((m) => ({ default: m.ResumeView }))
-);
+import { ResumeView } from './components/templates/ResumeView';
 const ArticlesView = lazy(() =>
   import('./components/templates/ArticlesView').then((m) => ({ default: m.ArticlesView }))
 );

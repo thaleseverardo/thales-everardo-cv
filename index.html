@@ -34,10 +34,10 @@
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" media="print" onload="this.media='all'">
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap">
     </noscript>
 
     <!-- Limpeza automática de Service Worker / Cache em ambiente local de desenvolvimento -->
@@ -250,17 +250,27 @@
   </head>
  <body class="bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 antialiased ">
     
-    <!-- 1. SKELETON NEUTRO: Evita o tranco visual enquanto o bundle JS carrega -->
+    <!-- 1. SKELETON ESTRUTURAL ZERO-CLS: Geometria idêntica à da SPA no frame zero -->
     <div id="root">
-      <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: -apple-system, BlinkMacSystemFont, sans-serif;">
-        <div style="text-align: center; opacity: 0.6;">
-          <div style="width: 32px; height: 32px; border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%; margin: 0 auto 12px; animation: spin 0.8s linear infinite;"></div>
-          <span style="font-size: 12px; letter-spacing: 0.05em; font-weight: 600;">INITIALIZING SYSTEM...</span>
+      <div style="min-height: 100dvh; display: flex; flex-direction: column; font-family: -apple-system, BlinkMacSystemFont, sans-serif;">
+        <!-- Header placeholder com altura de 64px (h-16 mobile) -->
+        <div style="height: 64px; border-bottom: 1px solid rgba(120, 120, 128, 0.15); display: flex; align-items: center; justify-content: space-between; padding: 0 16px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 48px; height: 48px; border-radius: 50%; background: currentColor; opacity: 0.08;"></div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div style="width: 140px; height: 16px; border-radius: 4px; background: currentColor; opacity: 0.12;"></div>
+              <div style="width: 90px; height: 12px; border-radius: 4px; background: currentColor; opacity: 0.08;"></div>
+            </div>
+          </div>
+          <div style="width: 36px; height: 36px; border-radius: 8px; background: currentColor; opacity: 0.08;"></div>
+        </div>
+        <!-- Card placeholder alinhado ao topo -->
+        <div style="max-width: 56rem; width: 100%; margin: 0 auto; padding: 20px 16px;">
+          <div style="height: 28px; width: 60%; border-radius: 6px; background: currentColor; opacity: 0.12; margin-bottom: 12px;"></div>
+          <div style="height: 16px; width: 40%; border-radius: 4px; background: currentColor; opacity: 0.08; margin-bottom: 24px;"></div>
+          <div style="height: 80px; width: 100%; border-radius: 12px; background: currentColor; opacity: 0.05;"></div>
         </div>
       </div>
-      <style>
-        @keyframes spin { to { transform: rotate(360deg); } }
-      </style>
     </div>
 
     <!-- 2. CONTEÚDO SEMÂNTICO INDEXÁVEL: Lido por robôs, crawlers e IA que não executam JS -->
