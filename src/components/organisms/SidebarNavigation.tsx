@@ -306,15 +306,6 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
             )}
           </button>
 
-          {/* DIVISOR DE SEÇÃO SEMÂNTICA: PUBLICAÇÕES */}
-          {!isCollapsed ? (
-            <div className="px-3 pt-4 pb-1 text-[10px] font-mono font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 select-none">
-              {t(language, 'sidebar.publicationsGroup')}
-            </div>
-          ) : (
-            <div className="my-2 border-t border-zinc-200/60 dark:border-zinc-800/60 mx-2" />
-          )}
-
           {/* ARTIGOS TÉCNICOS (RENDERIZA DIRETO NA ÁREA DE LEITURA) */}
           <button
             type="button"

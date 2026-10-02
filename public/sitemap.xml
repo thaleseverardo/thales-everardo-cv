@@ -1,100 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
-  <!-- Página Canônica Raiz com Alternates Hreflang -->
+  <!-- Página Canônica Raiz com Alternates Hreflang Oficiais (Sem Hashes) -->
   <url>
     <loc>https://thaleseverardo.github.io/thales-everardo-cv/</loc>
     <lastmod>2026-06-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="pt" href="https://thaleseverardo.github.io/thales-everardo-cv/?lang=pt#/curriculo/pt"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://thaleseverardo.github.io/thales-everardo-cv/?lang=en#/curriculo/en"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://thaleseverardo.github.io/thales-everardo-cv/?lang=es#/curriculo/es"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://thaleseverardo.github.io/thales-everardo-cv/?lang=fr#/curriculo/fr"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://thaleseverardo.github.io/thales-everardo-cv/?lang=en#/curriculo/en"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://thaleseverardo.github.io/thales-everardo-cv/?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thaleseverardo.github.io/thales-everardo-cv/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thaleseverardo.github.io/thales-everardo-cv/?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://thaleseverardo.github.io/thales-everardo-cv/?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thaleseverardo.github.io/thales-everardo-cv/?lang=en"/>
   </url>
 
-  <!-- Rotas Diretas Canônicas do Currículo por Idioma -->
+  <!-- URLs Canônicas de Idioma para Indexação Direta -->
   <url>
-    <loc>https://thaleseverardo.github.io/thales-everardo-cv/?lang=pt#/curriculo/pt</loc>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/?lang=pt</loc>
     <lastmod>2026-06-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://thaleseverardo.github.io/thales-everardo-cv/?lang=en#/curriculo/en</loc>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/?lang=en</loc>
     <lastmod>2026-06-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://thaleseverardo.github.io/thales-everardo-cv/?lang=es#/curriculo/es</loc>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/?lang=es</loc>
     <lastmod>2026-06-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://thaleseverardo.github.io/thales-everardo-cv/?lang=fr#/curriculo/fr</loc>
+    <loc>https://thaleseverardo.github.io/thales-everardo-cv/?lang=fr</loc>
     <lastmod>2026-06-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
 
-  <!-- Documentos Canônicos Markdown ATS (Scraping direto para Robôs de IA) -->
-  <url>
-    <loc>https://thaleseverardo.github.io/thales-everardo-cv/resumes/Thales_Everardo_CV_PT.md</loc>
-    <lastmod>2026-06-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://thaleseverardo.github.io/thales-everardo-cv/resumes/Thales_Everardo_CV_EN.md</loc>
-    <lastmod>2026-06-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://thaleseverardo.github.io/thales-everardo-cv/resumes/Thales_Everardo_CV_ES.md</loc>
-    <lastmod>2026-06-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://thaleseverardo.github.io/thales-everardo-cv/resumes/Thales_Everardo_CV_FR.md</loc>
-    <lastmod>2026-06-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-  </url>
-
-  <!-- LLM & Gemini AI Context Manifests -->
-  <url>
-    <loc>https://thaleseverardo.github.io/thales-everardo-cv/llms.txt</loc>
-    <lastmod>2026-06-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://thaleseverardo.github.io/thales-everardo-cv/llms-full.txt</loc>
-    <lastmod>2026-06-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.90</priority>
-  </url>
-
-  <!-- Hubs Canônicos de Conteúdo Técnico e Projetos -->
-  <url>
-    <loc>https://thaleseverardo.github.io/thales-everardo-cv/articles/</loc>
-    <lastmod>2026-06-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.92</priority>
-  </url>
-  <url>
-    <loc>https://thaleseverardo.github.io/thales-everardo-cv/projects/</loc>
-    <lastmod>2026-06-25</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.92</priority>
-  </url>
-
-  <!-- Technical Architecture Articles (Author: Thales Everardo Albuquerque Reis) -->
+  <!-- Artigos de Arquitetura (Páginas Estáticas Canônicas 200 OK) -->
   <url>
     <loc>https://thaleseverardo.github.io/thales-everardo-cv/articles/system-architecture-principles/</loc>
     <lastmod>2026-06-25</lastmod>
@@ -126,7 +72,7 @@
     <priority>0.88</priority>
   </url>
 
-  <!-- Production Engineering Case Studies (Author: Thales Everardo Albuquerque Reis) -->
+  <!-- Estudos de Caso e Projetos em Produção (Páginas Estáticas Canônicas 200 OK) -->
   <url>
     <loc>https://thaleseverardo.github.io/thales-everardo-cv/projects/magalu-11tb-purge/</loc>
     <lastmod>2026-06-25</lastmod>

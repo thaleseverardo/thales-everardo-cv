@@ -1,4 +1,4 @@
-Thales Everardo - Staff Software Engineer | Principal Systems Architect
+Thales Everardo - Staff Systems Engineer | Principal Systems Architect
 São Paulo, Brasil y Toronto, ON (Ex-residente | Relocalización a Canadá)
 Email: Protected via Portfolio Auth Gate | Teléfono: Protected via Portfolio Auth Gate
 LinkedIn: https://linkedin.com/in/thaleseverardo | GitHub: https://github.com/thaleseverardo
@@ -7,7 +7,7 @@ Idiomas: Inglés (Fluido — Más de 3 Años de Experiencia Laboral en Canadá) 
 ============================================================
 PERFIL PROFESIONAL
 ============================================================
-Arquitecto de Sistemas y Staff Software Engineer con más de 15 años de experiencia en TI corporativa, sistemas de misión crítica y arquitecturas de alta disponibilidad y resiliencia. Sólida trayectoria en diagnósticos profundos de sistemas, recuperación de incidentes bajo SLAs inferiores a 1 hora para instituciones financieras Tier-1 y optimización de rendimiento en bases de datos corporativas, complementada por más de 3 años de liderazgo en TI y arquitectura de datos ERP en Toronto, Canadá. Actualmente enfocado en el desarrollo y la arquitectura de productos SaaS, aplicando patrones orientados a eventos (CQRS, Event Sourcing), seguridad Zero-Trust y explorando la integración de recursos de IA.
+Arquitecto de Sistemas y Staff Systems Engineer con más de 15 años de experiencia en TI corporativa, sistemas de misión crítica y arquitecturas de alta disponibilidad y resiliencia. Sólida trayectoria en diagnósticos profundos de sistemas, recuperación de incidentes bajo SLAs inferiores a 1 hora para instituciones financieras Tier-1 y optimización de rendimiento en bases de datos corporativas, complementada por más de 3 años de liderazgo en TI y arquitectura de datos ERP en Toronto, Canadá. Actualmente enfocado en el desarrollo y la arquitectura de productos SaaS, aplicando patrones orientados a eventos (CQRS, Event Sourcing), seguridad Zero-Trust y explorando la integración de recursos de IA.
 
 ============================================================
 EXPERIENCIA PROFESIONAL

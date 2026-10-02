@@ -67,6 +67,10 @@ export default defineConfig(({ mode }) => {
             /\/resumes\/.*/,
             /\/articles\/.*/,
             /\/projects\/.*/,
+            /\/linkedin\/?.*$/,
+            /\/github\/?.*$/,
+            /\/portfolio\/?.*$/,
+            /\/portifolio\/?.*$/,
           ],
           runtimeCaching: [
             {
@@ -149,6 +153,9 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id) {
+            if (id.includes('node_modules/jspdf') || id.includes('node_modules/html-to-image')) {
+              return 'vendor-pdf';
+            }
             if (id.includes('node_modules/firebase/auth')) {
               return 'vendor-firebase-auth';
             }

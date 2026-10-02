@@ -73,7 +73,7 @@ export const ArticlesView: React.FC<ArticlesViewProps> = ({
               {title}
             </h1>
             <div className="text-xs font-mono text-zinc-500 dark:text-zinc-400 mt-2">
-              Author: Thales Everardo Albuquerque Reis · Staff Software Engineer & Systems Architect
+              Author: Thales Everardo Albuquerque Reis · Staff Systems Engineer & Systems Architect
             </div>
           </header>
 
@@ -116,10 +116,16 @@ export const ArticlesView: React.FC<ArticlesViewProps> = ({
           const desc = isPT ? art.descPT : art.descEN;
 
           return (
-            <article
+            <a
               key={art.slug}
-              onClick={() => onSelectArticle(art.slug)}
-              className={`p-5 sm:p-6 rounded-2xl border transition-all cursor-pointer group ${
+              href={`${base}/articles/${art.slug}/`}
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                  e.preventDefault();
+                  onSelectArticle(art.slug);
+                }
+              }}
+              className={`block p-5 sm:p-6 rounded-2xl border transition-all cursor-pointer group text-inherit no-underline ${
                 theme === 'dark'
                   ? 'bg-zinc-900/60 border-zinc-800 hover:border-zinc-700'
                   : 'bg-white border-zinc-200 hover:border-zinc-300 shadow-xs'
@@ -153,7 +159,7 @@ export const ArticlesView: React.FC<ArticlesViewProps> = ({
                   </span>
                 </div>
               </div>
-            </article>
+            </a>
           );
         })}
       </div>

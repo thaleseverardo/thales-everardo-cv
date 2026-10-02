@@ -9,6 +9,7 @@ import {
   Download,
   Share2,
   Linkedin,
+  Github,
   MessageCircle,
   Link as LinkIcon,
   ExternalLink,
@@ -35,6 +36,30 @@ import {
   getLanguagesLabel,
 } from '../../utils/resumeGenerator';
 
+const CanadaFlagSVG: React.FC<{ className?: string }> = ({
+  className = 'w-4.5 h-3 inline-block shrink-0 rounded-[2px] shadow-2xs border border-black/10 dark:border-white/15',
+}) => (
+  <svg className={className} viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Canada">
+    <rect width="24" height="16" fill="#D80027" />
+    <rect x="6" width="12" height="16" fill="#FFFFFF" />
+    <path
+      d="M12 2.8L12.5 4.8L14.3 4.2L13.5 6L15.5 7.1L14 8.2L14.6 9.8L12.6 9.4L12.3 12.2H11.7L11.4 9.4L9.4 9.8L10 8.2L8.5 7.1L10.5 6L9.7 4.2L11.5 4.8L12 2.8Z"
+      fill="#D80027"
+    />
+  </svg>
+);
+
+const BrazilFlagSVG: React.FC<{ className?: string }> = ({
+  className = 'w-4.5 h-3 inline-block shrink-0 rounded-[2px] shadow-2xs border border-black/10 dark:border-white/15',
+}) => (
+  <svg className={className} viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Brasil">
+    <rect width="24" height="16" fill="#009B3A" />
+    <path d="M12 2.2L21 8L12 13.8L3 8L12 2.2Z" fill="#FEDF00" />
+    <circle cx="12" cy="8" r="3.2" fill="#002776" />
+    <path d="M9.1 7.2C10.2 6.5 12.5 6.6 14.8 8.1C14.7 8.3 14.5 8.5 14.3 8.7C12.3 7.4 10.3 7.3 9.3 7.8L9.1 7.2Z" fill="#FFFFFF" />
+  </svg>
+);
+
 interface ResumeViewProps {
   language: AppLanguage;
   theme: AppTheme;
@@ -54,6 +79,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
   const [emailCopiedFeedback, setEmailCopiedFeedback] = useState(false);
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
   const email = contact?.email || '';
   const phone = contact?.phone || '';
@@ -66,17 +92,278 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
     window.print();
   };
 
-  const getAbsoluteDocUrl = (extension: 'pdf' | 'txt' | 'md' = 'pdf') => {
-    const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-    const filename = `Thales_Everardo_CV_${language}.${extension}`;
-    const relativePath = `${base}/resumes/${filename}`;
-    if (typeof window !== 'undefined') {
-      return new URL(relativePath, window.location.origin).href;
+  const handleGeneratePdf = async () => {
+    const card = document.getElementById('printable-resume-card');
+    if (!card || isGeneratingPdf) return;
+
+    setIsGeneratingPdf(true);
+    logAnalyticsEvent('cv_download', { extension: 'pdf', language });
+
+    const wasDark = document.documentElement.classList.contains('dark');
+    if (wasDark) {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
     }
-    return relativePath;
+
+    // Criar container desacoplado com proporções canônicas de A4 canadense (794px x 1123px)
+    const wrapper = document.createElement('div');
+    wrapper.className = 'light';
+    wrapper.style.position = 'fixed';
+    wrapper.style.left = '-9999px';
+    wrapper.style.top = '0';
+    wrapper.style.zIndex = '-9999';
+    wrapper.style.backgroundColor = '#ffffff';
+
+    try {
+      const [{ default: jsPDF }, { toJpeg }] = await Promise.all([
+        import('jspdf'),
+        import('html-to-image'),
+      ]);
+
+      // Extração dos blocos semânticos do currículo
+      const cardChildren = Array.from(card.children) as HTMLElement[];
+      const headerClone = cardChildren[0].cloneNode(true) as HTMLElement;
+      const summaryClone = cardChildren[1].cloneNode(true) as HTMLElement;
+      const expContainer = cardChildren[2];
+      const eduSkillsClone = cardChildren[3].cloneNode(true) as HTMLElement;
+
+      const expTitle = (expContainer.querySelector('h2')?.cloneNode(true) || document.createElement('h2')) as HTMLElement;
+      const expTitle2 = expTitle.cloneNode(true) as HTMLElement;
+      const expContLabel = language === 'PT' ? ' (Continuação)' : language === 'FR' ? ' (Suite)' : language === 'ES' ? ' (Continuación)' : ' (Continued)';
+      expTitle2.textContent = (expTitle2.textContent || '') + expContLabel;
+
+      const jobNodes = Array.from(expContainer.children).filter(
+        (el) => el.tagName !== 'H2'
+      ) as HTMLElement[];
+
+      // Divisão balanceada para padrão de 2 páginas:
+      // Página 1: Primeiras 3 experiências (Summerhill & Altitude/Ultra)
+      // Página 2: Experiências anteriores (Atento) + Formação + Habilidades + Idiomas
+      const jobsPage1 = jobNodes.slice(0, 2).map((j) => j.cloneNode(true) as HTMLElement);
+      const jobsPage2 = jobNodes.slice(2).map((j) => j.cloneNode(true) as HTMLElement);
+
+      // Folha de estilo embutida: Margens Canônicas Canadenses 0.75" (18mm) com densidade equilibrada
+      const pdfStyle = document.createElement('style');
+      pdfStyle.textContent = `
+        .canadian-a4-page {
+          width: 794px;
+          height: 1123px;
+          max-height: 1123px;
+          padding: 48px 64px; /* ~18mm laterais (0.72") e ~13mm verticais */
+          box-sizing: border-box;
+          background-color: #ffffff !important;
+          color: #111827 !important;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          font-size: 8.5pt !important;
+          line-height: 1.30 !important;
+          letter-spacing: -0.01em !important;
+        }
+        .canadian-a4-page * {
+          box-sizing: border-box;
+        }
+        .canadian-a4-page h1 {
+          font-size: 14pt !important;
+          line-height: 1.15 !important;
+          margin-bottom: 2px !important;
+          color: #111827 !important;
+        }
+        .canadian-a4-page h2 {
+          font-size: 8.8pt !important;
+          font-weight: 700 !important;
+          text-transform: uppercase !important;
+          letter-spacing: 0.04em !important;
+          border-bottom: 1px solid #d1d5db !important;
+          padding-bottom: 2px !important;
+          margin-top: 5px !important;
+          margin-bottom: 4px !important;
+          color: #111827 !important;
+        }
+        .canadian-a4-page p, .canadian-a4-page div {
+          line-height: 1.30 !important;
+          color: #1f2937 !important;
+        }
+        /* Neutralização de hifens e forçamento de alinhamento à esquerda no PDF para conformidade ATS */
+        .canadian-a4-page,
+        .canadian-a4-page *,
+        .canadian-a4-page .cv-justified-text,
+        .canadian-a4-page p {
+          text-align: left !important;
+          text-justify: auto !important;
+          hyphens: none !important;
+          -webkit-hyphens: none !important;
+          -ms-hyphens: none !important;
+        }
+        .canadian-a4-page .mb-6, .canadian-a4-page .mb-5 {
+          margin-bottom: 5px !important;
+        }
+        .canadian-a4-page .space-y-6 > * + * {
+          margin-top: 5px !important;
+        }
+        .canadian-a4-page .space-y-4 > * + * {
+          margin-top: 4px !important;
+        }
+        .canadian-a4-page .space-y-3 > * + * {
+          margin-top: 2.5px !important;
+        }
+        .canadian-a4-page .space-y-2\.5 > * + * {
+          margin-top: 2.5px !important;
+        }
+        .canadian-a4-page .space-y-1 > * + * {
+          margin-top: 1px !important;
+        }
+        .canadian-a4-page .mt-2\.5 {
+          margin-top: 2px !important;
+        }
+        .canadian-a4-page .mt-2 {
+          margin-top: 2px !important;
+        }
+        .canadian-a4-page .pb-4, .canadian-a4-page .pb-5 {
+          padding-bottom: 2px !important;
+        }
+        .canadian-a4-page .border-b {
+          border-color: #d1d5db !important;
+        }
+      `;
+      wrapper.appendChild(pdfStyle);
+
+      // ESTILO CANÔNICO A4 CANADENSE: Margens laterais de 0.75" (64px / 18mm)
+      const createPageContainer = (): HTMLElement => {
+        const page = document.createElement('div');
+        page.className = 'canadian-a4-page';
+        return page;
+      };
+
+      // === MONTAGEM DA PÁGINA 1 ===
+      const page1 = createPageContainer();
+      page1.appendChild(headerClone);
+      page1.appendChild(summaryClone);
+
+      const expSec1 = document.createElement('div');
+      expSec1.className = 'space-y-3';
+      expSec1.style.marginBottom = '0px';
+      expSec1.appendChild(expTitle);
+      jobsPage1.forEach((job) => expSec1.appendChild(job));
+      page1.appendChild(expSec1);
+
+      // === MONTAGEM DA PÁGINA 2 ===
+      const page2 = createPageContainer();
+
+      // Running Header Canônico Canadense (Sem colisão de títulos longos)
+      const runningHeader = document.createElement('div');
+      runningHeader.style.display = 'flex';
+      runningHeader.style.justifyContent = 'space-between';
+      runningHeader.style.alignItems = 'center';
+      runningHeader.style.borderBottom = '1px solid #d1d5db';
+      runningHeader.style.paddingBottom = '3px';
+      runningHeader.style.marginBottom = '8px';
+      runningHeader.style.fontSize = '8pt';
+      runningHeader.style.fontFamily = 'monospace';
+      runningHeader.style.color = '#6b7280';
+      runningHeader.style.letterSpacing = '0.04em';
+      const pageLabel = language === 'PT' ? 'Página 2 de 2' : language === 'FR' ? 'Page 2 sur 2' : language === 'ES' ? 'Página 2 de 2' : 'Page 2 of 2';
+      runningHeader.innerHTML = `<span style="font-weight: 700; color: #374151;">${PROFILE_DATA.name.toUpperCase()}</span><span>${pageLabel}</span>`;
+      page2.appendChild(runningHeader);
+
+      if (jobsPage2.length > 0) {
+        const expSec2 = document.createElement('div');
+        expSec2.className = 'space-y-3';
+        expSec2.style.marginBottom = '8px';
+        expSec2.appendChild(expTitle2);
+        jobsPage2.forEach((job) => expSec2.appendChild(job));
+        page2.appendChild(expSec2);
+      }
+
+      page2.appendChild(eduSkillsClone);
+
+      wrapper.appendChild(page1);
+      wrapper.appendChild(page2);
+      document.body.appendChild(wrapper);
+
+      // Renderização simultânea em alta densidade 2x DPI
+      const [imgPage1, imgPage2] = await Promise.all([
+        toJpeg(page1, { quality: 0.98, pixelRatio: 2, skipFonts: true, backgroundColor: '#ffffff' }),
+        toJpeg(page2, { quality: 0.98, pixelRatio: 2, skipFonts: true, backgroundColor: '#ffffff' }),
+      ]);
+
+      const pdf = new jsPDF({
+        orientation: 'p',
+        unit: 'mm',
+        format: 'a4',
+        compress: true,
+      });
+
+      // Mapeamento de links clicáveis (LinkedIn, GitHub, E-mail, WhatsApp) sobre as coordenadas A4
+      const attachPdfLinks = (pageElement: HTMLElement, pageNumber: number) => {
+        const pageRect = pageElement.getBoundingClientRect();
+        if (pageRect.width === 0 || pageRect.height === 0) return;
+
+        const scaleX = 210 / pageElement.offsetWidth;
+        const scaleY = 297 / pageElement.offsetHeight;
+
+        const links = pageElement.querySelectorAll('a');
+        links.forEach((anchor) => {
+          const href = anchor.getAttribute('href');
+          if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+
+          const elRect = anchor.getBoundingClientRect();
+          if (elRect.width === 0 || elRect.height === 0) return;
+
+          // Conversão de pixels do DOM para milímetros do PDF
+          const x = (elRect.left - pageRect.left) * scaleX;
+          const y = (elRect.top - pageRect.top) * scaleY;
+          const w = elRect.width * scaleX;
+          const h = elRect.height * scaleY;
+
+          // Área de toque com tolerância de 0.4mm e diretiva canônica para abrir em nova aba/janela
+          const pad = 0.4;
+          pdf.setPage(pageNumber);
+          pdf.link(
+            Math.max(0, x - pad),
+            Math.max(0, y - pad),
+            w + pad * 2,
+            h + pad * 2,
+            { url: href, newWindow: true } as any
+          );
+        });
+      };
+
+      // Página 1: imagem e injeção de links clicáveis (LinkedIn, GitHub, etc.)
+      pdf.addImage(imgPage1, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+      attachPdfLinks(page1, 1);
+
+      // Página 2: imagem e injeção de links
+      pdf.addPage('a4', 'p');
+      pdf.addImage(imgPage2, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+      attachPdfLinks(page2, 2);
+
+      pdf.save(`Thales_Everardo_CV_${language}.pdf`);
+    } catch (err) {
+      console.error('Falha ao gerar arquivo PDF:', err);
+    } finally {
+      if (document.body.contains(wrapper)) {
+        document.body.removeChild(wrapper);
+      }
+      if (wasDark) {
+        document.documentElement.classList.remove('light');
+        document.documentElement.classList.add('dark');
+      }
+      setIsGeneratingPdf(false);
+      setShowDownloadMenu(false);
+    }
   };
 
-  const downloadStaticFile = (extension: 'pdf' | 'txt' | 'md') => {
+  const getShareUrl = () => {
+    if (typeof window !== 'undefined') {
+      const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+      return `${window.location.origin}${base}/?lang=${language.toLowerCase()}`;
+    }
+    return '';
+  };
+
+  const downloadStaticFile = (extension: 'txt' | 'md') => {
     const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     const filename = `Thales_Everardo_CV_${language}.${extension}`;
     const fileUrl = `${base}/resumes/${filename}`;
@@ -103,9 +390,9 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
   };
 
   const handleCopyPdfLink = async () => {
-    const pdfUrl = getAbsoluteDocUrl('pdf');
+    const shareUrl = getShareUrl();
     try {
-      await navigator.clipboard.writeText(pdfUrl);
+      await navigator.clipboard.writeText(shareUrl);
       setCopiedLink(true);
       setTimeout(() => {
         setCopiedLink(false);
@@ -117,16 +404,16 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
   };
 
   const handleShareWhatsApp = () => {
-    const pdfUrl = getAbsoluteDocUrl('pdf');
-    const msg = `${t(language, 'resume.shareWhatsAppMsg')}${pdfUrl}`;
+    const shareUrl = getShareUrl();
+    const msg = `${t(language, 'resume.shareWhatsAppMsg')}${shareUrl}`;
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
     setShowShareMenu(false);
   };
 
   const handleShareLinkedIn = () => {
-    const pdfUrl = getAbsoluteDocUrl('pdf');
+    const shareUrl = getShareUrl();
     window.open(
-      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pdfUrl)}`,
+      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
       '_blank',
       'noopener,noreferrer'
     );
@@ -134,9 +421,9 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
   };
 
   const handleShareEmail = async () => {
-    const pdfUrl = getAbsoluteDocUrl('pdf');
+    const shareUrl = getShareUrl();
     const subject = t(language, 'resume.shareEmailSubject');
-    const body = t(language, 'resume.shareEmailBody').replace('{url}', pdfUrl);
+    const body = t(language, 'resume.shareEmailBody').replace('{url}', shareUrl);
 
     const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     const anchor = document.createElement('a');
@@ -147,7 +434,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
     document.body.removeChild(anchor);
 
     try {
-      await navigator.clipboard.writeText(pdfUrl);
+      await navigator.clipboard.writeText(shareUrl);
       setEmailCopiedFeedback(true);
       setTimeout(() => {
         setEmailCopiedFeedback(false);
@@ -159,13 +446,13 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
   };
 
   const handleNativeShare = async () => {
-    const pdfUrl = getAbsoluteDocUrl('pdf');
+    const shareUrl = getShareUrl();
     const title = `Thales Everardo - CV (${language})`;
     const text = `${PROFILE_DATA.name} - ${getProfileTitle(language)}`;
 
     try {
       if (typeof navigator !== 'undefined' && navigator.share) {
-        await navigator.share({ title, text, url: pdfUrl });
+        await navigator.share({ title, text, url: shareUrl });
         setShowShareMenu(false);
       }
     } catch {}
@@ -326,15 +613,30 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                 </div>
                 <div className="p-1.5 space-y-1">
                   <button
-                    onClick={() => downloadStaticFile('pdf')}
-                    className="w-full text-left p-2.5 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors flex items-center justify-between cursor-pointer group"
+                    onClick={handleGeneratePdf}
+                    disabled={isGeneratingPdf}
+                    className="w-full text-left p-2.5 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors flex items-center justify-between cursor-pointer group disabled:opacity-50"
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 flex items-center justify-center shrink-0">
-                        <FileCheck className="w-4 h-4" />
+                        {isGeneratingPdf ? (
+                          <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <FileCheck className="w-4 h-4" />
+                        )}
                       </div>
                       <div>
-                        <div className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">{t(language, 'resume.formatPdfTitle')}</div>
+                        <div className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
+                          {isGeneratingPdf
+                            ? language === 'PT'
+                              ? 'Gerando arquivo...'
+                              : language === 'ES'
+                              ? 'Generando archivo...'
+                              : language === 'FR'
+                              ? 'Génération du fichier...'
+                              : 'Generating file...'
+                            : t(language, 'resume.formatPdfTitle')}
+                        </div>
                         <div className="text-[11px] text-zinc-500 dark:text-zinc-400">{t(language, 'resume.formatPdfSub')}</div>
                       </div>
                     </div>
@@ -455,6 +757,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
       {/* 3. CORPO DO CV TIMBRADO (CONTAINER PURO DO DOCUMENTO EXECUTIVO - PADRÃO WYSIWYG) */}
       <article
         id="printable-resume-card"
+        lang={language === 'PT' ? 'pt-BR' : language === 'ES' ? 'es-ES' : language === 'FR' ? 'fr-FR' : 'en-US'}
         className={`w-full cv-sheet-font leading-relaxed text-[13px] print:border-none print:shadow-none print:p-0 print:m-0 print:text-black p-5 sm:p-10 rounded-2xl border transition-all ${
           theme === 'dark'
             ? 'bg-[#0c0c0f]/80 border-zinc-800/80 text-zinc-200 shadow-xs'
@@ -512,7 +815,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                     <span className="tracking-wide select-none font-medium text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-800 dark:group-hover:text-zinc-200">
                       thales••••••@•••••.com
                     </span>
-                    <Lock className="w-3 h-3 text-zinc-400/80 dark:text-zinc-500/80 shrink-0" />
+                    <Lock className="w-3 h-3 text-amber-500 shrink-0" strokeWidth={1.8} />
                   </button>
                   <span className="text-zinc-300 dark:text-zinc-700 select-none">|</span>
                   <button
@@ -525,7 +828,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                     <span className="tracking-wide select-none font-medium text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-800 dark:group-hover:text-zinc-200">
                       +55 11 9••••-••••
                     </span>
-                    <Lock className="w-3 h-3 text-zinc-400/80 dark:text-zinc-500/80 shrink-0" />
+                    <Lock className="w-3 h-3 text-amber-500 shrink-0" strokeWidth={1.8} />
                   </button>
                 </>
               )}
@@ -533,31 +836,41 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
 
             <span className="text-zinc-300 dark:text-zinc-700 select-none hidden sm:inline">|</span>
 
-            {/* Bloco 2: Perfis Profissionais */}
-            <div className="flex items-center gap-x-2.5">
+            {/* Bloco 2: Perfis Profissionais (Rastreados via Bridge Pages) */}
+            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
               <a
-                href="https://br.linkedin.com/in/thaleseverardo"
+                href="https://thaleseverardo.github.io/thales-everardo-cv/linkedin?src=cv_web"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors"
               >
-                <Linkedin className="w-3.5 h-3.5 text-[#0A66C2] shrink-0" />
+                <Linkedin className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
                 <span className="hover:underline">LinkedIn</span>
               </a>
               <span className="text-zinc-300 dark:text-zinc-700 select-none">|</span>
               <a
-                href="https://github.com/thaleseverardo"
+                href="https://thaleseverardo.github.io/thales-everardo-cv/github?src=cv_web"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors"
+              >
+                <Github className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+                <span className="hover:underline">GitHub</span>
+              </a>
+              <span className="text-zinc-300 dark:text-zinc-700 select-none">|</span>
+              <a
+                href="https://thaleseverardo.github.io/thales-everardo-cv/portfolio?src=cv_web"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors"
               >
                 <Globe className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
-                <span className="hover:underline">GitHub</span>
+                <span className="hover:underline">{language === 'PT' ? 'Portfólio' : language === 'ES' ? 'Portafolio' : 'Portfolio'}</span>
               </a>
             </div>
           </div>
 
-          {/* 2. LINHA DE CONTATOS DEDICADA PARA IMPRESSÃO / PDF (CONTATOS REAIS + ZERO PIPES DUPLOS) */}
+          {/* 2. LINHA DE CONTATOS DEDICADA PARA IMPRESSÃO / PDF (RASTREADOS COM ?src=cv_pdf) */}
           <div className="hidden print:flex flex-wrap items-center gap-x-2 gap-y-1 text-[9pt] font-sans text-zinc-700 mt-1.5">
             <span className="inline-flex items-center gap-1">
               <Mail className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
@@ -569,15 +882,29 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
               <span>{phone || '+55 11 9••••-••••'}</span>
             </span>
             <span className="text-zinc-400 select-none">|</span>
-            <span className="inline-flex items-center gap-1">
+            <a
+              href="https://thaleseverardo.github.io/thales-everardo-cv/linkedin?src=cv_pdf"
+              className="inline-flex items-center gap-1 text-inherit no-underline"
+            >
               <Linkedin className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
               <span>linkedin.com/in/thaleseverardo</span>
-            </span>
+            </a>
             <span className="text-zinc-400 select-none">|</span>
-            <span className="inline-flex items-center gap-1">
-              <Globe className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+            <a
+              href="https://thaleseverardo.github.io/thales-everardo-cv/github?src=cv_pdf"
+              className="inline-flex items-center gap-1 text-inherit no-underline"
+            >
+              <Github className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
               <span>github.com/thaleseverardo</span>
-            </span>
+            </a>
+            <span className="text-zinc-400 select-none">|</span>
+            <a
+              href="https://thaleseverardo.github.io/thales-everardo-cv/portfolio?src=cv_pdf"
+              className="inline-flex items-center gap-1 text-inherit no-underline"
+            >
+              <Globe className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+              <span>thaleseverardo.github.io/.../portfolio</span>
+            </a>
           </div>
 
           {/* DESTAQUE DE IDIOMAS & EXPERIÊNCIA CORPORATIVA (TEXTUAL CONTINUO) */}
@@ -666,7 +993,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
             };
 
             // Filtrar fundações puramente acadêmicas para manter apenas histórico corporativo formal
-            const professionalNodes = CURRICULUM_NODES.filter((node) => {
+            const filteredNodes = CURRICULUM_NODES.filter((node) => {
               const id = node.id.toLowerCase();
               const comp = node.company.toLowerCase();
               const role = node.role.toLowerCase();
@@ -687,118 +1014,191 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
               return scoreB - scoreA;
             });
 
+            // Consolidação das atribuições da Summerhill Market em uma experiência unificada
+            const summerhillNodes = filteredNodes.filter((n) => n.company.toLowerCase().includes('summerhill'));
+            const nonSummerhillNodes = filteredNodes.filter((n) => !n.company.toLowerCase().includes('summerhill'));
+
+            let consolidatedSummerhillNode: (typeof filteredNodes)[0] | null = null;
+            if (summerhillNodes.length > 0) {
+              const baseNode = summerhillNodes[0];
+              const progressionText =
+                language === 'PT'
+                  ? 'Progressão de Carreira: Liderança Operacional (2020/21) ➔ DBA & Dados (2021/23) ➔ Gerente de Sistemas de TI & Soluções (2023/24)'
+                  : language === 'FR'
+                  ? 'Progression : Responsable Opérations (2020/21) ➔ DBA & Données (2021/23) ➔ Responsable Systèmes IT & Solutions (2023/24)'
+                  : language === 'ES'
+                  ? 'Progresión: Liderazgo Operacional (2020/21) ➔ DBA y Datos (2021/23) ➔ Gerente de Sistemas de TI y Soluciones (2023/24)'
+                  : 'Career Progression: Operations Lead (2020/21) ➔ Database Administrator (2021/23) ➔ IT Systems & Solutions Manager (2023/24)';
+
+              const unifiedRole =
+                language === 'PT'
+                  ? 'Gerente de Sistemas de TI, Engenheiro de Soluções & DBA'
+                  : language === 'FR'
+                  ? 'Responsable des Systèmes IT, Ingénieur Solutions & Lead DBA'
+                  : language === 'ES'
+                  ? 'Gerente de Sistemas de TI, Ingeniero de Soluciones y DBA'
+                  : 'IT Systems Manager, Solutions Engineer & Lead DBA';
+
+              const unifiedROI =
+                language === 'PT'
+                  ? 'Unificou a governança tecnológica de 5 lojas físicas para +500.000 transações/mês (30.000 SKUs) e reduziu descarte de insumos em 70% com +50% de produtividade fabril.'
+                  : language === 'FR'
+                  ? 'Gouvernance technologique et données unifiée sur 5 magasins physiques (+500 000 transactions/mois et 30 000 SKUs) et réduction de 70% du gaspillage avec +50% de productivité.'
+                  : language === 'ES'
+                  ? 'Gobernanza tecnológica y de datos unificada en 5 tiendas físicas (+500.000 transacciones/mes y 30.000 SKUs), reduciendo el descarte en un 70% con +50% de productividad.'
+                  : 'Unified IT & data governance across 5 enterprise stores for 500,000+ monthly transactions (30,000 SKUs) while slashing physical production waste by 70% with +50% throughput.';
+
+              const unifiedFeat =
+                language === 'PT'
+                  ? 'Implementou plano de Disaster Recovery (DR/BCP) com recuperação de dados críticos em 24h, eliminou retrabalho em 30k SKUs via catálogo GS1 em tempo real e aplicou Teoria das Filas à produção.'
+                  : language === 'FR'
+                  ? 'Mise en œuvre d\'un plan de reprise après sinistre (DR/BCP) restaurant les données en 24h, synchronisation POS/ERP en temps réel (standard GS1) et application de la Théorie des files d\'attente.'
+                  : language === 'ES'
+                  ? 'Implementó plan de Disaster Recovery (DR/BCP) recuperando datos críticos en 24h, logró sincronización GS1/POS en tiempo real en 30.000 SKUs y aplicó Teoría de Colas a la producción.'
+                  : 'Architected Disaster Recovery (DR/BCP) restoring critical data within 24h, achieved sub-second GS1 catalog/POS sync across 30k SKUs, and applied Queueing Theory to physical factory workflows.';
+
+              const unifiedSolution =
+                language === 'PT'
+                  ? 'Desenvolveu microsserviços e APIs RESTful em C#/.NET conectando o padrão GS1 ao ERP com tolerância a falhas, modelou rotinas ETL e aplicou cadência Just-in-Time com previsão de demanda.'
+                  : language === 'FR'
+                  ? 'Développement de microservices et APIs RESTful en C#/.NET reliant le standard GS1 à l\'ERP avec haute résilience, optimisation ETL et flux Just-in-Time.'
+                  : language === 'ES'
+                  ? 'Desarrolló microservicios y APIs RESTful en C#/.NET conectando el estándar GS1 al ERP con tolerancia a fallos, optimizó ETL y aplicó cadencia Just-in-Time.'
+                  : 'Engineered resilient C#/.NET RESTful microservices integrating GS1 catalog standards with enterprise ERP, automated relational ETL pipelines, and enforced Just-in-Time predictive demand forecasting.';
+
+              const unifiedTechs = Array.from(
+                new Set(summerhillNodes.flatMap((n) => n.technologies))
+              );
+
+              consolidatedSummerhillNode = {
+                ...baseNode,
+                id: 'summerhill-consolidated-node',
+                role: unifiedRole,
+                company: 'Summerhill Market',
+                period: 'Jul 2020 - Feb 2024',
+                location: 'Toronto, ON, Canada',
+                technologies: unifiedTechs,
+                careerProgression: progressionText,
+                businessValue: unifiedROI,
+                engineeringFeat: unifiedFeat,
+                architecturalSolution: unifiedSolution,
+              };
+            }
+
+            // Consolidação das atribuições da Atento em uma experiência unificada com progressão
+            const atentoNodes = nonSummerhillNodes.filter((n) => n.company.toLowerCase().includes('atento'));
+            const nonAtentoNodes = nonSummerhillNodes.filter((n) => !n.company.toLowerCase().includes('atento'));
+
+            let consolidatedAtentoNode: (typeof filteredNodes)[0] | null = null;
+            if (atentoNodes.length > 0) {
+              const baseNode = atentoNodes[0];
+              const progressionText =
+                language === 'PT'
+                  ? 'Progressão de Carreira: Analista de Suporte (2007/08) ➔ Eng. de Suporte I (2011) ➔ Eng. de Suporte II (2014) ➔ Eng. de Suporte III (2015/16) ➔ Coordenação Técnica Interina'
+                  : language === 'FR'
+                  ? 'Progression : Analyste Support (2007/08) ➔ Ing. Support I (2011) ➔ Ing. Support II (2014) ➔ Ing. Support III (2015/16) ➔ Coordination Technique par intérim'
+                  : language === 'ES'
+                  ? 'Progresión: Analista de Soporte (2007/08) ➔ Ing. de Soporte I (2011) ➔ Ing. de Soporte II (2014) ➔ Ing. de Soporte III (2015/16) ➔ Coordinación Técnica Interina'
+                  : 'Career Progression: Support Analyst (2007/08) ➔ Support Eng. I (2011) ➔ Support Eng. II (2014) ➔ Support Eng. III (2015/16) ➔ Acting Technical Coordinator';
+
+              const unifiedRole =
+                language === 'PT'
+                  ? 'Engenheiro de Suporte Técnico III (Telecomunicações, CTI & Automação)'
+                  : language === 'FR'
+                  ? 'Ingénieur Support Technique III (Télécoms, CTI & Automatisation)'
+                  : language === 'ES'
+                  ? 'Ingeniero de Soporte Técnico III (Telecomunicaciones, CTI y Automatización)'
+                  : 'Technical Support Engineer III (Telecom, CTI & Automation)';
+
+              const unifiedROI =
+                language === 'PT'
+                  ? 'Garantia de 99,98% de disponibilidade operacional para +40.000 PAs (economia de US$ 500k+ em multas) e redução de 99,8% no tempo de processamento de relatórios gerenciais (de 7 dias para 20 minutos).'
+                  : language === 'FR'
+                  ? 'Garantie de 99,98% de disponibilité opérationnelle pour +40 000 postes (+500k$ d\'économies) et réduction de 99,8% du temps de traitement des rapports (de 7 jours à 20 minutes).'
+                  : language === 'ES'
+                  ? 'Garantizó el 99,98% de disponibilidad operativa para más de 40.000 puestos (ahorro de US$ 500k+) y reducción del 99,8% en el tiempo de procesamiento de informes (de 7 días a 20 minutos).'
+                  : '99.98% operational uptime across mission-critical infrastructure for 40,000+ workstations (US$ 500k+ saved) and 99.8% reduction in reporting processing latency (from 7 days down to 20 minutes).';
+
+              const unifiedFeat =
+                language === 'PT'
+                  ? 'Projetou pipelines contínuos de ingestão para +100.000 registros diários de voz e desenvolveu esteiras ETL em T-SQL e Shell Script que reduziram auditorias manuais de 1 semana para 10 segundos.'
+                  : language === 'FR'
+                  ? 'Conception de pipelines d\'ingestion pour +100 000 enregistrements quotidiens de voix et développement de flux ETL en T-SQL réduisant les audits d\'une semaine à 10 secondes.'
+                  : language === 'ES'
+                  ? 'Diseñó pipelines continuos de ingestión para más de 100.000 registros diarios de voz y esteiras ETL en T-SQL que redujeron auditorías de 1 semana a 10 segundos.'
+                  : 'Engineered continuous voice ingestion pipelines for 100,000+ daily records and developed automated T-SQL/Shell ETL scripts slashing manual audit routines from 1 week to 10 seconds.';
+
+              const unifiedSolution =
+                language === 'PT'
+                  ? 'Gerenciou tráfego massivo de voz e dados em topologias heterogêneas 24/7 (Windows/Linux, LAN/WAN, SIP/VoIP, discadores preditivos e CTI) combinadas a procedures T-SQL otimizadas e automação de banco de dados.'
+                  : language === 'FR'
+                  ? 'Gestion du trafic massif voix/données 24/7 (Windows/Linux, LAN/WAN, SIP/VoIP, CTI et composeurs prédictifs) combinée à des procédures T-SQL optimisées sans intervention manuelle.'
+                  : language === 'ES'
+                  ? 'Gestión de tráfico masivo de voz y datos (Windows/Linux, LAN/WAN, SIP/VoIP, CTI y marcadores predictivos) integrada con procedimientos T-SQL optimizados.'
+                  : 'Administered 24/7 high-availability telecom infrastructure (Windows/Linux, LAN/WAN, SIP/VoIP, predictive dialers and CTI) combined with optimized T-SQL stored procedures and database automation.';
+
+              const unifiedTechs = Array.from(
+                new Set(atentoNodes.flatMap((n) => n.technologies))
+              );
+
+              consolidatedAtentoNode = {
+                ...baseNode,
+                id: 'atento-consolidated-node',
+                role: unifiedRole,
+                company: 'Atento',
+                period: 'Jan 2008 - Dec 2016',
+                location: 'São Paulo, Brazil',
+                technologies: unifiedTechs,
+                careerProgression: progressionText,
+                businessValue: unifiedROI,
+                engineeringFeat: unifiedFeat,
+                architecturalSolution: unifiedSolution,
+              };
+            }
+
+            const professionalNodes = [
+              ...nonAtentoNodes,
+              ...(consolidatedSummerhillNode ? [consolidatedSummerhillNode] : []),
+              ...(consolidatedAtentoNode ? [consolidatedAtentoNode] : []),
+            ].sort((a, b) => parsePeriodEndScore(b.period) - parsePeriodEndScore(a.period));
+
             return professionalNodes.map((node) => {
               const content = getNodeContent(node, language);
               const isCanadianEN = language === 'EN';
 
-              // Textos nativos garantidos para Francês e Espanhol
-              let roleText = content.role;
-              let roiText = content.businessValue;
-              let featText = content.engineeringFeat;
-              let solText = content.architecturalSolution;
-
-              const compLower = node.company.toLowerCase();
-              const roleLower = node.role.toLowerCase();
-
-              if (language === 'ES') {
-                if (compLower.includes('magalu')) {
-                  roleText = 'Staff Software Engineer y Arquitecto de Sistemas';
-                  roiText = 'Cero bloqueos en producción y mitigación total de riesgos de indisponibilidad durante cierres fiscales críticos.';
-                  featText = 'Purga asíncrona particionada de 11TB de logs transaccionales en SQL Server sin bloqueos transaccionales en caliente.';
-                  solText = 'Construcción de pipeline desacoplado en lotes dinámicos con monitoreo de telemetría de buffers de log y control de presión.';
-                } else if (compLower.includes('gps')) {
-                  roleText = 'Ingeniero de Software Senior';
-                  roiText = 'Reducción del 99,8% en el tiempo de procesamiento contable y liquidación de nóminas corporativas.';
-                  featText = 'Reducción de la latencia del pipeline de cálculo financiero de 7 días a solo 20 minutos con consistencia total.';
-                  solText = 'Optimización profunda de índices agrupados, particionamiento de tablas históricas y paralelización asíncrona en C#.';
-                } else if (compLower.includes('summerhill') && (roleLower.includes('system') || roleLower.includes('gerente') || roleLower.includes('dba'))) {
-                  roleText = 'Gerente de Sistemas de TI, Ingeniero de Soluciones y DBA';
-                  roiText = 'Gobernanza tecnológica unificada en 5 tiendas físicas con facturación íntegra en más de 500.000 transacciones mensuales y 30.000 SKUs.';
-                  featText = 'Implementó plan de Disaster Recovery (DR/BCP) con recuperación total de 1 mes de datos críticos en 24 horas y sincronización POS/ERP en tiempo real.';
-                  solText = 'Desarrollo de microservicios y APIs RESTful en C#/.NET conectando el catálogo GS1 al ERP con sincronización en tiempo real.';
-                } else if (compLower.includes('summerhill')) {
-                  roleText = 'Líder de Operaciones y Optimización de Procesos';
-                  roiText = 'Reducción del 70% en el descarte de materia prima y aumento de la capacidad de producción en un 50% sin nuevas contrataciones.';
-                  featText = 'Aplicó conceptos formales de ingeniería de software (Teoría de Colas y flujo Just-in-Time) directamente a la logística de producción física.';
-                  solText = 'Modelado predictivo de demanda con datos históricos de ventas y estandarización de pipelines de producción por lotes.';
-                } else if (compLower.includes('ambar')) {
-                  roleText = 'Ingeniero de Software Especialista';
-                  roiText = 'Sincronización en tiempo real de catálogos e inventarios en 5 centros de distribución sin pérdida de pedidos.';
-                  featText = 'Broker de mensajería estándar GS1 que conecta ERP central y terminales de punto de venta POS en tiempo real.';
-                  solText = 'Patrón Transactional Outbox con RabbitMQ y almacenamiento local idempotente con tolerancia a desconexión.';
-                } else if (compLower.includes('altitude') || compLower.includes('ultra')) {
-                  roleText = 'Ingeniero de Software / Analista Desarrollador';
-                  roiText = 'Recuperación de 11 Terabytes de almacenamiento en servidores de producción al 99% de capacidad, evitando costos masivos de hardware.';
-                  featText = 'Reducción del tiempo de ejecución de un proceso crítico mensual de 1 mes a solo 2 horas (ganancia del 99,7%).';
-                  solText = 'Expurgo transaccional particionado de datos históricos desindexados con 100% de integridad referencial y módulos en ASP.NET / T-SQL.';
-                } else if (compLower.includes('atento')) {
-                  roleText = 'Ingeniero de Soporte Técnico III y Arquitecto de Automatización';
-                  roiText = 'Garantizó el 99,98% de disponibilidad operativa en atención corporativa; redujo indisponibilidades en un 97% con ahorro superior a US$ 500.000.';
-                  featText = 'Estabilizó pipelines de ingestión continua para más de 100.000 registros diarios de voz y telefonía sin pérdida de paquetes.';
-                  solText = 'Gestión de tráfico masivo de voz y datos, optimización LAN/WAN y SIP/VoIP, y automatización con scripts ETL hacia SQL.';
-                }
-              } else if (language === 'FR') {
-                if (compLower.includes('magalu')) {
-                  roleText = 'Staff Software Engineer & Architecte Systèmes';
-                  roiText = 'Zéro verrouillage en production et élimination des risques de panne lors des clôtures fiscales critiques.';
-                  featText = 'Purge asynchrone partitionnée de 11 To de journaux sur SQL Server sans lock escalations en production.';
-                  solText = 'Conception d\'un pipeline découplé par lots dynamiques avec surveillance télémétrique de la pression des journaux.';
-                } else if (compLower.includes('gps')) {
-                  roleText = 'Ingénieur Logiciel Senior';
-                  roiText = 'Réduction de 99,8% du temps de traitement comptable et de règlement de paie multi-entités.';
-                  featText = 'Réduction de la latence du pipeline de calcul financier de 7 jours à 20 minutes avec cohérence absolue.';
-                  solText = 'Optimisation approfondie des index, partitionnement des tables historiques et parallélisation asynchrone en C#.';
-                } else if (compLower.includes('summerhill') && (roleLower.includes('system') || roleLower.includes('gerente') || roleLower.includes('dba'))) {
-                  roleText = 'Responsable des Systèmes IT, Ingénieur Solutions & DBA';
-                  roiText = 'Gouvernance technologique unifiée sur 5 magasins physiques avec facturation intègre sur plus de 500 000 transactions mensuelles et 30 000 SKUs.';
-                  featText = 'Mise en œuvre d\'un plan de reprise après sinistre (DR/BCP) avec restauration intégrale d\'un mois de données critiques en 24 heures.';
-                  solText = 'Développement de microservices et d\'APIs RESTful en C#/.NET reliant le catalogue GS1 à l\'ERP avec synchronisation en temps réel.';
-                } else if (compLower.includes('summerhill')) {
-                  roleText = 'Responsable Opérations & Optimisation des Processus';
-                  roiText = 'Réduction de 70% du gaspillage de matières premières et augmentation de 50% de la capacité de production sans nouveaux recrutements.';
-                  featText = 'Application directe des principes d\'ingénierie logicielle (Théorie des files d\'attente et Just-in-Time) à la logistique physique.';
-                  solText = 'Modélisation prédictive de la demande basée sur les historiques de ventes et standardisation des flux de production par lots.';
-                } else if (compLower.includes('ambar')) {
-                  roleText = 'Ingénieur Logiciel Spécialiste';
-                  roiText = 'Synchronisation en temps réel des catalogues et stocks sur 5 centres de distribution sans aucune perte de commande.';
-                  featText = 'Broker de messagerie au standard GS1 reliant ERP central et points de vente POS en temps réel.';
-                  solText = 'Pattern Transactional Outbox avec files RabbitMQ et persistance locale idempotente tolérante aux pannes.';
-                } else if (compLower.includes('altitude') || compLower.includes('ultra')) {
-                  roleText = 'Ingénieur Logiciel / Développeur Analyste';
-                  roiText = 'Récupération de 11 To de stockage sur des serveurs de production saturés à 99%, évitant des coûts massifs d\'infrastructure.';
-                  featText = 'Réduction du temps d\'exécution d\'un processus critique mensuel de 1 mois à seulement 2 heures (gain de 99,7%).';
-                  solText = 'Purge transactionnelle partitionnée de données historiques désindexées avec intégrité référentielle à 100% et modules en ASP.NET / T-SQL.';
-                } else if (compLower.includes('atento')) {
-                  roleText = 'Ingénieur Support Technique III & Architecte Automatisation';
-                  roiText = 'Garantie de 99,98% de disponibilité opérationnelle; réduction des interruptions de 97% générant plus de 500 000 $ d\'économies.';
-                  featText = 'Conception et stabilisation de pipelines d\'ingestion continue de plus de 100 000 enregistrements quotidiens de voix sans perte de paquets.';
-                  solText = 'Gestion du trafic massif voix/données, optimisation LAN/WAN et SIP/VoIP, et automatisation de scripts ETL vers SQL.';
-                }
-              }
+              const roleText = content.role;
+              const roiText = content.businessValue;
+              const featText = content.engineeringFeat;
+              const solText = content.architecturalSolution;
 
               return (
                 <div key={node.id} className="space-y-1 text-xs sm:text-[13px]">
-                  {/* Cabeçalho do Cargo: Empresa, Badge de País, Cargo e Período */}
+                  {/* Cabeçalho do Cargo: Empresa, Cargo, Período e Badge de País no final da linha */}
                   <div className="flex flex-col sm:flex-row sm:items-baseline justify-between font-bold gap-1 sm:gap-4">
                     <div className="text-xs sm:text-sm text-zinc-900 dark:text-zinc-100 print:text-black leading-snug">
-                      <span className="inline-flex items-center gap-1.5 mr-2 font-bold">
-                        <span>{node.company}</span>
-                        <span
-                          className="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold tracking-wider uppercase border border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 select-none"
-                          title={node.location}
-                        >
-                          {node.location.toLowerCase().includes('canada') || node.company.toLowerCase().includes('summerhill') ? 'CA' : 'BR'}
-                        </span>
-                      </span>
+                      <span className="font-bold mr-2">{node.company}</span>
                       <span className="opacity-40 font-normal mr-1.5">—</span>
                       <span className="text-zinc-700 dark:text-zinc-300 font-medium print:text-black">
                         {roleText}
                       </span>
                     </div>
-                    <span className="font-mono text-[11px] opacity-70 shrink-0 sm:pt-0.5">
-                      {node.period} · {node.location}
+                    <span className="font-mono text-[11px] opacity-70 shrink-0 sm:pt-0.5 inline-flex items-center gap-1.5">
+                      <span>{node.period} · {node.location}</span>
+                      <span className="inline-flex items-center print:hidden" title={node.location}>
+                        {node.location.toLowerCase().includes('canada') || node.company.toLowerCase().includes('summerhill') ? (
+                          <CanadaFlagSVG />
+                        ) : (
+                          <BrazilFlagSVG />
+                        )}
+                      </span>
                     </span>
                   </div>
+
+                  {node.careerProgression && (
+                    <div className="text-[11px] font-sans font-medium text-blue-600/90 dark:text-blue-400/90 print:text-zinc-600 print:text-[8.5pt] italic pt-0.5 pb-0.5">
+                      {node.careerProgression}
+                    </div>
+                  )}
 
                   {isCanadianEN ? (
                     /* =========================================================

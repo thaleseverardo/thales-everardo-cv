@@ -115,24 +115,32 @@ export default function App() {
   const [systemState, setSystemState] = useState<SystemState>(() => {
     // Currículo oficial como página inicial padrão absoluta (Recruiter-First)
     let initialLayout: ViewLayout = 'RESUME';
+    let initialArticle: string | null = null;
+    let initialProject: string | null = null;
     const detectedLang = parseLanguageFromUrl();
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.toLowerCase();
       const search = new URLSearchParams(window.location.search);
-      if (hash.includes('grafo') || hash.includes('graph') || search.get('view') === 'graph' || search.get('view') === 'grafo') {
+      const viewParam = search.get('view')?.toLowerCase();
+
+      if (hash.includes('grafo') || hash.includes('graph') || viewParam === 'graph' || viewParam === 'grafo') {
         initialLayout = 'GRAPH';
-      } else if (hash.includes('timeline') || search.get('view') === 'timeline') {
+      } else if (hash.includes('timeline') || viewParam === 'timeline') {
         initialLayout = 'TIMELINE';
-      } else if (hash.includes('artigos') || hash.includes('articles')) {
+      } else if (hash.includes('artigos') || hash.includes('articles') || viewParam === 'articles' || viewParam === 'artigos') {
         initialLayout = 'ARTICLES';
-      } else if (hash.includes('projetos') || hash.includes('projects')) {
+        const parts = hash.split('/');
+        initialArticle = search.get('article') || parts[2] || null;
+      } else if (hash.includes('projetos') || hash.includes('projects') || viewParam === 'projects' || viewParam === 'projetos') {
         initialLayout = 'PROJECTS';
+        const parts = hash.split('/');
+        initialProject = search.get('project') || parts[2] || null;
       } else if (
         hash.includes('curriculo') ||
         hash.includes('cv') ||
         hash.includes('resume') ||
-        search.get('view') === 'resume' ||
-        search.get('view') === 'curriculo'
+        viewParam === 'resume' ||
+        viewParam === 'curriculo'
       ) {
         initialLayout = 'RESUME';
       }
@@ -150,6 +158,8 @@ export default function App() {
       theme: getInitialTheme(),
       profileLens: 'ALL',
       viewLayout: initialLayout,
+      activeArticleSlug: initialArticle,
+      activeProjectSlug: initialProject,
       onboardingDismissed: true,
       searchTerm: '',
       selectedTag: null,
@@ -171,68 +181,71 @@ export default function App() {
     setSystemState((prev) => ({ ...prev, ...updates }));
   }, []);
 
-  // Sincronização de URL/Rota multilíngue com suporte a histórico do navegador (SEO Canônico)
+  // Sincronização Canônica de Histórico (Compatível com Googlebot e livre de hashes obrigatórios)
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     const langCode = systemState.language.toLowerCase();
-    if (systemState.viewLayout === 'RESUME') {
-      const targetHash = `#/curriculo/${langCode}`;
-      if (window.location.hash !== targetHash) {
-        window.history.replaceState(null, '', `${base}/${targetHash}`);
-      }
-    } else if (systemState.viewLayout === 'GRAPH') {
-      if (window.location.hash !== '#/grafo') {
-        window.history.replaceState(null, '', `${base}/#/grafo`);
-      }
+    const params = new URLSearchParams();
+    
+    params.set('lang', langCode);
+
+    if (systemState.viewLayout === 'GRAPH') {
+      params.set('view', 'graph');
     } else if (systemState.viewLayout === 'TIMELINE') {
-      if (window.location.hash !== '#/timeline') {
-        window.history.replaceState(null, '', `${base}/#/timeline`);
-      }
+      params.set('view', 'timeline');
     } else if (systemState.viewLayout === 'ARTICLES') {
-      const target = systemState.activeArticleSlug ? `#/artigos/${systemState.activeArticleSlug}` : '#/artigos';
-      if (window.location.hash !== target) {
-        window.history.replaceState(null, '', `${base}/${target}`);
-      }
+      params.set('view', 'articles');
+      if (systemState.activeArticleSlug) params.set('article', systemState.activeArticleSlug);
     } else if (systemState.viewLayout === 'PROJECTS') {
-      const target = systemState.activeProjectSlug ? `#/projetos/${systemState.activeProjectSlug}` : '#/projetos';
-      if (window.location.hash !== target) {
-        window.history.replaceState(null, '', `${base}/${target}`);
-      }
+      params.set('view', 'projects');
+      if (systemState.activeProjectSlug) params.set('project', systemState.activeProjectSlug);
     }
-  }, [systemState.viewLayout, systemState.language]);
+
+    const newQuery = params.toString() ? `?${params.toString()}` : '';
+    const currentQuery = window.location.search;
+    const currentHash = window.location.hash;
+
+    // Se a URL mudou e não estamos em navegação hash legada explícita, atualiza canonicamente
+    if (currentQuery !== newQuery && !currentHash) {
+      window.history.replaceState(null, '', `${base}/${newQuery}`);
+    }
+  }, [systemState.viewLayout, systemState.language, systemState.activeArticleSlug, systemState.activeProjectSlug]);
 
   useEffect(() => {
     const handlePopState = () => {
       const hash = window.location.hash.toLowerCase();
+      const search = new URLSearchParams(window.location.search);
+      const viewParam = search.get('view')?.toLowerCase();
       const detectedLang = parseLanguageFromUrl();
-      if (hash.includes('curriculo') || hash.includes('cv') || hash.includes('resume')) {
+
+      if (hash.includes('curriculo') || hash.includes('cv') || hash.includes('resume') || viewParam === 'resume' || viewParam === 'curriculo') {
         updateState({
           viewLayout: 'RESUME',
           ...(detectedLang ? { language: detectedLang } : {}),
         });
-      } else if (hash.includes('timeline')) {
+      } else if (hash.includes('timeline') || viewParam === 'timeline') {
         updateState({
           viewLayout: 'TIMELINE',
           ...(detectedLang ? { language: detectedLang } : {}),
         });
-      } else if (hash.includes('artigos') || hash.includes('articles')) {
+      } else if (hash.includes('artigos') || hash.includes('articles') || viewParam === 'articles' || viewParam === 'artigos') {
         const parts = hash.split('/');
-        const slug = parts[2] || null;
+        const slug = search.get('article') || parts[2] || null;
         updateState({
           viewLayout: 'ARTICLES',
           activeArticleSlug: slug,
           ...(detectedLang ? { language: detectedLang } : {}),
         });
-      } else if (hash.includes('projetos') || hash.includes('projects')) {
+      } else if (hash.includes('projetos') || hash.includes('projects') || viewParam === 'projects' || viewParam === 'projetos') {
         const parts = hash.split('/');
-        const slug = parts[2] || null;
+        const slug = search.get('project') || parts[2] || null;
         updateState({
           viewLayout: 'PROJECTS',
           activeProjectSlug: slug,
           ...(detectedLang ? { language: detectedLang } : {}),
         });
-      } else if (hash.includes('grafo') || hash.includes('graph')) {
+      } else if (hash.includes('grafo') || hash.includes('graph') || viewParam === 'graph' || viewParam === 'grafo') {
         updateState({
           viewLayout: 'GRAPH',
           ...(detectedLang ? { language: detectedLang } : {}),

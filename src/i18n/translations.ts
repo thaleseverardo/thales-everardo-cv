@@ -10,7 +10,7 @@ export const LOCALIZED_LANGUAGE_NAMES: Record<AppLanguage, Record<AppLanguage, s
 export const TRANSLATIONS = {
   PT: {
     // Header & Navegação
-    'nav.staffTitle': 'Staff Software Engineer',
+    'nav.staffTitle': 'Staff Systems Engineer',
     'nav.architectTitle': 'Principal Systems Architect',
     'nav.filterPlaceholder': 'Filtrar por stack, banco ou arquitetura...',
     'nav.graphView': 'Grafo',
@@ -177,7 +177,7 @@ export const TRANSLATIONS = {
     'resume.shareResume': 'Compartilhar CV',
     'resume.linkCopied': 'Link copiado!',
     'resume.otherApps': 'Outros Aplicativos...',
-    'resume.copyPdfLink': 'Copiar Link do PDF',
+    'resume.copyPdfLink': 'Copiar Link do CV',
     'resume.loading': 'Carregando...',
     'resume.unlockPrompt': 'Desbloquear e-mail e telefone com Google',
     'resume.gateTitle': 'Contato',
@@ -206,13 +206,13 @@ export const TRANSLATIONS = {
     'contactModal.activeSession': 'Sessão Ativa',
     'contactModal.signOut': 'Bloquear e Sair',
     'resume.availability': 'Remoto Global · Híbrido SP · Realocação Internacional',
-    'resume.shareWhatsAppMsg': 'Confira o currículo de Thales Everardo (Arquiteto de Sistemas / Staff Software Engineer): ',
+    'resume.shareWhatsAppMsg': 'Confira o currículo de Thales Everardo (Arquiteto de Sistemas / Staff Systems Engineer): ',
     'resume.shareEmailSubject': 'Currículo de Thales Everardo // Arquiteto de Sistemas',
     'resume.shareEmailBody': 'Olá,\n\nAcesse o currículo em PDF de Thales Everardo através do link abaixo:\n{url}\n\nAtenciosamente,',
 
     // Formatos de Arquivo de Download
-    'resume.formatPdfTitle': 'PDF Oficial',
-    'resume.formatPdfSub': 'Documento timbrado (.pdf)',
+    'resume.formatPdfTitle': 'PDF',
+    'resume.formatPdfSub': 'Gerar em tempo real (.pdf)',
     'resume.formatTxtTitle': 'Texto Puro',
     'resume.formatTxtSub': 'Formatação limpa para ATS (.txt)',
     'resume.formatMdTitle': 'Markdown',
@@ -279,7 +279,7 @@ export const TRANSLATIONS = {
   },
   EN: {
     // Header & Navigation
-    'nav.staffTitle': 'Staff Software Engineer',
+    'nav.staffTitle': 'Staff Systems Engineer',
     'nav.architectTitle': 'Principal Systems Architect',
     'nav.filterPlaceholder': 'Filter by stack, database or architecture...',
     'nav.graphView': 'Graph',
@@ -440,7 +440,7 @@ export const TRANSLATIONS = {
     'resume.shareResume': 'Share Resume',
     'resume.linkCopied': 'Link copied!',
     'resume.otherApps': 'Other Apps...',
-    'resume.copyPdfLink': 'Copy PDF Link',
+    'resume.copyPdfLink': 'Copy CV Link',
     'resume.loading': 'Loading...',
     'resume.unlockPrompt': 'Unlock email & phone with Google',
     'resume.gateTitle': 'Contact',
@@ -449,13 +449,13 @@ export const TRANSLATIONS = {
     'resume.gateRow2': 'To unlock direct access to WhatsApp and corporate email, sign in with your account.',
     'resume.gateButton': 'Sign in',
     'resume.availability': 'Global Remote · Hybrid SP · International Relocation',
-    'resume.shareWhatsAppMsg': "Check out Thales Everardo's Resume (Systems Architect / Staff Software Engineer): ",
+    'resume.shareWhatsAppMsg': "Check out Thales Everardo's Resume (Systems Architect / Staff Systems Engineer): ",
     'resume.shareEmailSubject': 'Resume - Thales Everardo // Systems Architect',
     'resume.shareEmailBody': 'Hello,\n\nPlease find the PDF resume of Thales Everardo via the direct link below:\n{url}\n\nBest regards,',
 
     // Formats
-    'resume.formatPdfTitle': 'Official PDF',
-    'resume.formatPdfSub': 'Letterhead executive dossier (.pdf)',
+    'resume.formatPdfTitle': 'PDF',
+    'resume.formatPdfSub': 'Real-time print generation (.pdf)',
     'resume.formatTxtTitle': 'Plain Text',
     'resume.formatTxtSub': 'ATS-optimized clean text (.txt)',
     'resume.formatMdTitle': 'Markdown',
@@ -542,7 +542,7 @@ export const TRANSLATIONS = {
   },
   ES: {
     // Header & Navegación
-    'nav.staffTitle': 'Staff Software Engineer',
+    'nav.staffTitle': 'Staff Systems Engineer',
     'nav.architectTitle': 'Principal Systems Architect',
     'nav.filterPlaceholder': 'Filtrar por stack, base de datos o arquitectura...',
     'nav.graphView': 'Grafo',
@@ -703,7 +703,7 @@ export const TRANSLATIONS = {
     'resume.shareResume': 'Compartir CV',
     'resume.linkCopied': '¡Enlace copiado!',
     'resume.otherApps': 'Otras Aplicaciones...',
-    'resume.copyPdfLink': 'Copiar Enlace del PDF',
+    'resume.copyPdfLink': 'Copiar Enlace del CV',
     'resume.loading': 'Cargando...',
     'resume.unlockPrompt': 'Desbloquear correo y teléfono con Google',
     'resume.gateTitle': 'Contacto',
@@ -732,13 +732,13 @@ export const TRANSLATIONS = {
     'contactModal.activeSession': 'Sessão Ativa',
     'contactModal.signOut': 'Bloquear e Sair',
     'resume.availability': 'Remoto Global · Híbrido SP · Reubicación Internacional',
-    'resume.shareWhatsAppMsg': 'Consulta el currículum de Thales Everardo (Arquitecto de Sistemas / Staff Software Engineer): ',
+    'resume.shareWhatsAppMsg': 'Consulta el currículum de Thales Everardo (Arquitecto de Sistemas / Staff Systems Engineer): ',
     'resume.shareEmailSubject': 'Currículum de Thales Everardo // Arquitecto de Sistemas',
     'resume.shareEmailBody': 'Hola:\n\nPuedes consultar el currículum en PDF de Thales Everardo en el siguiente enlace directo:\n{url}\n\nUn cordial saludo,',
 
     // Formatos
-    'resume.formatPdfTitle': 'PDF Oficial',
-    'resume.formatPdfSub': 'Documento membretado (.pdf)',
+    'resume.formatPdfTitle': 'PDF',
+    'resume.formatPdfSub': 'Generar en tiempo real (.pdf)',
     'resume.formatTxtTitle': 'Texto Plano',
     'resume.formatTxtSub': 'Formato limpio para ATS (.txt)',
     'resume.formatMdTitle': 'Markdown',
@@ -805,7 +805,7 @@ export const TRANSLATIONS = {
   },
   FR: {
     // Header & Navigation
-    'nav.staffTitle': 'Staff Software Engineer',
+    'nav.staffTitle': 'Staff Systems Engineer',
     'nav.architectTitle': 'Principal Systems Architect',
     'nav.filterPlaceholder': 'Filtrer par stack, base de données ou architecture...',
     'nav.graphView': 'Graphe',
@@ -967,7 +967,7 @@ export const TRANSLATIONS = {
     'resume.shareResume': 'Partager le CV',
     'resume.linkCopied': 'Lien copié !',
     'resume.otherApps': 'Autres Applications...',
-    'resume.copyPdfLink': 'Copier le Lien du PDF',
+    'resume.copyPdfLink': 'Copier le Lien du CV',
     'resume.loading': 'Chargement...',
     'resume.unlockPrompt': 'Débloquer e-mail et téléphone avec Google',
     'resume.gateTitle': 'Contact',
@@ -976,13 +976,13 @@ export const TRANSLATIONS = {
     'resume.gateRow2': 'Pour débloquer l’accès direct au WhatsApp et à l’e-mail professionnel, connectez-vous.',
     'resume.gateButton': 'Se connecter',
     'resume.availability': 'Télétravail Mondial · Hybride SP · Relocalisation',
-    'resume.shareWhatsAppMsg': 'Consultez le CV de Thales Everardo (Architecte Systèmes / Staff Software Engineer) : ',
+    'resume.shareWhatsAppMsg': 'Consultez le CV de Thales Everardo (Architecte Systèmes / Staff Systems Engineer) : ',
     'resume.shareEmailSubject': 'CV de Thales Everardo // Architecte Systèmes',
     'resume.shareEmailBody': 'Bonjour,\n\nVeuillez trouver le CV au format PDF de Thales Everardo via le lien direct ci-dessous:\n{url}\n\nCordialement,',
 
     // Formatos
-    'resume.formatPdfTitle': 'PDF Officiel',
-    'resume.formatPdfSub': 'Document officiel avec en-tête (.pdf)',
+    'resume.formatPdfTitle': 'PDF',
+    'resume.formatPdfSub': 'Génération en temps réel (.pdf)',
     'resume.formatTxtTitle': 'Texte Brut',
     'resume.formatTxtSub': 'Format épuré pour ATS (.txt)',
     'resume.formatMdTitle': 'Markdown',
@@ -1076,6 +1076,131 @@ export function t(lang: AppLanguage, key: TranslationKey): string {
   return (dictionary as Record<string, string>)[key] || TRANSLATIONS.EN[key] || key;
 }
 
+function resolveRegionalOverrides(node: ArchitectureNode, lang: AppLanguage) {
+  const compLower = node.company.toLowerCase();
+  const roleLower = node.role.toLowerCase();
+
+  if (lang === "ES") {
+    if (compLower.includes("magalu")) {
+      return {
+        role: "Staff Systems Engineer y Arquitecto de Sistemas",
+        businessValue: "Cero bloqueos en producción y mitigación total de riesgos de indisponibilidad durante cierres fiscales críticos.",
+        engineeringFeat: "Purga asíncrona particionada de 11TB de logs transaccionales en SQL Server sin bloqueos transaccionales en caliente.",
+        architecturalSolution: "Construcción de pipeline desacoplado en lotes dinámicos con monitoreo de telemetría de buffers de log y control de presión.",
+      };
+    }
+    if (compLower.includes("gps")) {
+      return {
+        role: "Ingeniero de Software Senior",
+        businessValue: "Reducción del 99,8% en el tiempo de procesamiento contable y liquidación de nóminas corporativas.",
+        engineeringFeat: "Reducción de la latencia del pipeline de cálculo financiero de 7 días a solo 20 minutos con consistencia total.",
+        architecturalSolution: "Optimización profunda de índices agrupados, particionamiento de tablas históricas y paralelización asíncrona en C#.",
+      };
+    }
+    if (compLower.includes("summerhill") && (roleLower.includes("system") || roleLower.includes("gerente") || roleLower.includes("dba"))) {
+      return {
+        role: "Gerente de Sistemas de TI, Ingeniero de Soluciones y DBA",
+        businessValue: "Gobernanza tecnológica unificada en 5 tiendas físicas con facturación íntegra en más de 500.000 transacciones mensuales y 30.000 SKUs.",
+        engineeringFeat: "Implementó plan de Disaster Recovery (DR/BCP) con recuperación total de 1 mes de datos críticos en 24 horas y sincronización POS/ERP en tiempo real.",
+        architecturalSolution: "Desarrollo de microservicios y APIs RESTful en C#/.NET conectando el catálogo GS1 al ERP con sincronización en tiempo real.",
+      };
+    }
+    if (compLower.includes("summerhill")) {
+      return {
+        role: "Líder de Operaciones y Optimización de Procesos",
+        businessValue: "Reducción del 70% en el descarte de materia prima y aumento de la capacidad de producción en un 50% sin nuevas contrataciones.",
+        engineeringFeat: "Aplicó conceptos formales de ingeniería de software (Teoría de Colas y flujo Just-in-Time) directamente a la logística de producción física.",
+        architecturalSolution: "Modelado predictivo de demanda con datos históricos de ventas y estandarización de pipelines de producción por lotes.",
+      };
+    }
+    if (compLower.includes("ambar")) {
+      return {
+        role: "Ingeniero de Software Especialista",
+        businessValue: "Sincronización en tiempo real de catálogos e inventarios en 5 centros de distribución sin pérdida de pedidos.",
+        engineeringFeat: "Broker de mensajería estándar GS1 que conecta ERP central y terminales de punto de venta POS en tiempo real.",
+        architecturalSolution: "Patrón Transactional Outbox con RabbitMQ y almacenamiento local idempotente con tolerancia a desconexión.",
+      };
+    }
+    if (compLower.includes("altitude") || compLower.includes("ultra")) {
+      return {
+        role: "Ingeniero de Software / Analista Desarrollador",
+        businessValue: "Recuperación de 11 Terabytes de almacenamiento en servidores de producción al 99% de capacidad, evitando costos masivos de hardware.",
+        engineeringFeat: "Reducción del tiempo de ejecución de un proceso crítico mensual de 1 mes a solo 2 horas (ganancia del 99,7%).",
+        architecturalSolution: "Expurgo transaccional particionado de datos históricos desindexados con 100% de integridad referencial y módulos en ASP.NET / T-SQL.",
+      };
+    }
+    if (compLower.includes("atento")) {
+      return {
+        role: "Ingeniero de Soporte Técnico III y Arquitecto de Automatización",
+        businessValue: "Garantizó el 99,98% de disponibilidad operativa en atención corporativa; redujo indisponibilidades en un 97% con ahorro superior a US$ 500.000.",
+        engineeringFeat: "Estabilizó pipelines de ingestión continua para más de 100.000 registros diarios de voz y telefonía sin pérdida de paquetes.",
+        architecturalSolution: "Gestión de tráfico masivo de voz y datos, optimización LAN/WAN y SIP/VoIP, y automatización con scripts ETL hacia SQL.",
+      };
+    }
+  }
+
+  if (lang === "FR") {
+    if (compLower.includes("magalu")) {
+      return {
+        role: "Staff Systems Engineer & Architecte Systèmes",
+        businessValue: "Zéro verrouillage en production et élimination des risques de panne lors des clôtures fiscales critiques.",
+        engineeringFeat: "Purge asynchrone partitionnée de 11 To de journaux sur SQL Server sans lock escalations en production.",
+        architecturalSolution: "Conception d'un pipeline découplé par lots dynamiques avec surveillance télémétrique de la pression des journaux.",
+      };
+    }
+    if (compLower.includes("gps")) {
+      return {
+        role: "Ingénieur Logiciel Senior",
+        businessValue: "Réduction de 99,8% du temps de traitement comptable et de règlement de paie multi-entités.",
+        engineeringFeat: "Réduction de la latence du pipeline de calcul financier de 7 jours à 20 minutes avec cohérence absolue.",
+        architecturalSolution: "Optimisation approfondie des index, partitionnement des tables historiques et parallélisation asynchrone en C#.",
+      };
+    }
+    if (compLower.includes("summerhill") && (roleLower.includes("system") || roleLower.includes("gerente") || roleLower.includes("dba"))) {
+      return {
+        role: "Responsable des Systèmes IT, Ingénieur Solutions & DBA",
+        businessValue: "Gouvernance technologique unifiée sur 5 magasins physiques avec facturation intègre sur plus de 500 000 transactions mensuelles et 30 000 SKUs.",
+        engineeringFeat: "Mise en œuvre d'un plan de reprise après sinistre (DR/BCP) avec restauration intégrale d'un mois de données critiques en 24 heures.",
+        architecturalSolution: "Développement de microservices et d'APIs RESTful en C#/.NET reliant le catalogue GS1 à l'ERP avec synchronisation en temps réel.",
+      };
+    }
+    if (compLower.includes("summerhill")) {
+      return {
+        role: "Responsable Opérations & Optimisation des Processus",
+        businessValue: "Réduction de 70% du gaspillage de matières premières et augmentation de 50% de la capacité de production sans nouveaux recrutements.",
+        engineeringFeat: "Application directe des principes d'ingénierie logicielle (Théorie des files d'attente et Just-in-Time) à la logistique physique.",
+        architecturalSolution: "Modélisation prédictive de la demande basée sur les historiques de ventes et standardisation des flux de production par lots.",
+      };
+    }
+    if (compLower.includes("ambar")) {
+      return {
+        role: "Ingénieur Logiciel Spécialiste",
+        businessValue: "Synchronisation en temps réel des catalogues et stocks sur 5 centres de distribution sans aucune perte de commande.",
+        engineeringFeat: "Broker de messagerie au standard GS1 reliant ERP central et points de vente POS en temps réel.",
+        architecturalSolution: "Pattern Transactional Outbox avec files RabbitMQ et persistance locale idempotente tolérante aux pannes.",
+      };
+    }
+    if (compLower.includes("altitude") || compLower.includes("ultra")) {
+      return {
+        role: "Ingénieur Logiciel / Développeur Analyste",
+        businessValue: "Récupération de 11 To de stockage sur des serveurs de production saturés à 99%, évitant des coûts massifs d'infrastructure.",
+        engineeringFeat: "Réduction du temps d'exécution d'un processus critique mensuel de 1 mois à seulement 2 heures (gain de 99,7%).",
+        architecturalSolution: "Purge transactionnelle partitionnée de données historiques désindexées avec intégrité référentielle à 100% et modules en ASP.NET / T-SQL.",
+      };
+    }
+    if (compLower.includes("atento")) {
+      return {
+        role: "Ingénieur Support Technique III & Architecte Automatisation",
+        businessValue: "Garantie de 99,98% de disponibilité opérationnelle; réduction des interruptions de 97% générant plus de 500 000 $ d'économies.",
+        engineeringFeat: "Conception et stabilisation de pipelines d'ingestion continue de plus de 100 000 enregistrements quotidiens de voix sans perte de paquets.",
+        architecturalSolution: "Gestion du trafic massif voix/données, optimisation LAN/WAN et SIP/VoIP, et automatisation de scripts ETL vers SQL.",
+      };
+    }
+  }
+
+  return null;
+}
+
 export function getNodeContent(node: ArchitectureNode, lang: AppLanguage): {
   shortTitle: string;
   role: string;
@@ -1090,16 +1215,17 @@ export function getNodeContent(node: ArchitectureNode, lang: AppLanguage): {
   interactiveActionDescription?: string;
 } {
   const transObj = lang === 'PT' ? node.pt : lang === 'ES' ? node.es : lang === 'FR' ? node.fr : null;
+  const overrides = resolveRegionalOverrides(node, lang);
 
   if (transObj && 'shortTitle' in transObj) {
     const trans = transObj as Required<Partial<typeof node.pt>>;
     return {
       shortTitle: trans.shortTitle ?? node.shortTitle,
-      role: trans.role ?? node.role,
-      businessValue: trans.businessValue ?? node.businessValue,
-      engineeringFeat: trans.engineeringFeat ?? node.engineeringFeat,
+      role: overrides?.role ?? trans.role ?? node.role,
+      businessValue: overrides?.businessValue ?? trans.businessValue ?? node.businessValue,
+      engineeringFeat: overrides?.engineeringFeat ?? trans.engineeringFeat ?? node.engineeringFeat,
       contextProblem: trans.contextProblem ?? node.contextProblem,
-      architecturalSolution: trans.architecturalSolution ?? node.architecturalSolution,
+      architecturalSolution: overrides?.architecturalSolution ?? trans.architecturalSolution ?? node.architecturalSolution,
       engineeringLesson: trans.engineeringLesson ?? node.engineeringLesson,
       metricHighlight: trans.metricHighlight ?? node.metricHighlight,
       metricDetails: trans.metricDetails ?? node.metricDetails,
@@ -1110,11 +1236,11 @@ export function getNodeContent(node: ArchitectureNode, lang: AppLanguage): {
 
   return {
     shortTitle: node.shortTitle,
-    role: node.role,
-    businessValue: node.businessValue,
-    engineeringFeat: node.engineeringFeat,
+    role: overrides?.role ?? node.role,
+    businessValue: overrides?.businessValue ?? node.businessValue,
+    engineeringFeat: overrides?.engineeringFeat ?? node.engineeringFeat,
     contextProblem: node.contextProblem,
-    architecturalSolution: node.architecturalSolution,
+    architecturalSolution: overrides?.architecturalSolution ?? node.architecturalSolution,
     engineeringLesson: node.engineeringLesson,
     metricHighlight: node.metricHighlight,
     metricDetails: node.metricDetails,

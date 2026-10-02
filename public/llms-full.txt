@@ -2,9 +2,9 @@
 
 ## EXECUTIVE PROFILE
 - Name: Thales Everardo Albuquerque Reis
-- Role: Staff Software Engineer & Systems Architect
+- Role: Staff Systems Engineer & Systems Architect
 - Canonical Domain: https://thaleseverardo.github.io/thales-everardo-cv/
-- Target Roles: Staff Software Engineer, Principal Systems Architect, Tech Lead, Distributed Systems Specialist
+- Target Roles: Staff Systems Engineer, Principal Systems Architect, Tech Lead, Distributed Systems Specialist
 - Engagement Models: Global Remote (US/EU/LATAM), Hybrid (São Paulo, Brazil), International Relocation
 - Education:
   - Postgraduate Degree in Distributed Systems & Software Architecture, FIAP

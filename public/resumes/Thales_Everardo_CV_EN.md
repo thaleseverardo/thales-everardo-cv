@@ -1,5 +1,5 @@
 # Thales Everardo
-**Staff Software Engineer | Principal Systems Architect**
+**Staff Systems Engineer | Principal Systems Architect**
 
 São Paulo, Brazil & Toronto, ON (Former Resident | Relocating to Canada)
 Email: Protected via Portfolio Auth Gate | Phone: Protected via Portfolio Auth Gate
@@ -9,7 +9,7 @@ Languages: English (Fluent — 3+ Yrs Canadian Work Experience) | Portuguese (Na
 ---
 
 ## PROFESSIONAL SUMMARY
-Systems Architect & Staff Software Engineer with 15+ years of experience across enterprise IT, mission-critical environments, and high-availability, resilient architectures. Proven track record in deep systems diagnostics, sub-1-hour SLA incident recovery for Tier-1 financial institutions, and enterprise database performance tuning (SQL Server/PostgreSQL), complemented by 3+ years of local IT leadership and ERP data architecture in Toronto, ON. Currently focused on SaaS product architecture and engineering, leveraging event-driven paradigms (CQRS, Event Sourcing), Zero-Trust security, and exploring AI-driven integrations.
+Systems Architect & Staff Systems Engineer with 15+ years of experience across enterprise IT, mission-critical environments, and high-availability, resilient architectures. Proven track record in deep systems diagnostics, sub-1-hour SLA incident recovery for Tier-1 financial institutions, and enterprise database performance tuning (SQL Server/PostgreSQL), complemented by 3+ years of local IT leadership and ERP data architecture in Toronto, ON. Currently focused on SaaS product architecture and engineering, leveraging event-driven paradigms (CQRS, Event Sourcing), Zero-Trust security, and exploring AI-driven integrations.
 
 ---
 

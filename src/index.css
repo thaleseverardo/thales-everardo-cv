@@ -318,12 +318,13 @@ textarea:focus-visible {
    TIPOGRAFIA DUAL-MODE (JUSTIFICADA NA TELA // 100% LIMPA E LINEAR EM ATS/PRINT)
    ========================================================================== */
 @media screen {
-  .cv-justified-text {
-    text-align: justify;
-    text-justify: inter-word;
-    hyphens: auto;
-    -webkit-hyphens: auto;
-    -ms-hyphens: auto;
+  .cv-justified-text,
+  .cv-justified-text p {
+    text-align: justify !important;
+    text-justify: inter-word !important;
+    hyphens: auto !important;
+    -webkit-hyphens: auto !important;
+    -ms-hyphens: auto !important;
   }
 }
 
@@ -442,8 +443,11 @@ textarea:focus-visible {
     color: #1f2937 !important;
   }
 
-  /* Neutralização de hifens e justificação na impressão para máxima aderência ATS */
+  /* Neutralização estrita de hifens e justificação na impressão para máxima aderência ATS */
   .cv-justified-text,
+  .cv-justified-text p,
+  #printable-resume-card,
+  #printable-resume-card *,
   article, p, div, span {
     text-align: left !important;
     text-justify: auto !important;

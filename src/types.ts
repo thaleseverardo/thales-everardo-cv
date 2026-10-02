@@ -78,6 +78,7 @@ export interface ArchitectureNode {
   architecturalSolution: string;
   engineeringLesson: string;
   technologies: string[];
+  careerProgression?: string;
   category: 'ingestion' | 'optimization' | 'storage' | 'integration' | 'operations' | 'core';
   visualShape: NodeVisualShape;
   lenses: ProfileLens[];
@@ -118,7 +119,7 @@ export interface AcademicDegree {
   degreeNameEN: string;
   degreeNameES?: string;
   degreeNameFR?: string;
-  level: 'BACHELOR' | 'POSTGRADUATE' | 'TECH_DEGREE' | 'CORE_STUDIES';
+  level: 'BACHELOR' | 'POSTGRADUATE' | 'TECH_DEGREE' | 'CORE_STUDIES' | 'EXTENSION';
   status: 'IN_PROGRESS' | 'COMPLETED';
   period: string;
   startYear: number;

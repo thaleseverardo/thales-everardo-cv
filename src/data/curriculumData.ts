@@ -101,7 +101,7 @@ export const CURRICULUM_NODES: ArchitectureNode[] = [
     metricDetails: [
       { label: 'Data Loss Rate', value: '0.00%', subtext: 'Zero packet drop under peak load', trend: 'down', color: 'blue' },
       { label: 'Ingestion Volume', value: '100k+', subtext: 'Daily voice & telemetry records', trend: 'up', color: 'cyan' },
-      { label: 'Network Uptime', value: '99.98%', subtext: 'LAN/WAN & SIP Trunk availability', trend: 'up', color: 'blue' },
+      { label: 'Network Uptime', value: '99.98%', subtext: 'LAN/WAN & SIP Trunk availability', trend: 'up', color: 'blue' }
     ],
     contextProblem: 'High-density enterprise call center infrastructure handling millions of customer interactions was vulnerable to network jitter, packet drop, and severe manual data processing bottlenecks across fragmented telecom switches.',
     architecturalSolution: 'Managed high-throughput voice and data pipelines, optimized network topologies (LAN/WAN, SIP, VoIP), configured high-availability predictive dialing clusters, and implemented automated ETL batch scripts to ingest telephony logs straight into analytical data marts.',
@@ -138,8 +138,8 @@ export const CURRICULUM_NODES: ArchitectureNode[] = [
       metricDetails: [
         { label: 'Taxa de Perda de Dados', value: '0,00%', subtext: 'Zero perda de pacotes sob pico', trend: 'down', color: 'blue' },
         { label: 'Volume Ingerido', value: '100k+', subtext: 'Registros diários de voz e telemetria', trend: 'up', color: 'cyan' },
-        { label: 'Uptime da Rede', value: '99,98%', subtext: 'Disponibilidade LAN/WAN e troncos SIP', trend: 'up', color: 'blue' },
-      ],
+        { label: 'Uptime da Rede', value: '99,98%', subtext: 'Disponibilidade LAN/WAN e troncos SIP', trend: 'up', color: 'blue' }
+    ],
     },
   },
   {
@@ -159,7 +159,7 @@ export const CURRICULUM_NODES: ArchitectureNode[] = [
     metricDetails: [
       { label: 'Processing Latency', value: '10,080m ➔ 20m', subtext: 'From 168 hours to near real-time', trend: 'down', color: 'blue' },
       { label: 'Pipeline Speedup', value: '504x', subtext: 'Throughput multiplier', trend: 'up', color: 'cyan' },
-      { label: 'Delivery Reliability', value: '100%', subtext: 'On-schedule executive dispatch', trend: 'up', color: 'blue' },
+      { label: 'Delivery Reliability', value: '100%', subtext: 'On-schedule executive dispatch', trend: 'up', color: 'blue' }
     ],
     contextProblem: 'Operational reporting workflows took 7 full days (10,080 minutes) to extract, cleanse, and compile enterprise stakeholder data due to manual spreadsheet stitch-ups and unindexed raw query execution.',
     architecturalSolution: 'Engineered an automated data pipeline utilizing tuned T-SQL stored procedures, scheduled batch extraction workers, and Power Query / VBA services that eliminated human intermediary steps and parallelized data aggregation.',
@@ -201,8 +201,8 @@ export const CURRICULUM_NODES: ArchitectureNode[] = [
       metricDetails: [
         { label: 'Latência de Processamento', value: '10.080m ➔ 20m', subtext: 'De 168 horas para quase tempo real', trend: 'down', color: 'blue' },
         { label: 'Aceleração do Pipeline', value: '504x', subtext: 'Multiplicador de velocidade', trend: 'up', color: 'cyan' },
-        { label: 'Confiabilidade de Entrega', value: '100%', subtext: 'Envio executivo rigorosamente pontual', trend: 'up', color: 'blue' },
-      ],
+        { label: 'Confiabilidade de Entrega', value: '100%', subtext: 'Envio executivo rigorosamente pontual', trend: 'up', color: 'blue' }
+    ],
       interactiveActionLabel: 'RODAR AUTOMAÇÃO',
       interactiveActionActiveLabel: 'RESTAURAR BENCHMARK LENTO',
       interactiveActionDescription: 'Aciona o pipeline otimizado para descer o tempo de execução de 10.080 minutos para 20 minutos.',
@@ -225,7 +225,7 @@ export const CURRICULUM_NODES: ArchitectureNode[] = [
     metricDetails: [
       { label: 'Storage Reclaimed', value: '11 Terabytes', subtext: 'Unindexed bloat safely eliminated', trend: 'down', color: 'blue' },
       { label: 'Data Corruption', value: '0 Incidents', subtext: '100% relational integrity preserved', trend: 'down', color: 'blue' },
-      { label: 'Query IOPS Gain', value: '+340%', subtext: 'Cache hit ratio improvement', trend: 'up', color: 'cyan' },
+      { label: 'Query IOPS Gain', value: '+340%', subtext: 'Cache hit ratio improvement', trend: 'up', color: 'cyan' }
     ],
     contextProblem: 'Mission-critical enterprise and e-commerce platforms suffered from critical disk space starvation (99% capacity) and severe lock contention due to over a decade of unindexed, orphaned logging blobs and legacy schemas.',
     architecturalSolution: 'Formulated an audited chunk-wise archival and purge strategy with transactional rollback safeguards. Reverse-engineered legacy e-commerce database engines, refactored non-SARGable queries, and rebuilt clustered index strategies.',
@@ -268,8 +268,8 @@ export const CURRICULUM_NODES: ArchitectureNode[] = [
       metricDetails: [
         { label: 'Espaço Recuperado', value: '11 Terabytes', subtext: 'Inchaço eliminado em segurança', trend: 'down', color: 'blue' },
         { label: 'Corrupção de Dados', value: '0 Incidentes', subtext: '100% de integridade referencial mantida', trend: 'down', color: 'blue' },
-        { label: 'Ganho em IOPS', value: '+340%', subtext: 'Melhoria na taxa de acertos de cache', trend: 'up', color: 'cyan' },
-      ],
+        { label: 'Ganho em IOPS', value: '+340%', subtext: 'Melhoria na taxa de acertos de cache', trend: 'up', color: 'cyan' }
+    ],
       interactiveActionLabel: 'PURGAR LOGS DESESTRUTURADOS',
       interactiveActionActiveLabel: 'RESTAURAR MASSA DE TESTE',
       interactiveActionDescription: 'Executa vácuo por partição e reindexação para recuperar 11 TB e liberar o disco.',
@@ -292,7 +292,7 @@ export const CURRICULUM_NODES: ArchitectureNode[] = [
     metricDetails: [
       { label: 'Monthly Throughput', value: '500k+', subtext: 'Real-time retail transactions', trend: 'up', color: 'cyan' },
       { label: 'Active Catalog', value: '30,000 SKUs', subtext: 'Synchronized across all terminals', trend: 'up', color: 'blue' },
-      { label: 'POS Clusters Synced', value: '5 Databases', subtext: 'Real-time bidirectional event bus', trend: 'up', color: 'cyan' },
+      { label: 'POS Clusters Synced', value: '5 Databases', subtext: 'Real-time bidirectional event bus', trend: 'up', color: 'cyan' }
     ],
     contextProblem: 'Disparate retail operational stacks—consisting of external GS1 nutritional master databases, central ERP systems, and 5 physically isolated Point of Sale (POS) stores—relied on error-prone manual duplicate inputs.',
     architecturalSolution: 'Designed and deployed distributed RESTful services and C#/.NET middleware linking GS1 standards directly into the central ERP and broadcasting differential state updates out to 5 distributed POS databases.',
@@ -335,8 +335,8 @@ export const CURRICULUM_NODES: ArchitectureNode[] = [
       metricDetails: [
         { label: 'Throughput Mensal', value: '500k+', subtext: 'Transações de varejo em tempo real', trend: 'up', color: 'cyan' },
         { label: 'Catálogo Ativo', value: '30.000 SKUs', subtext: 'Sincronizados em todos os caixas', trend: 'up', color: 'blue' },
-        { label: 'Bancos Sincronizados', value: '5 Bancos PDV', subtext: 'Barramento de eventos bidirecional', trend: 'up', color: 'cyan' },
-      ],
+        { label: 'Bancos Sincronizados', value: '5 Bancos PDV', subtext: 'Barramento de eventos bidirecional', trend: 'up', color: 'cyan' }
+    ],
       interactiveActionLabel: 'SINCRONIZAR GS1 ➔ ERP ➔ PDVs',
       interactiveActionActiveLabel: 'ISOLAR PONTES DE INTEGRAÇÃO',
       interactiveActionDescription: 'Transmite deltas de catálogo para todos os 5 clusters de PDV e ERP central.',
@@ -359,7 +359,7 @@ export const CURRICULUM_NODES: ArchitectureNode[] = [
     metricDetails: [
       { label: 'Waste Reduction', value: '-70.0%', subtext: 'Raw ingredient & overproduction drop', trend: 'down', color: 'blue' },
       { label: 'Production Output', value: '+50.0%', subtext: 'Daily throughput expansion', trend: 'up', color: 'cyan' },
-      { label: 'Batch Variance', value: '±1.5%', subtext: 'Standardized operational cadence', trend: 'down', color: 'blue' },
+      { label: 'Batch Variance', value: '±1.5%', subtext: 'Standardized operational cadence', trend: 'down', color: 'blue' }
     ],
     contextProblem: 'High food production overhead, unpredictable seasonal demand spikes, and unstandardized manual scheduling created severe physical supply bottlenecks, material spoilage, and operational fatigue.',
     architecturalSolution: 'Applied core systems thinking, lean queueing theory, and predictive sales data models directly to physical manufacturing: restructured ingredient pipelining, batch scheduling, and station workflows.',
@@ -395,8 +395,8 @@ export const CURRICULUM_NODES: ArchitectureNode[] = [
       metricDetails: [
         { label: 'Redução de Desperdício', value: '-70,0%', subtext: 'Queda em perda de ingredientes', trend: 'down', color: 'blue' },
         { label: 'Aumento de Produção', value: '+50,0%', subtext: 'Expansão de entregas diárias', trend: 'up', color: 'cyan' },
-        { label: 'Variância de Lote', value: '±1,5%', subtext: 'Padronização de qualidade', trend: 'down', color: 'blue' },
-      ],
+        { label: 'Variância de Lote', value: '±1,5%', subtext: 'Padronização de qualidade', trend: 'down', color: 'blue' }
+    ],
     },
   },
   {
@@ -416,7 +416,7 @@ export const CURRICULUM_NODES: ArchitectureNode[] = [
     metricDetails: [
       { label: 'Core Paradigms', value: 'EDA / DDD / GoF', subtext: 'Event-driven, Domain-Driven, Gang of Four', trend: 'up', color: 'cyan' },
       { label: 'Runtime Stacks', value: '7+ Languages', subtext: 'C#, Java, T-SQL, Python, JS, Bash, Lua', trend: 'up', color: 'blue' },
-      { label: 'Game Engines', value: 'Unity 3D / Unreal', subtext: 'Deterministic physics & graphics loops', trend: 'up', color: 'cyan' },
+      { label: 'Game Engines', value: 'Unity 3D / Unreal', subtext: 'Deterministic physics & graphics loops', trend: 'up', color: 'cyan' }
     ],
     contextProblem: 'Modern distributed architectures collapse when built without deep computational foundations, memory awareness, and rigorous design pattern discipline.',
     architecturalSolution: 'Forged a dual foundation in rigorous Computer Science and real-time Interactive Game Development. Mastered high-frequency frame-budgeted game loops, low-level Linux systems, and enterprise design patterns.',
@@ -456,24 +456,24 @@ export const CURRICULUM_NODES: ArchitectureNode[] = [
       metricDetails: [
         { label: 'Paradigmas Centrais', value: 'EDA / DDD / GoF', subtext: 'Event-driven, Domain-Driven, Gang of Four', trend: 'up', color: 'cyan' },
         { label: 'Linguagens de Produção', value: '7+ Linguagens', subtext: 'C#, Java, T-SQL, Python, JS, Bash, Lua', trend: 'up', color: 'blue' },
-        { label: 'Engines de Jogos', value: 'Unity 3D / Unreal', subtext: 'Loops de física e renderização', trend: 'up', color: 'cyan' },
-      ],
+        { label: 'Engines de Jogos', value: 'Unity 3D / Unreal', subtext: 'Loops de física e renderização', trend: 'up', color: 'cyan' }
+    ],
     },
-  },
-];
+  }
+    ];
 
 export const PROFILE_DATA = {
   name: 'Thales Everardo Albuquerque Reis',
-  title: 'Staff Software Engineer | Principal Systems Architect',
-  titlePT: 'Staff Software Engineer | Principal Systems Architect',
+  title: 'Staff Systems Engineer | Principal Systems Architect',
+  titlePT: 'Staff Systems Engineer | Principal Systems Architect',
   location: 'São Paulo, Brazil',
   email: 'email@gmail.com',
   github: 'https://github.com/thaleseverardo',
   linkedin: 'https://linkedin.com/in/thaleseverardo',
   summary:
-    'Systems Architect & Staff Software Engineer with 15+ years of experience across enterprise IT, mission-critical environments, and high-availability, resilient architectures. Proven track record in deep systems diagnostics, sub-1-hour SLA incident recovery for Tier-1 financial institutions, and enterprise database performance tuning, complemented by 3+ years of local IT leadership and ERP data architecture in Toronto, ON. Currently focused on SaaS product architecture and engineering, leveraging event-driven paradigms (CQRS, Event Sourcing), Zero-Trust security, and exploring AI-driven integrations.',
+    'Systems Architect & Staff Systems Engineer with 15+ years of experience across enterprise IT, mission-critical environments, and high-availability, resilient architectures. Proven track record in deep systems diagnostics, sub-1-hour SLA incident recovery for Tier-1 financial institutions, and enterprise database performance tuning, complemented by 3+ years of local IT leadership and ERP data architecture in Toronto, ON. Currently focused on SaaS product architecture and engineering, leveraging event-driven paradigms (CQRS, Event Sourcing), Zero-Trust security, and exploring AI-driven integrations.',
   summaryPT:
-    'Arquiteto de Sistemas e Staff Software Engineer com mais de 15 anos de experiência em TI corporativa, sistemas de missão crítica e arquiteturas de alta disponibilidade e resiliência. Sólida atuação em diagnósticos profundos de sistemas, recuperação de incidentes sob SLAs inferiores a 1 hora para instituições financeiras Tier-1 e otimização de performance em bancos de dados corporativos, complementada por mais de 3 anos de liderança em TI e arquitetura de dados ERP em Toronto, Canadá. Atualmente dedicado ao desenvolvimento e arquitetura de produtos SaaS, aplicando padrões orientados a eventos (CQRS, Event Sourcing), segurança Zero-Trust e explorando a integração de recursos de IA.',
+    'Arquiteto de Sistemas e Staff Systems Engineer com mais de 15 anos de experiência em TI corporativa, sistemas de missão crítica e arquiteturas de alta disponibilidade e resiliência. Sólida atuação em diagnósticos profundos de sistemas, recuperação de incidentes sob SLAs inferiores a 1 hora para instituições financeiras Tier-1 e otimização de performance em bancos de dados corporativos, complementada por mais de 3 anos de liderança em TI e arquitetura de dados ERP em Toronto, Canadá. Atualmente dedicado ao desenvolvimento e arquitetura de produtos SaaS, aplicando padrões orientados a eventos (CQRS, Event Sourcing), segurança Zero-Trust e explorando a integração de recursos de IA.',
 
   // ==========================================
   // KPIS DE FORMAÇÃO & CERTIFICAÇÃO AUDITADA
@@ -492,7 +492,7 @@ export const PROFILE_DATA = {
   academicDegrees: [
     {
       id: 'ESTACIO_BS_CS',
-      institution: 'Universidade Estácio',
+      institution: 'Universidade Estácio de Sá (Estácio)',
       institutionShort: 'Estácio',
       degreeName: 'Bacharelado em Ciência da Computação',
       degreeNameEN: 'Bachelor of Science in Computer Science',
@@ -500,8 +500,8 @@ export const PROFILE_DATA = {
       degreeNameFR: 'Licence en Informatique / Science Informatique',
       level: 'BACHELOR',
       status: 'IN_PROGRESS',
-      period: 'Concluded',
-      startYear: 2024,
+      period: '2023 - 2026',
+      startYear: 2023,
       endYear: 2026,
       expectedYear: 2026,
       focus: 'Sistemas Distribuídos e Computação Paralela, Compiladores, Algoritmos em Grafos, Inteligência Artificial, Big Data e Computação em Nuvem.',
@@ -509,25 +509,27 @@ export const PROFILE_DATA = {
       skills: ['Distributed Systems', 'Compilers', 'Graph Algorithms', 'AI', 'Cloud Computing', 'Big Data', 'Parallelism'],
     },
     {
-      id: 'PUC_SP_POSTGRAD',
-      institution: 'Pontifícia Universidade Católica de São Paulo',
-      institutionShort: 'PUC-SP',
-      degreeName: 'Pós-Graduação em Desenvolvimento de Sistemas Interativos & Unity 3D',
-      degreeNameEN: 'Postgraduate Degree in Interactive Systems & Software Development',
-      degreeNameES: 'Posgrado en Desarrollo de Sistemas Interactivos y Unity 3D',
-      degreeNameFR: 'Diplôme d’Études Supérieures en Systèmes Interactifs et Unity 3D',
-      level: 'POSTGRADUATE',
+      id: 'Pontifícia Universidade Católica de São Paulo (PUC-SP)-games-extension',
+      institution: 'Pontifícia Universidade Católica de São Paulo (PUC-SP)',
+      institutionShort: 'Pontifícia Universidade Católica de São Paulo (PUC-SP)',
+      degreeName: 'Extensão Universitária em Desenvolvimento de Games com Unity 3D',
+      degreeNameEN: 'University Extension in Game Development with Unity 3D',
+      degreeNameES: 'Extensión Universitaria en Desarrollo de Juegos con Unity 3D',
+      degreeNameFR: 'Extension Universitaire en Développement de Jeux avec Unity 3D',
+      level: 'EXTENSION',
       status: 'COMPLETED',
       period: '2016',
       startYear: 2016,
       endYear: 2016,
-      focus: 'Arquitetura de Software em C#, .NET Framework, Máquinas de Estado Determinísticas, Algoritmos de Simulação, Mecânicas de Sistemas.',
-      focusEN: 'Software Architecture in C#, .NET Framework, Deterministic State Machines, Simulation Algorithms, System Mechanics.',
-      skills: ['C#', '.NET Framework', 'System Mechanics', 'Algorithms', 'Deterministic Physics', 'Unity 3D'],
+      focus: 'Curso de extensão universitária promovido pela Faculdade de Ciências Exatas e Tecnologia da Pontifícia Universidade Católica de São Paulo (PUC-SP) (48 horas). Máquinas de estado determinísticas, física em tempo real, C# e Unity 3D.',
+      focusEN: 'University extension course promoted by the Faculty of Exact Sciences and Technology at Pontifícia Universidade Católica de São Paulo (PUC-SP) (48 hours). Deterministic state machines, real-time physics, C# and Unity 3D.',
+      focusES: 'Curso de extensión universitaria promovido por la Facultad de Ciencias Exactas y Tecnología de la Pontifícia Universidade Católica de São Paulo (PUC-SP) (48 horas). Máquinas de estado deterministas, física en tiempo real, C# y Unity 3D.',
+      focusFR: 'Cours d\'extension universitaire promu par la Faculté des Sciences Exactes et Technologie de la Pontifícia Universidade Católica de São Paulo (PUC-SP) (48 heures). Machines d\'état déterministes, physique en temps réel, C# et Unity 3D.',
+      skills: ['Unity 3D', 'C#', '.NET', 'Physics Simulation', 'Game Architecture', 'State Machines'],
     },
     {
       id: 'CRUZEIRO_TECH_GAMES',
-      institution: 'Universidade Cruzeiro do Sul',
+      institution: 'Universidade Cruzeiro do Sul (UNICSUL)',
       institutionShort: 'Cruzeiro do Sul',
       degreeName: 'Graduação Tecnológica em Jogos Digitais',
       degreeNameEN: 'Associate Degree in Game Development & Software Architecture',
@@ -547,25 +549,8 @@ export const PROFILE_DATA = {
       focus: 'Otimização de Framerate, Matemática Vetorial, Física de Sistemas, Gestão Determinística de Memória (GC Pressure), C# e T-SQL.',
       focusEN: 'Framerate Optimization, Vector Mathematics, System Physics, Deterministic Memory Management, C# and T-SQL.',
       skills: ['C#', 'T-SQL', 'Vector Mathematics', 'Memory Management', 'Real-Time Physics', 'AI Systems'],
-    },
-    {
-      id: 'CRUZEIRO_CS_CORE',
-      institution: 'Universidade Cruzeiro do Sul',
-      institutionShort: 'Cruzeiro do Sul',
-      degreeName: 'Ciência da Computação (Fundamentos & Estruturas de Dados)',
-      degreeNameEN: 'Computer Science (Core Foundations & Data Structures)',
-      degreeNameES: 'Ciencias de la Computación (Fundamentos y Estructuras de Datos)',
-      degreeNameFR: 'Informatique (Fondements et Structures de Données)',
-      level: 'CORE_STUDIES',
-      status: 'COMPLETED',
-      period: '2005 – 2008',
-      startYear: 2005,
-      endYear: 2008,
-      focus: 'Estruturas de Dados, Algoritmos Avançados, Teoria de Bancos de Dados Relacionais, T-SQL, Programação Orientada a Objetos em Java, Sistemas Operacionais.',
-      focusEN: 'Data Structures, Advanced Algorithms, Relational Database Theory, T-SQL, Object-Oriented Java, Operating Systems.',
-      skills: ['Data Structures', 'Algorithms', 'Database Theory', 'T-SQL', 'Java', 'Operating Systems'],
-    },
-  ],
+    }
+    ],
 
   // ==========================================
   // CERTIFICAÇÕES ACADÊMICAS COM HASH PÚBLICO (ESTÁCIO / MEC)
@@ -654,8 +639,8 @@ export const PROFILE_DATA = {
       disciplinesCount: 1,
       disciplinesIncluded: ['Programação para Dispositivos Móveis em Android (80h)'],
       competencyDomain: 'SOFTWARE_ENG',
-    },
-  ],
+    }
+    ],
 
   // ==========================================
   // TRILHAS TÉCNICAS E CURSOS DE ESPECIALIZAÇÃO
@@ -671,8 +656,8 @@ export const PROFILE_DATA = {
     { id: 'DDCOM_SYSTEMS', title: 'ddCom Systems & Telefonia Empresarial', institution: 'ddCom', associatedCompany: 'Atento', category: 'TELECOM' },
     { id: 'SENAI_HARDWARE', title: 'Montagem e Manutenção de Computadores', institution: 'SENAI', category: 'LINUX' },
     { id: 'UNITY_DEV', title: 'Unity Certified Developer', institution: 'Unity Technologies', category: 'ARCHITECTURE' },
-    { id: 'CIW_WEB_DEV', title: 'Certified Internet Webmaster Web Developer Professional (CIW)', institution: 'CIW', category: 'ARCHITECTURE' },
-  ],
+    { id: 'CIW_WEB_DEV', title: 'Certified Internet Webmaster Web Developer Professional (CIW)', institution: 'CIW', category: 'ARCHITECTURE' }
+    ],
 
   // ==========================================
   // IDIOMAS & PROFICIÊNCIA DECLARADA
@@ -681,8 +666,8 @@ export const PROFILE_DATA = {
     { language: 'Português', proficiencyPT: 'Nativo', proficiencyEN: 'Native or bilingual proficiency', proficiencyES: 'Nativo', proficiencyFR: 'Natif', cefrLevel: 'C2', isNative: true },
     { language: 'Inglês', proficiencyPT: 'Profissional Pleno', proficiencyEN: 'Professional working proficiency', proficiencyES: 'Competencia profesional completa', proficiencyFR: 'Capacité professionnelle complète', cefrLevel: 'C1' },
     { language: 'Espanhol', proficiencyPT: 'Básico', proficiencyEN: 'Elementary proficiency', proficiencyES: 'Competencia básica', proficiencyFR: 'Notions élémentaires', cefrLevel: 'A2' },
-    { language: 'Francês', proficiencyPT: 'Básico', proficiencyEN: 'Elementary proficiency', proficiencyES: 'Competencia básica', proficiencyFR: 'Notions élémentaires', cefrLevel: 'A2' },
-  ],
+    { language: 'Francês', proficiencyPT: 'Básico', proficiencyEN: 'Elementary proficiency', proficiencyES: 'Competencia básica', proficiencyFR: 'Notions élémentaires', cefrLevel: 'A2' }
+    ],
 
 
   // ==========================================
@@ -736,8 +721,8 @@ export const PROFILE_DATA = {
       categoryES: 'Herramientas y Versionado',
       categoryFR: 'Outils et Gestion de Versions',
       skills: ['Git', 'GitHub', 'GitFlow', 'Subversion', 'Visual Studio', 'VS Code', 'CI/CD'],
-    },
-  ],
+    }
+    ],
 
   // ==========================================
   // SOFT SKILLS & LIDERANÇA TÉCNICA (STAFF ENGINEER)
@@ -802,14 +787,14 @@ export const PROFILE_DATA = {
       descriptionES: 'Propiedad total del ciclo de vida del software con entrega continua.',
       descriptionFR: 'Responsabilité globale du cycle de vie logiciel avec intégration continue.',
       linkedSkills: ['Agile Environment', 'GitFlow', 'Test-Driven Development (TDD)'],
-    },
-  ],
+    }
+    ],
 
     // Campo retrocompatível com chamadas legadas
   education: [
-    { degree: 'Bachelor of Science in Computer Science', degreePT: 'Bacharelado em Ciência da Computação (Previsão 2026)', institution: 'Universidade Estácio', period: 'Concluded', focus: 'Distributed Systems, Parallel Computing, Compilers, Graph Algorithms', focusPT: 'Sistemas Distribuídos, Computação Paralela, Compiladores, Algoritmos em Grafos' },
+    { degree: 'Bachelor of Science in Computer Science', degreePT: 'Bacharelado em Ciência da Computação (Previsão 2026)', institution: 'Universidade Estácio de Sá (Estácio)', period: 'Concluded', focus: 'Distributed Systems, Parallel Computing, Compilers, Graph Algorithms', focusPT: 'Sistemas Distribuídos, Computação Paralela, Compiladores, Algoritmos em Grafos' },
     { degree: 'Postgraduate Degree in Interactive Systems & Unity 3D', degreePT: 'Pós-Graduação em Sistemas Interativos & Unity 3D', institution: 'Pontifícia Universidade Católica de São Paulo (PUC-SP)', period: '2016', focus: 'Software Architecture in C#, .NET Framework, System Mechanics, Simulation', focusPT: 'Arquitetura de Software em C#, .NET Framework, Mecânicas de Sistemas' },
-    { degree: 'Associate Degree in Game Development (WES Canadian Equivalency)', degreePT: 'Graduação Tecnológica em Jogos Digitais (🇨🇦 WES Equivalência Canadá)', institution: 'Universidade Cruzeiro do Sul', period: '2013 – 2014', focus: 'Framerate Optimization, Vector Math, Memory Management, C#, T-SQL', focusPT: 'Otimização de Memória, Matemática Vetorial, Física de Sistemas, C#' },
-    { degree: 'Computer Science (Core Foundations)', degreePT: 'Ciência da Computação (Ciclo Fundamental)', institution: 'Universidade Cruzeiro do Sul', period: '2005 – 2008', focus: 'Data Structures, Advanced Algorithms, Database Theory, T-SQL, Java', focusPT: 'Estruturas de Dados, Algoritmos, Teoria de Banco de Dados, T-SQL' },
-  ],
+    { degree: 'Associate Degree in Game Development (WES Canadian Equivalency)', degreePT: 'Graduação Tecnológica em Jogos Digitais (🇨🇦 WES Equivalência Canadá)', institution: 'Universidade Cruzeiro do Sul (UNICSUL)', period: '2013 – 2014', focus: 'Framerate Optimization, Vector Math, Memory Management, C#, T-SQL', focusPT: 'Otimização de Memória, Matemática Vetorial, Física de Sistemas, C#' },
+    { degree: 'Computer Science (Core Foundations)', degreePT: 'Ciência da Computação (Ciclo Fundamental)', institution: 'Universidade Cruzeiro do Sul (UNICSUL)', period: '2005 – 2008', focus: 'Data Structures, Advanced Algorithms, Database Theory, T-SQL, Java', focusPT: 'Estruturas de Dados, Algoritmos, Teoria de Banco de Dados, T-SQL' }
+    ],
 };

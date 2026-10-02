@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Redirecting to Portfolio — Thales Everardo</title>
+  <meta http-equiv="refresh" content="1;url=https://thaleseverardo.github.io/thales-everardo-cv/?utm_source=redirect_portfolio&utm_medium=referral">
+  <!-- Google Analytics 4 Tag -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-08E2E9B8C2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-08E2E9B8C2');
+
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var src = params.get('src') || 'direct';
+      var target = "https://thaleseverardo.github.io/thales-everardo-cv/?utm_source=" + encodeURIComponent(src) + "&utm_medium=referral";
+
+      gtag('event', 'outbound_redirect', {
+        'destination': 'portfolio',
+        'target_url': target,
+        'source_channel': src,
+        'event_callback': function() {
+          window.location.replace(target);
+        }
+      });
+
+      setTimeout(function() {
+        window.location.replace(target);
+      }, 250);
+    })();
+  </script>
+</head>
+<body style="background:#09090b;color:#f4f4f5;font-family:-apple-system,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;">
+  <p style="font-size:13px;opacity:0.7;">Redirecting to Portfolio...</p>
+</body>
+</html>

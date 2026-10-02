@@ -15,8 +15,7 @@ import {
   LogOut,
   Globe,
 } from 'lucide-react';
-import { SystemState, AppLanguage, ViewLayout, ProfileLens } from '../../types';
-import { PROFILE_LENSES_CONFIG } from '../../data/curriculumData';
+import { SystemState, AppLanguage } from '../../types';
 import { useAuth } from '../../hooks/useAuth';
 import { usePWAInstall } from '../../hooks/usePWAInstall';
 import { t, LOCALIZED_LANGUAGE_NAMES } from '../../i18n/translations';
@@ -97,9 +96,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   const {
     language,
     theme,
-    viewLayout,
-    profileLens,
-    searchTerm,
   } = systemState;
 
   const { isAuthenticated, user, contact, signOut } = useAuth();
@@ -141,12 +137,10 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
     };
   }, [settingsOpen]);
 
-  const allLenses: ProfileLens[] = ['ALL', 'ARCHITECTURE', 'DATA', 'SOFTWARE_ENG', 'DATABASE'];
-
   const handleToggleLanguage = (newLang: AppLanguage) => {
     if (language === newLang) return;
     updateState({ language: newLang });
-      };
+  };
 
   const handleToggleTheme = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
@@ -154,17 +148,6 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
       updateState({ theme: nextTheme });
     });
   };
-
-    const handleToggleViewLayout = (newLayout: ViewLayout) => {
-    if (viewLayout === newLayout) return;
-    updateState({ viewLayout: newLayout });
-      };
-
-  const handleSelectLens = (lens: ProfileLens) => {
-    updateState({ profileLens: lens });
-      };
-
-    const userInitial = (user?.displayName || user?.email || 'U')[0].toUpperCase();
 
   return (
     <>

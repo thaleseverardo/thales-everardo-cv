@@ -116,10 +116,16 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
           const desc = isPT ? proj.descPT : proj.descEN;
 
           return (
-            <article
+            <a
               key={proj.slug}
-              onClick={() => onSelectProject(proj.slug)}
-              className={`p-5 sm:p-6 rounded-2xl border transition-all cursor-pointer group ${
+              href={`${base}/projects/${proj.slug}/`}
+              onClick={(e) => {
+                if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+                  e.preventDefault();
+                  onSelectProject(proj.slug);
+                }
+              }}
+              className={`block p-5 sm:p-6 rounded-2xl border transition-all cursor-pointer group text-inherit no-underline ${
                 theme === 'dark'
                   ? 'bg-zinc-900/60 border-zinc-800 hover:border-zinc-700'
                   : 'bg-white border-zinc-200 hover:border-zinc-300 shadow-xs'
@@ -155,7 +161,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
                   </span>
                 </div>
               </div>
-            </article>
+            </a>
           );
         })}
       </div>

@@ -1,9 +1,9 @@
-# Thales Everardo — Staff Software Engineer & Systems Architect
+# Thales Everardo — Staff Systems Engineer & Systems Architect
 
 > Interactive Systems Architecture & Observability Portfolio: https://thaleseverardo.github.io/thales-everardo-cv/
 
 ## Professional Overview
-Systems Architect and Staff Software Engineer with over 10 years of production experience specializing in high-throughput data engineering, distributed microservices, fault-tolerant computing, and event-driven architectures (EDA). Expert in eliminating mission-critical latencies in enterprise transactional environments under strict ACID compliance.
+Systems Architect and Staff Systems Engineer with over 10 years of production experience specializing in high-throughput data engineering, distributed microservices, fault-tolerant computing, and event-driven architectures (EDA). Expert in eliminating mission-critical latencies in enterprise transactional environments under strict ACID compliance.
 
 - Location: São Paulo, Brazil (Open to Global Remote, Hybrid SP, and International Relocation)
 - GitHub: https://github.com/thaleseverardo
