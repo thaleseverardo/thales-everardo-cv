@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
           id: '/thales-everardo-cv/',
           name: 'Thales Everardo // Systems Architect',
           short_name: 'ThalesEverardo',
-          description: 'Interactive Systems Architecture & Observability Portfolio - Thales Everardo',
+          description: 'Portfolio - Thales Everardo Albuquerque Reis',
           theme_color: '#09090b',
           background_color: '#09090b',
           display: 'standalone',
@@ -74,7 +74,6 @@ export default defineConfig(({ mode }) => {
             /\/linkedin\/?.*$/,
             /\/github\/?.*$/,
             /\/portfolio\/?.*$/,
-            /\/portifolio\/?.*$/,
           ],
           runtimeCaching: [
             {
