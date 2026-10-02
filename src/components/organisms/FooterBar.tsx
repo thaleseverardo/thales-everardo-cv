@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { SystemState } from '../../types';
 import { t } from '../../i18n/translations';
+import { getTrackingUrl } from '../../utils/trackingLinks';
 
 interface FooterBarProps {
   systemState: SystemState;
@@ -51,7 +52,7 @@ export const FooterBar: React.FC<FooterBarProps> = ({ systemState, onOpenPrivacy
       <div className="flex items-center justify-center gap-3 shrink-0 sm:pr-24">
         {/* LINKEDIN (ATIVO) */}
         <a
-          href="https://br.linkedin.com/in/thaleseverardo"
+          href={getTrackingUrl("linkedin", "footer")}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="LinkedIn"
@@ -63,7 +64,7 @@ export const FooterBar: React.FC<FooterBarProps> = ({ systemState, onOpenPrivacy
 
         {/* GITHUB (ATIVO) */}
         <a
-          href="https://github.com/thaleseverardo"
+          href={getTrackingUrl("github", "footer")}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="GitHub"

@@ -3,6 +3,7 @@ import { X, Mail, Phone, MessageCircle, Linkedin, Lock, ExternalLink, LogOut, Ch
 import { AppLanguage, AppTheme } from '../../types';
 import { useAuth } from '../../hooks/useAuth';
 import { t } from '../../i18n/translations';
+import { getTrackingUrl } from '../../utils/trackingLinks';
 
 interface MobileContactModalProps {
   isOpen: boolean;
@@ -79,7 +80,7 @@ export const MobileContactModal: React.FC<MobileContactModalProps> = ({
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3 max-w-md mx-auto w-full">
           {/* 1. LINKEDIN */}
           <a
-            href="https://br.linkedin.com/in/thaleseverardo"
+            href={getTrackingUrl("linkedin", "mobile_modal")}
             target="_blank"
             rel="noopener noreferrer"
             onClick={onClose}

@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Mail, Linkedin, Phone, MessageCircle, Lock, X } from 'lucide-react';
 import { AppLanguage, AppTheme } from '../../types';
 import { ContactData } from '../../services/firebaseAuth';
+import { getTrackingUrl } from '../../utils/trackingLinks';
 
 interface SpeedDialContactProps {
   isOpen: boolean;
@@ -72,7 +73,7 @@ export const SpeedDialContact: React.FC<SpeedDialContactProps> = ({
 
         {/* SATÉLITE 1: LINKEDIN */}
         <a
-          href="https://br.linkedin.com/in/thaleseverardo"
+          href={getTrackingUrl("linkedin", "speed_dial")}
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => onToggle(false)}

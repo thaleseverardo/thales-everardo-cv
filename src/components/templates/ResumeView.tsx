@@ -27,6 +27,7 @@ import { AppLanguage, AppTheme } from '../../types';
 import { t, getNodeContent } from '../../i18n/translations';
 import { useAuth } from '../../hooks/useAuth';
 import { logAnalyticsEvent } from '../../services/firebaseAuth';
+import { getTrackingUrl } from '../../utils/trackingLinks';
 import {
   getProfileTitle,
   getProfileLocation,
@@ -705,7 +706,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
               </p>
             </div>
             <a
-              href="https://br.linkedin.com/in/thaleseverardo"
+              href={getTrackingUrl("linkedin", "gate_web")}
               target="_blank"
               rel="noopener noreferrer"
               className={`h-8 px-3 rounded-lg border font-sans font-medium text-xs transition-colors flex items-center justify-center gap-1.5 shrink-0 cursor-pointer shadow-2xs active:scale-95 ${
@@ -839,7 +840,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
             {/* Bloco 2: Perfis Profissionais (Rastreados via Bridge Pages) */}
             <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
               <a
-                href="https://thaleseverardo.github.io/thales-everardo-cv/linkedin?src=cv_web"
+                href={getTrackingUrl("linkedin", "cv_web")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors"
@@ -849,7 +850,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
               </a>
               <span className="text-zinc-300 dark:text-zinc-700 select-none">|</span>
               <a
-                href="https://thaleseverardo.github.io/thales-everardo-cv/github?src=cv_web"
+                href={getTrackingUrl("github", "cv_web")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors"
@@ -859,7 +860,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
               </a>
               <span className="text-zinc-300 dark:text-zinc-700 select-none">|</span>
               <a
-                href="https://thaleseverardo.github.io/thales-everardo-cv/portfolio?src=cv_web"
+                href={getTrackingUrl("portfolio", "cv_web")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors"
@@ -883,7 +884,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
             </span>
             <span className="text-zinc-400 select-none">|</span>
             <a
-              href="https://thaleseverardo.github.io/thales-everardo-cv/linkedin?src=cv_pdf"
+              href={getTrackingUrl("linkedin", "cv_pdf")}
               className="inline-flex items-center gap-1 text-inherit no-underline"
             >
               <Linkedin className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
@@ -891,7 +892,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
             </a>
             <span className="text-zinc-400 select-none">|</span>
             <a
-              href="https://thaleseverardo.github.io/thales-everardo-cv/github?src=cv_pdf"
+              href={getTrackingUrl("github", "cv_pdf")}
               className="inline-flex items-center gap-1 text-inherit no-underline"
             >
               <Github className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
@@ -899,7 +900,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
             </a>
             <span className="text-zinc-400 select-none">|</span>
             <a
-              href="https://thaleseverardo.github.io/thales-everardo-cv/portfolio?src=cv_pdf"
+              href={getTrackingUrl("portfolio", "cv_pdf")}
               className="inline-flex items-center gap-1 text-inherit no-underline"
             >
               <Globe className="w-3.5 h-3.5 text-zinc-600 shrink-0" />

@@ -4,6 +4,7 @@ import { AppLanguage, AppTheme } from '../../types';
 import { t } from '../../i18n/translations';
 import { useAuth } from '../../hooks/useAuth';
 import { GoogleLogo, GithubLogo } from '../atoms/SocialIcons';
+import { getTrackingUrl } from '../../utils/trackingLinks';
 import thalesAvatar from '../../assets/images/thales_avatar_250x250.webp';
 
 interface ContactAuthModalProps {
@@ -157,7 +158,7 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
 
           {/* BOTÃO LINKEDIN SEM LOGIN (PADRÃO AAA INTEGRADO COM GOOGLE/GITHUB) */}
           <a
-            href="https://br.linkedin.com/in/thaleseverardo"
+            href={getTrackingUrl("linkedin", "auth_modal")}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
