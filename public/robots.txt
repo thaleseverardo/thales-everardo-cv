@@ -36,4 +36,4 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
-Sitemap: https://thaleseverardo.github.io/thales-everardo-cv/sitemap.xml
+Sitemap: https://thaleseverardo.github.io/thales-everardo-cv/sitemap_index.xml
