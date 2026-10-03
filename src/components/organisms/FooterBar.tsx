@@ -35,10 +35,6 @@ export const FooterBar: React.FC<FooterBarProps> = ({ systemState, onOpenPrivacy
           © {currentYear} Thales Everardo
         </span>
         <span className="opacity-30">•</span>
-        <span className="text-[11px] opacity-60">
-          {t(language, 'footer.subtitle')}
-        </span>
-        <span className="opacity-30">•</span>
         <button
           type="button"
           onClick={onOpenPrivacy}

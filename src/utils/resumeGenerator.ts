@@ -3,21 +3,21 @@ import { CURRICULUM_NODES, PROFILE_DATA } from '../data/curriculumData';
 import { t, getNodeContent } from '../i18n/translations';
 
 export function getProfileTitle(lang: AppLanguage): string {
-  return 'Staff Systems Engineer | Principal Systems Architect';
+  return 'Staff Systems Engineer   |   Principal Systems Architect';
 }
 
 export function getProfileLocation(lang: AppLanguage): string {
-  if (lang === 'PT') return 'São Paulo, Brasil & Toronto, ON (Ex-Residente | Realocação para o Canadá)';
-  if (lang === 'FR') return 'São Paulo, Brésil & Toronto, ON (Ancien Résident | Relocalisation au Canada)';
-  if (lang === 'ES') return 'São Paulo, Brasil y Toronto, ON (Ex-residente | Relocalización a Canadá)';
-  return 'São Paulo, Brazil & Toronto, ON (Former Resident | Relocating to Canada)';
+  if (lang === 'PT') return 'São Paulo, Brasil & Toronto, ON   |   Ex-Residente   |   Realocação para o Canadá';
+  if (lang === 'FR') return 'São Paulo, Brésil & Toronto, ON   |   Ancien Résident   |   Relocalisation au Canada';
+  if (lang === 'ES') return 'São Paulo, Brasil y Toronto, ON   |   Ex-residente   |   Relocalización a Canadá';
+  return 'São Paulo, Brazil & Toronto, ON   |   Former Resident   |   Relocating to Canada';
 }
 
 export function getLanguagesSummary(lang: AppLanguage): string {
-  if (lang === 'PT') return 'Inglês (Fluente — Mais de 3 Anos de Experiência no Canadá) | Português (Nativo)';
-  if (lang === 'FR') return "Anglais (Courant — 3+ Ans d'Expérience Professionnelle au Canada) | Portugais (Natif)";
-  if (lang === 'ES') return 'Inglés (Fluido — Más de 3 Años de Experiencia Laboral en Canadá) | Portugués (Nativo)';
-  return 'English (Fluent — 3+ Yrs Canadian Work Experience) | Portuguese (Native)';
+  if (lang === 'PT') return 'Inglês (Fluente — Mais de 3 Anos de Experiência no Canadá)   |   Português (Nativo)';
+  if (lang === 'FR') return "Anglais (Courant — 3+ Ans d'Expérience Professionnelle au Canada)   |   Portugais (Natif)";
+  if (lang === 'ES') return 'Inglés (Fluido — Más de 3 Años de Experiencia Laboral en Canadá)   |   Portugués (Nativo)';
+  return 'English (Fluent — 3+ Yrs Canadian Work Experience)   |   Portuguese (Native)';
 }
 
 export function getLanguagesLabel(lang: AppLanguage): string {

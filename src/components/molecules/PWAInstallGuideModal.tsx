@@ -1,5 +1,5 @@
 import React from 'react';
-import { Smartphone, DownloadCloud, X, Share, PlusSquare } from 'lucide-react';
+import { Smartphone, Monitor, X, Share, PlusSquare } from 'lucide-react';
 import { AppLanguage, AppTheme } from '../../types';
 import { t } from '../../i18n/translations';
 
@@ -35,13 +35,8 @@ export const PWAInstallGuideModal: React.FC<PWAInstallGuideModalProps> = ({
       >
         {/* CABEÇALHO COM SAFE-AREA */}
         <div className="px-4 md:px-5 pt-[max(1rem,env(safe-area-inset-top,0px))] pb-3 md:py-3.5 border-b border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between shrink-0">
-          <h3 className="text-sm font-bold flex items-center gap-2">
-            {isIOS ? (
-              <Smartphone className="w-4 h-4 text-emerald-500" />
-            ) : (
-              <DownloadCloud className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            )}
-            <span>{isIOS ? t(language, 'pwa.iosTitle') : t(language, 'pwa.guideTitle')}</span>
+          <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
+            {isIOS ? t(language, 'pwa.iosTitle') : t(language, 'pwa.guideTitle')}
           </h3>
           <button
             onClick={onClose}
@@ -69,8 +64,8 @@ export const PWAInstallGuideModal: React.FC<PWAInstallGuideModalProps> = ({
           ) : (
             <>
               <div className="flex items-start gap-3 p-3 rounded-xl bg-zinc-50 border border-zinc-200 dark:bg-zinc-900/60 dark:border-zinc-800/80">
-                <DownloadCloud className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
-                <div>{t(language, 'pwa.guideDesktopStep')}</div>
+                <Monitor className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                <div className="leading-relaxed">{t(language, 'pwa.guideDesktopStep')}</div>
               </div>
 
               <div className="flex items-start gap-3 p-3 rounded-xl bg-zinc-50 border border-zinc-200 dark:bg-zinc-900/60 dark:border-zinc-800/80">

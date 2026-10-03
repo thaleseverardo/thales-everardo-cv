@@ -190,3 +190,81 @@ export interface SoftSkillCompetency {
   descriptionFR: string;
   linkedSkills: string[];
 }
+
+// ==========================================
+// CONTRATOS CANÔNICOS DE DADOS LOCALIZADOS (SSOT)
+// ==========================================
+
+export interface LocalizedArticle {
+  slug: string;
+  tag: string;
+  date: string;
+  readTime: string;
+  title: string;
+  desc: string;
+  content: string;
+}
+
+export interface LocalizedProject {
+  slug: string;
+  badge: string;
+  company: string;
+  period: string;
+  stack: string;
+  title: string;
+  desc: string;
+  content: string;
+}
+
+export interface LocalizedAcademicDegree {
+  id: string;
+  institution: string;
+  institutionShort: string;
+  degreeName: string;
+  level: 'BACHELOR' | 'POSTGRADUATE' | 'TECH_DEGREE' | 'CORE_STUDIES' | 'EXTENSION';
+  status: 'IN_PROGRESS' | 'COMPLETED';
+  period: string;
+  startYear: number;
+  endYear: number;
+  expectedYear?: number;
+  focus: string;
+  skills: string[];
+  internationalEquivalency?: {
+    agency: 'WES';
+    country: 'CA';
+    canadianEquivalency: string;
+    badgeText: string;
+  };
+}
+
+export interface LocalizedVerifiedCredential {
+  id: string;
+  title: string;
+  institution: string;
+  workloadHours: number;
+  issueDate: string;
+  verificationUrl: string;
+  disciplinesCount: number;
+  disciplinesIncluded: string[];
+  competencyDomain: 'ALGORITHMS' | 'DATA_CLOUD' | 'SYSTEMS_DB' | 'SOFTWARE_ENG';
+}
+
+export interface LocalizedSkillDomain {
+  id: string;
+  category: string;
+  skills: string[];
+}
+
+export interface LocalizedSoftSkill {
+  id: string;
+  title: string;
+  description: string;
+  linkedSkills: string[];
+}
+
+export interface LocalizedLanguageItem {
+  language: string;
+  proficiency: string;
+  cefrLevel: 'C2' | 'C1' | 'B2' | 'B1' | 'A2';
+  isNative?: boolean;
+}

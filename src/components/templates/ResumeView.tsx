@@ -21,6 +21,7 @@ import {
   FileText,
   FileCode,
   FileCheck,
+  Shield,
 } from 'lucide-react';
 import { CURRICULUM_NODES, PROFILE_DATA } from '../../data/curriculumData';
 import { AppLanguage, AppTheme } from '../../types';
@@ -37,29 +38,7 @@ import {
   getLanguagesLabel,
 } from '../../utils/resumeGenerator';
 
-const CanadaFlagSVG: React.FC<{ className?: string }> = ({
-  className = 'w-4.5 h-3 inline-block shrink-0 rounded-[2px] shadow-2xs border border-black/10 dark:border-white/15',
-}) => (
-  <svg className={className} viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Canada">
-    <rect width="24" height="16" fill="#D80027" />
-    <rect x="6" width="12" height="16" fill="#FFFFFF" />
-    <path
-      d="M12 2.8L12.5 4.8L14.3 4.2L13.5 6L15.5 7.1L14 8.2L14.6 9.8L12.6 9.4L12.3 12.2H11.7L11.4 9.4L9.4 9.8L10 8.2L8.5 7.1L10.5 6L9.7 4.2L11.5 4.8L12 2.8Z"
-      fill="#D80027"
-    />
-  </svg>
-);
 
-const BrazilFlagSVG: React.FC<{ className?: string }> = ({
-  className = 'w-4.5 h-3 inline-block shrink-0 rounded-[2px] shadow-2xs border border-black/10 dark:border-white/15',
-}) => (
-  <svg className={className} viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Brasil">
-    <rect width="24" height="16" fill="#009B3A" />
-    <path d="M12 2.2L21 8L12 13.8L3 8L12 2.2Z" fill="#FEDF00" />
-    <circle cx="12" cy="8" r="3.2" fill="#002776" />
-    <path d="M9.1 7.2C10.2 6.5 12.5 6.6 14.8 8.1C14.7 8.3 14.5 8.5 14.3 8.7C12.3 7.4 10.3 7.3 9.3 7.8L9.1 7.2Z" fill="#FFFFFF" />
-  </svg>
-);
 
 interface ResumeViewProps {
   language: AppLanguage;
@@ -612,18 +591,18 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                 <div className="px-4 py-2.5 text-[11px] font-semibold tracking-wider text-zinc-400 dark:text-zinc-500 uppercase border-b border-zinc-100 dark:border-white/5">
                   {t(language, 'resume.staticDownload')}
                 </div>
-                <div className="p-1.5 space-y-1">
+                <div className="p-1.5 space-y-0.5">
                   <button
                     onClick={handleGeneratePdf}
                     disabled={isGeneratingPdf}
-                    className="w-full text-left p-2.5 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors flex items-center justify-between cursor-pointer group disabled:opacity-50"
+                    className="w-full text-left px-3 py-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors flex items-center justify-between cursor-pointer group disabled:opacity-50"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 flex items-center justify-center shrink-0">
+                      <div className="w-5 h-5 flex items-center justify-center shrink-0 text-red-500 dark:text-red-400">
                         {isGeneratingPdf ? (
                           <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
                         ) : (
-                          <FileCheck className="w-4 h-4" />
+                          <FileCheck className="w-4.5 h-4.5" />
                         )}
                       </div>
                       <div>
@@ -645,11 +624,11 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
 
                   <button
                     onClick={() => downloadStaticFile('txt')}
-                    className="w-full text-left p-2.5 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors flex items-center justify-between cursor-pointer group"
+                    className="w-full text-left px-3 py-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors flex items-center justify-between cursor-pointer group"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
-                        <FileText className="w-4 h-4" />
+                      <div className="w-5 h-5 flex items-center justify-center shrink-0 text-blue-500 dark:text-blue-400">
+                        <FileText className="w-4.5 h-4.5" />
                       </div>
                       <div>
                         <div className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">{t(language, 'resume.formatTxtTitle')}</div>
@@ -660,11 +639,11 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
 
                   <button
                     onClick={() => downloadStaticFile('md')}
-                    className="w-full text-left p-2.5 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors flex items-center justify-between cursor-pointer group"
+                    className="w-full text-left px-3 py-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800/70 transition-colors flex items-center justify-between cursor-pointer group"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0">
-                        <FileCode className="w-4 h-4" />
+                      <div className="w-5 h-5 flex items-center justify-center shrink-0 text-emerald-500 dark:text-emerald-400">
+                        <FileCode className="w-4.5 h-4.5" />
                       </div>
                       <div>
                         <div className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">{t(language, 'resume.formatMdTitle')}</div>
@@ -689,12 +668,18 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
               : 'bg-white border-zinc-200 divide-zinc-200 text-zinc-800 shadow-xs'
           }`}
         >
-          {/* CABEÇALHO DO BLOCO: TÍTULO EXECUTIVO REFINADO */}
-          <div className="px-4 py-2.5 bg-zinc-50 dark:bg-zinc-900/60 flex items-center justify-between">
+          {/* CABEÇALHO DO BLOCO: TÍTULO EXECUTIVO + SALVAGUARDA DE PRIVACIDADE */}
+          <div className="px-4 py-2 bg-zinc-50/90 dark:bg-zinc-900/50 flex items-center justify-between">
             <h2 className="font-sans font-semibold text-xs text-zinc-900 dark:text-zinc-100 tracking-tight">
               {t(language, 'resume.gateTitle')}
             </h2>
-            <span className="text-[11px] font-mono text-zinc-400 dark:text-zinc-500">{t(language, 'resume.directLine')}</span>
+            <button
+              type="button"
+              onClick={onOpenPrivacy}
+              className="text-[10.5px] font-sans text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-300 transition-colors flex items-center gap-1.5 cursor-pointer hover:underline"
+            >
+              <span>{t(language, 'footer.privacyLink')}</span>
+            </button>
           </div>
 
           {/* LINHA 1: LINKEDIN COM CADEADO ABERTO (CANAL LIVRE / PÚBLICO) */}
@@ -710,15 +695,10 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
               target="_blank"
               rel="me noopener noreferrer"
               onClick={() => logAnalyticsEvent('social_outbound', { platform: 'linkedin', source: 'gate_web' })}
-              className={`h-8 px-3 rounded-lg border font-sans font-medium text-xs transition-colors flex items-center justify-center gap-1.5 shrink-0 cursor-pointer shadow-2xs active:scale-95 ${
-                theme === 'dark'
-                  ? 'bg-zinc-900 hover:bg-zinc-800 border-zinc-700/80 text-zinc-200 hover:text-white'
-                  : 'bg-zinc-50 hover:bg-zinc-100 border-zinc-300 text-zinc-700 hover:text-zinc-900'
-              }`}
+              className="h-8 font-sans font-medium text-xs text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 transition-colors flex items-center justify-center gap-1 shrink-0 cursor-pointer active:scale-95 group/link"
             >
-              <Linkedin className="w-3.5 h-3.5 text-[#0A66C2] shrink-0" />
-              <span>{t(language, 'auth.connectLinkedIn')}</span>
-              <ExternalLink className="w-3 h-3 text-zinc-400 dark:text-zinc-500 opacity-60 ml-0.5 shrink-0" />
+              <span className="group-hover/link:underline">{t(language, 'auth.connectLinkedIn')}</span>
+              <ExternalLink className="w-3 h-3 opacity-80 group-hover/link:opacity-100 shrink-0 transition-opacity" />
             </a>
           </div>
 
@@ -742,17 +722,6 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
               <span>{t(language, 'resume.gateButton')}</span>
             </button>
           </div>
-
-          {/* RODAPÉ DO BLOCO: PRIVACIDADE & LGPD */}
-          <div className="px-4 py-2 bg-zinc-50/60 dark:bg-zinc-900/30 flex items-center justify-end text-[11px] font-sans text-zinc-400 dark:text-zinc-500">
-            <button
-              type="button"
-              onClick={onOpenPrivacy}
-              className="font-medium hover:text-zinc-700 dark:hover:text-zinc-300 hover:underline transition-colors cursor-pointer"
-            >
-              {t(language, 'footer.privacyLink')}
-            </button>
-          </div>
         </div>
       )}
 
@@ -771,14 +740,38 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
           <h1 className="text-[clamp(0.95rem,4.3vw,1.65rem)] font-bold tracking-tight whitespace-nowrap text-zinc-900 dark:text-zinc-100 leading-tight print:text-black">
             {PROFILE_DATA.name.toUpperCase()}
           </h1>
-          <div className="text-[clamp(0.68rem,2.8vw,0.875rem)] font-medium text-zinc-700 dark:text-zinc-300 mt-1 whitespace-nowrap tracking-tight leading-tight print:text-zinc-800 print:text-[10pt]">
-            {getProfileTitle(language)}
+          <div className="text-[clamp(0.68rem,2.8vw,0.875rem)] font-medium text-zinc-700 dark:text-zinc-300 mt-1 whitespace-nowrap tracking-tight leading-tight print:text-zinc-800 print:text-[10pt] flex items-center">
+            <span>Staff Systems Engineer</span>
+            <span className="mx-2.5 text-zinc-300 dark:text-zinc-700 select-none font-normal">|</span>
+            <span>Principal Systems Architect</span>
           </div>
 
           {/* LOCALIZAÇÃO E STATUS DE RESIDÊNCIA CANADENSE */}
-          <div className="mt-2.5 flex items-start gap-1.5 text-xs font-sans text-zinc-700 dark:text-zinc-300 leading-snug print:text-[9pt] print:mt-1.5">
-            <MapPin className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0 mt-0.5 print:text-zinc-600" />
-            <span className="font-medium">{getProfileLocation(language)}</span>
+          <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs font-sans text-zinc-700 dark:text-zinc-300 leading-snug print:text-[9pt] print:mt-1.5">
+            <div className="flex items-center gap-2">
+              <MapPin className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0 -translate-y-px print:text-zinc-600" />
+              <span className="font-medium">
+                {language === 'PT'
+                  ? 'São Paulo, Brasil & Toronto, ON'
+                  : language === 'FR'
+                  ? 'São Paulo, Brésil & Toronto, ON'
+                  : language === 'ES'
+                  ? 'São Paulo, Brasil y Toronto, ON'
+                  : 'São Paulo, Brazil & Toronto, ON'}
+              </span>
+            </div>
+            <span className="text-zinc-300 dark:text-zinc-700 select-none">|</span>
+            <span className="text-zinc-600 dark:text-zinc-400">
+              {language === 'PT' ? (
+                <>Ex-Residente <span className="mx-2.5 text-zinc-300 dark:text-zinc-700 select-none font-normal">|</span> Realocação para o Canadá</>
+              ) : language === 'FR' ? (
+                <>Ancien Résident <span className="mx-2.5 text-zinc-300 dark:text-zinc-700 select-none font-normal">|</span> Relocalisation au Canada</>
+              ) : language === 'ES' ? (
+                <>Ex-residente <span className="mx-2.5 text-zinc-300 dark:text-zinc-700 select-none font-normal">|</span> Relocalización a Canadá</>
+              ) : (
+                <>Former Resident <span className="mx-2.5 text-zinc-300 dark:text-zinc-700 select-none font-normal">|</span> Relocating to Canada</>
+              )}
+            </span>
           </div>
 
           {/* 1. LINHA DE CONTATOS INTERATIVA (EXCLUSIVA DE TELA, OCULTA NA IMPRESSÃO) */}
@@ -791,7 +784,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                     href={`mailto:${email}`}
                     className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors group cursor-pointer"
                   >
-                    <Mail className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+                    <Mail className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0 translate-y-px" />
                     <span className="hover:underline font-medium select-all">{email || t(language, 'resume.loading')}</span>
                   </a>
                   <span className="text-zinc-300 dark:text-zinc-700 select-none">|</span>
@@ -801,7 +794,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors group cursor-pointer"
                   >
-                    <Phone className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+                    <Phone className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0 translate-y-px" />
                     <span className="hover:underline font-medium select-all">{phone || t(language, 'resume.loading')}</span>
                   </a>
                 </>
@@ -813,11 +806,11 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                     className="group inline-flex items-center gap-1.5 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors cursor-pointer text-left"
                     title={t(language, 'resume.gateTitle')}
                   >
-                    <Mail className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+                    <Mail className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0 -translate-y-px" />
                     <span className="tracking-wide select-none font-medium text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-800 dark:group-hover:text-zinc-200">
                       thales••••••@•••••.com
                     </span>
-                    <Lock className="w-3 h-3 text-amber-500 shrink-0" strokeWidth={1.8} />
+                    <Lock className="w-3 h-3 text-amber-500 shrink-0 translate-y-px" strokeWidth={1.8} />
                   </button>
                   <span className="text-zinc-300 dark:text-zinc-700 select-none">|</span>
                   <button
@@ -826,11 +819,11 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                     className="group inline-flex items-center gap-1.5 text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors cursor-pointer text-left"
                     title={t(language, 'resume.gateTitle')}
                   >
-                    <Phone className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+                    <Phone className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0 -translate-y-px" />
                     <span className="tracking-wide select-none font-medium text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-800 dark:group-hover:text-zinc-200">
                       +55 11 9••••-••••
                     </span>
-                    <Lock className="w-3 h-3 text-amber-500 shrink-0" strokeWidth={1.8} />
+                    <Lock className="w-3 h-3 text-amber-500 shrink-0 translate-y-px" strokeWidth={1.8} />
                   </button>
                 </>
               )}
@@ -847,7 +840,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                 onClick={() => logAnalyticsEvent('social_outbound', { platform: 'linkedin', source: 'cv_web' })}
                 className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors"
               >
-                <Linkedin className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+                <Linkedin className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0 -translate-y-px" />
                 <span className="hover:underline">LinkedIn</span>
               </a>
               <span className="text-zinc-300 dark:text-zinc-700 select-none">|</span>
@@ -858,7 +851,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                 onClick={() => logAnalyticsEvent('social_outbound', { platform: 'github', source: 'cv_web' })}
                 className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors"
               >
-                <Github className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+                <Github className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0 -translate-y-px" />
                 <span className="hover:underline">GitHub</span>
               </a>
               <span className="text-zinc-300 dark:text-zinc-700 select-none">|</span>
@@ -866,7 +859,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                 href="https://thaleseverardo.github.io/thales-everardo-cv/"
                 className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors"
               >
-                <Globe className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
+                <Globe className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0 -translate-y-px" />
                 <span className="hover:underline">{language === 'PT' ? 'Portfólio' : language === 'ES' ? 'Portafolio' : 'Portfolio'}</span>
               </a>
             </div>
@@ -875,12 +868,12 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
           {/* 2. LINHA DE CONTATOS DEDICADA PARA IMPRESSÃO / PDF (RASTREADOS COM ?src=cv_pdf) */}
           <div className="hidden print:flex flex-wrap items-center gap-x-2 gap-y-1 text-[9pt] font-sans text-zinc-700 mt-1.5">
             <span className="inline-flex items-center gap-1">
-              <Mail className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+              <Mail className="w-3.5 h-3.5 text-zinc-600 shrink-0 translate-y-px" />
               <span>{email || 'thales••••••@•••••.com'}</span>
             </span>
             <span className="text-zinc-400 select-none">|</span>
             <span className="inline-flex items-center gap-1">
-              <Phone className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+              <Phone className="w-3.5 h-3.5 text-zinc-600 shrink-0 translate-y-px" />
               <span>{phone || '+55 11 9••••-••••'}</span>
             </span>
             <span className="text-zinc-400 select-none">|</span>
@@ -888,7 +881,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
               href="https://linkedin.com/in/thaleseverardo"
               className="inline-flex items-center gap-1 text-inherit no-underline"
             >
-              <Linkedin className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+              <Linkedin className="w-3.5 h-3.5 text-zinc-600 shrink-0 translate-y-px" />
               <span>linkedin.com/in/thaleseverardo</span>
             </a>
             <span className="text-zinc-400 select-none">|</span>
@@ -896,7 +889,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
               href="https://github.com/thaleseverardo"
               className="inline-flex items-center gap-1 text-inherit no-underline"
             >
-              <Github className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+              <Github className="w-3.5 h-3.5 text-zinc-600 shrink-0 translate-y-px" />
               <span>github.com/thaleseverardo</span>
             </a>
             <span className="text-zinc-400 select-none">|</span>
@@ -904,15 +897,35 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
               href="https://thaleseverardo.github.io/thales-everardo-cv/"
               className="inline-flex items-center gap-1 text-inherit no-underline"
             >
-              <Globe className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+              <Globe className="w-3.5 h-3.5 text-zinc-600 shrink-0 translate-y-px" />
               <span>thaleseverardo.github.io/thales-everardo-cv</span>
             </a>
           </div>
 
           {/* DESTAQUE DE IDIOMAS & EXPERIÊNCIA CORPORATIVA (TEXTUAL CONTINUO) */}
-          <div className="mt-2 text-xs font-sans text-zinc-600 dark:text-zinc-400 leading-normal print:text-[8.8pt] print:text-zinc-700 print:mt-1.5">
-            <strong className="font-semibold text-zinc-800 dark:text-zinc-200 print:text-zinc-900">{getLanguagesLabel(language)}:</strong>{' '}
-            <span>{getLanguagesSummary(language)}</span>
+          <div className="mt-2 text-xs font-sans text-zinc-600 dark:text-zinc-400 leading-normal print:text-[8.8pt] print:text-zinc-700 print:mt-1.5 flex flex-wrap items-center">
+            <strong className="font-semibold text-zinc-800 dark:text-zinc-200 print:text-zinc-900 mr-2.5">
+              {getLanguagesLabel(language)}:
+            </strong>
+            <span>
+              {language === 'PT'
+                ? 'Inglês (Fluente — Mais de 3 Anos de Experiência no Canadá)'
+                : language === 'FR'
+                ? "Anglais (Courant — 3+ Ans d'Expérience Professionnelle au Canada)"
+                : language === 'ES'
+                ? 'Inglés (Fluido — Más de 3 Años de Experiencia Laboral en Canadá)'
+                : 'English (Fluent — 3+ Yrs Canadian Work Experience)'}
+            </span>
+            <span className="mx-2.5 text-zinc-300 dark:text-zinc-700 select-none font-normal">|</span>
+            <span>
+              {language === 'PT'
+                ? 'Português (Nativo)'
+                : language === 'FR'
+                ? 'Portugais (Natif)'
+                : language === 'ES'
+                ? 'Portugués (Nativo)'
+                : 'Portuguese (Native)'}
+            </span>
           </div>
         </div>
 
@@ -1186,12 +1199,8 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
                     </div>
                     <span className="font-mono text-[11px] opacity-70 shrink-0 sm:pt-0.5 inline-flex items-center gap-1.5">
                       <span>{node.period} · {node.location}</span>
-                      <span className="inline-flex items-center print:hidden" title={node.location}>
-                        {node.location.toLowerCase().includes('canada') || node.company.toLowerCase().includes('summerhill') ? (
-                          <CanadaFlagSVG />
-                        ) : (
-                          <BrazilFlagSVG />
-                        )}
+                      <span className="inline-flex items-center text-xs leading-none print:hidden select-none" title={node.location}>
+                        {node.location.toLowerCase().includes('canada') || node.company.toLowerCase().includes('summerhill') ? '🇨🇦' : '🇧🇷'}
                       </span>
                     </span>
                   </div>

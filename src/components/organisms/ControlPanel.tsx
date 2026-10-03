@@ -182,10 +182,10 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                 <span className="text-zinc-500 dark:text-zinc-400 font-medium hidden lg:inline">Albuquerque Reis</span>
               </h1>
 
-              <div className="text-xs font-sans opacity-70 leading-normal flex items-center gap-1.5 pt-0.5">
-                <span className="font-medium text-blue-600 dark:text-cyan-400">{t(language, 'nav.staffTitle')}</span>
-                <span className="opacity-40">•</span>
-                <span>{t(language, 'nav.architectTitle')}</span>
+              <div className="text-[11.5px] sm:text-xs font-sans flex items-center gap-2 pt-0.5 tracking-normal text-zinc-500 dark:text-zinc-400 leading-normal">
+                <span className="font-normal text-zinc-500 dark:text-zinc-400">{t(language, 'nav.staffTitle')}</span>
+                <span className="w-1 h-1 rounded-full bg-zinc-300 dark:bg-zinc-700 select-none shrink-0" />
+                <span className="font-normal text-zinc-500 dark:text-zinc-400">{t(language, 'nav.architectTitle')}</span>
               </div>
             </div>
           </div>
@@ -233,10 +233,10 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               <span className="font-sans font-bold text-[15px] sm:text-base tracking-tight block text-zinc-900 dark:text-zinc-100 leading-snug truncate">
                 Thales Everardo
               </span>
-              <div className="text-[11px] font-sans opacity-70 leading-tight flex items-center gap-1 truncate pt-0.5">
-                <span className="font-medium text-blue-600 dark:text-cyan-400">Staff Engineer</span>
-                <span className="opacity-40">•</span>
-                <span className="truncate">{t(language, 'nav.architectTitle')}</span>
+              <div className="text-[11px] font-sans flex items-center gap-1.5 truncate pt-0.5 tracking-normal text-zinc-500 dark:text-zinc-400 leading-tight">
+                <span className="font-normal text-zinc-500 dark:text-zinc-400 truncate">{t(language, 'nav.staffTitle')}</span>
+                <span className="w-1 h-1 rounded-full bg-zinc-300 dark:bg-zinc-700 select-none shrink-0" />
+                <span className="font-normal text-zinc-500 dark:text-zinc-400 truncate">{t(language, 'nav.architectTitle')}</span>
               </div>
             </div>
           </div>

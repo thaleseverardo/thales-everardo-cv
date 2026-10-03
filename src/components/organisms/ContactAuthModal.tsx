@@ -175,7 +175,7 @@ export const ContactAuthModal: React.FC<ContactAuthModalProps> = ({
             <ExternalLink className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 ml-0.5" />
           </a>
 
-          {/* BLINDAGEM LGPD / GDPR */}
+          {/* BLINDAGEM GDPR / LGPD */}
           <div className="mt-4 pt-3.5 border-t border-slate-100 dark:border-zinc-800/80 text-left space-y-2">
             <p className="text-[11px] leading-relaxed text-slate-500 dark:text-zinc-400 font-sans">
               {t(language, 'auth.lgpdNotice')}

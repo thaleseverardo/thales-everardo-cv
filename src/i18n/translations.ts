@@ -1,4 +1,5 @@
 import { AppLanguage, ArchitectureNode, MetricHighlight } from '../types';
+import { getRegionalNodeOverlay } from '../utils/careerConsolidator';
 
 export const LOCALIZED_LANGUAGE_NAMES: Record<AppLanguage, Record<AppLanguage, string>> = {
   PT: { PT: 'Português', EN: 'Inglês', ES: 'Espanhol', FR: 'Francês' },
@@ -34,6 +35,7 @@ export const TRANSLATIONS = {
     'nav.appInstalled': 'Aplicativo Instalado',
     'nav.skipContent': 'Pular para o conteúdo principal',
     'nav.clearSearch': 'Limpar busca',
+    'nav.back': 'Voltar',
     'sidebar.graph': 'Grafo',
     'sidebar.graphDesc': 'Arquitetura de Sistemas',
     'sidebar.timeline': 'Linha do Tempo',
@@ -48,15 +50,17 @@ export const TRANSLATIONS = {
     'sidebar.caseStudiesDesc': 'Projetos em Produção',
     'sidebar.collapse': 'Recolher menu',
     'sidebar.expand': 'Expandir menu',
+    'sidebar.navAriaLabel': 'Navegação de Vistas',
+    'sidebar.mobileNavAriaLabel': 'Navegação Inferior Mobile',
 
-    // Lentes de Especialidade (Filtros)
+    // Lentes de Especialidade
     'lens.all': 'Todos',
     'lens.architecture': 'Arquitetura',
     'lens.data': 'Dados',
     'lens.software': 'Eng. Software',
     'lens.database': 'Bancos de Dados',
 
-    // Modal de Autenticação & Linha Direta
+    // Modal de Autenticação & Contato
     'auth.modalTitle': 'Contato',
     'auth.modalSubtitle': 'Para contato imediato sem cadastro, conecte-se pelo LinkedIn. Se preferir acesso direto ao WhatsApp pessoal e e-mail corporativo, autentique-se para liberar o contato direto.',
     'auth.continueWithGoogle': 'Continuar com o Google',
@@ -65,16 +69,17 @@ export const TRANSLATIONS = {
     'auth.orEmail': 'ou continue com e-mail',
     'auth.orLinkedIn': 'OU SEM CADASTRO',
     'auth.connectLinkedIn': 'LinkedIn',
-    'auth.lgpdNotice': 'Ao continuar, você concorda em compartilhar seu nome e e-mail exclusivamente para verificação de acesso aos canais de contato. Seus dados nunca serão compartilhados, vendidos ou utilizados para envio de mensagens não solicitadas (spam).',
-    'auth.privacyPolicyLink': 'Política de Privacidade (LGPD / GDPR)',
-    'auth.privacyPolicyTitle': 'Política de Privacidade & Proteção de Dados',
-    'auth.privacyController': 'Controlador: Thales Everardo Albuquerque Reis',
-    'auth.privacyDataCollected': 'Dados Coletados: Nome, endereço de e-mail e identificador de autenticação (OAuth).',
-    'auth.privacyPurpose': 'Finalidade: Controle legítimo de acesso para proteção de dados pessoais de contato contra raspagem automatizada (Art. 7º e 9º da LGPD).',
-    'auth.privacyRetention': 'Retenção & Descarte: Dados mantidos estritamente durante o propósito do contato ou revogados imediatamente pelo usuário.',
-    'auth.privacyRights': 'Seus Direitos (Art. 18 LGPD): Você pode revogar o acesso e solicitar a exclusão definitiva a qualquer momento na interface.',
-    'auth.revokeData': 'Revogar acesso e excluir meus dados',
-    'auth.revokeSuccess': 'Seus dados foram excluídos e o acesso foi revogado.',
+    'auth.lgpdNotice': 'Ao prosseguir, você autoriza o tratamento do seu nome e e-mail exclusivamente para verificação de identidade e liberação dos canais de contato direto, em estrita conformidade com a LGPD (Lei Federal nº 13.709/2018). Inexistência de compartilhamento comercial ou spam.',
+    'auth.privacyPolicyLink': 'Política de Privacidade (LGPD)',
+    'auth.privacyPolicyTitle': 'Política de Privacidade & Proteção de Dados (LGPD)',
+    'auth.privacyController': 'Controlador: Thales Everardo Albuquerque Reis (São Paulo, Brasil)',
+    'auth.privacyDataCollected': 'Dados Pessoais Tratados: Nome completo, endereço de e-mail e identificador de sessão federada (OAuth 2.0). Nenhuma senha é solicitada, processada ou armazenada.',
+    'auth.privacyPurpose': 'Bases Legais e Finalidade: Consentimento do titular (Art. 7º, I) e Legítimo Interesse (Art. 7º, IX da LGPD) estritamente para autenticação anti-bot e salvaguarda das vias de comunicação contra raspagem automatizada.',
+    'auth.privacyRetention': 'Término do Tratamento: Dados mantidos durante a sessão ativa ou eliminados definitivamente a qualquer tempo mediante requisição do titular (Art. 16 da LGPD).',
+    'auth.privacyRights': 'Direitos do Titular (Art. 18 da LGPD): Confirmação, acesso, revogação do consentimento e eliminação definitiva dos dados disponíveis a qualquer momento na interface.',
+    'auth.revokeData': 'Revogar consentimento e eliminar meus dados',
+    'auth.revokeDataTooltip': 'Eliminar dados pessoais da sessão conforme Art. 18, VI e IX da LGPD',
+    'auth.revokeSuccess': 'Seus dados foram permanentemente eliminados da base conforme o Art. 18 da LGPD.',
     'auth.emailLabel': 'E-mail',
     'auth.passwordLabel': 'Senha',
     'auth.passwordHint': 'Mínimo de 6 caracteres (letras e números)',
@@ -106,7 +111,29 @@ export const TRANSLATIONS = {
     'auth.errorGeneric': 'Não foi possível concluir a autenticação. Tente novamente.',
     'auth.errorAccountExists': 'Este e-mail já foi registrado com outro método (Google ou Senha). Por favor, use o método original.',
 
-    // Alertas de Incidente
+    // Contact Modal & Gate
+    'contactModal.channelsTitle': 'Canais de Contato',
+    'contactModal.phone': 'Telefone',
+    'contactModal.authenticatedSubtitle': 'Sessão autenticada · Contatos liberados',
+    'contactModal.unauthenticatedSubtitle': 'Selecione o canal de sua preferência',
+    'contactModal.copied': 'Copiado',
+    'contactModal.copy': 'Copiar',
+    'contactModal.tapToUnlock': 'Toque para autenticar e liberar',
+    'contactModal.unlock': 'Liberar',
+    'contactModal.activeSession': 'Sessão Ativa',
+    'contactModal.signOut': 'Bloquear e Sair',
+    'gate.directEmail': 'E-mail Direto',
+    'gate.phoneWhatsApp': 'Telefone / WhatsApp',
+    'gate.protected': 'Protegido',
+    'gate.antiBotTitle': 'Contato',
+    'gate.antiBotDesc': 'Faça login para ter acesso ao e-mail, WhatsApp e telefone direto.',
+    'gate.unlockContacts': 'Entrar',
+    'gate.copyEmail': 'Copiar e-mail',
+    'gate.copyPhone': 'Copiar telefone',
+    'gate.verifiedSession': 'Acesso Verificado',
+    'gate.lockContacts': 'Bloquear',
+
+    // Incident Simulation
     'incident.badge': 'INCIDENTE SIMULADO:',
     'incident.desc': 'Circuit breaker aberto · Roteamento em failover ativo',
     'incident.autoHeal': 'AUTORRECUPERAR',
@@ -120,7 +147,7 @@ export const TRANSLATIONS = {
     'timeline.businessImpact': 'Impacto de Negócio:',
     'timeline.inspectButton': 'INSPECIONAR ARQUITETURA',
 
-    // Drawer / Inspector
+    // Inspector
     'inspector.tabArchitecture': 'ARQUITETURA & DESAFIO',
     'inspector.tabLogs': 'LOGS EM TEMPO REAL',
     'inspector.roiTitle': 'Impacto de Negócio (ROI):',
@@ -134,38 +161,19 @@ export const TRANSLATIONS = {
     'inspector.prevNode': 'Anterior',
     'inspector.nextNode': 'Próximo',
     'inspector.closeEsc': 'Fechar (Esc)',
+    'inspector.adrTitle': '[POST-MORTEM & DECISÃO ARQUITETURAL // ADR]',
+    'inspector.subsystemLabel': 'SUBSISTEMA:',
+    'inspector.rootCause': 'CAUSA-RAIZ / DESAFIO:',
+    'inspector.countermeasure': 'CONTRAMEDIDA ARQUITETURAL:',
+    'inspector.productionOutcome': 'RESULTADO EM PRODUÇÃO:',
+    'inspector.acceptanceCriteriaLabel': 'Critério de Aceitação de Arquitetura:',
+    'inspector.acceptanceCriteria': 'A solução opera em conformidade estrita com garantias ACID e idempotência de eventos, mitigando qualquer necessidade de intervenção manual em janelas críticas.',
 
-    // Gate de Contato
-    'gate.directEmail': 'E-mail Direto',
-    'gate.phoneWhatsApp': 'Telefone / WhatsApp',
-    'gate.protected': 'Protegido',
-    'gate.antiBotTitle': 'Contato',
-    'gate.antiBotDesc': 'Faça login para ter acesso ao e-mail, WhatsApp e telefone direto.',
-    'gate.unlockContacts': 'Entrar',
-    'gate.copyEmail': 'Copiar e-mail',
-    'gate.copyPhone': 'Copiar telefone',
-    'gate.verifiedSession': 'Acesso Verificado',
-    'gate.lockContacts': 'Bloquear',
-
-    // Modal de Contato (Handshake)
-    'handshake.subtitle': 'INICIAR CONTATO PROFISSIONAL',
-    'handshake.title': 'CONTATAR Thales Everardo // ARQUITETO DE SISTEMAS',
-    'handshake.availabilityTitle': 'DISPONIBILIDADE PROFISSIONAL:',
-    'handshake.availabilityDesc': 'Aberto a posições de Arquiteto de Software Sênior, Staff / Principal Engineer e Tech Lead. Modelos: Remoto Global, Híbrido em São Paulo ou realocação internacional.',
-    'handshake.emailLabel': 'E-MAIL',
-    'handshake.phoneLabel': 'TELEFONE / WHATSAPP',
-    'handshake.viewResume': 'VER CURRÍCULO (RAW CV)',
-    'handshake.rapidDispatch': 'MENSAGEM RÁPIDA VIA CLIENTE DE E-MAIL',
-    'handshake.subjectDefault': 'Oportunidade para Arquiteto de Sistemas / Engenheiro Sênior',
-    'handshake.notePlaceholder': 'Escreva uma mensagem rápida para o Thales...',
-    'handshake.sendButton': 'ABRIR E-MAIL DE CONTATO',
-    'handshake.defaultBody': 'Olá Thales, explorei seu portfólio interativo de arquitetura e gostaria de conversar sobre uma oportunidade técnica para sua senioridade.',
-
-    // Modal de Currículo ATS & Ações
+    // Resume View
     'resume.title': 'CURRÍCULO ATS',
     'resume.copy': 'COPIAR',
     'resume.copied': 'COPIADO',
-    'resume.print': 'IMPRIMER',
+    'resume.print': 'IMPRIMIR',
     'resume.savePdf': 'BAIXAR PDF',
     'resume.executiveSummary': 'RESUMO PROFISSIONAL',
     'resume.coreExperience': 'EXPERIÊNCIA PROFISSIONAL',
@@ -173,7 +181,7 @@ export const TRANSLATIONS = {
     'resume.businessRoi': 'Impacto Comercial:',
     'resume.engineeringFeat': 'Feito Técnico:',
     'resume.solution': 'Solução:',
-    'resume.staticDownload': 'Download Estático',
+    'resume.staticDownload': 'Formatos de Arquivo Disponíveis',
     'resume.shareResume': 'Compartilhar CV',
     'resume.linkCopied': 'Link copiado!',
     'resume.otherApps': 'Outros Aplicativos...',
@@ -186,39 +194,90 @@ export const TRANSLATIONS = {
     'resume.gateRow2': 'Para liberar a visualização do WhatsApp e e-mail corporativo, autentique-se via login simplificado.',
     'resume.gateButton': 'Entrar',
     'resume.directLine': 'Linha Direta',
-    'inspector.adrTitle': '[POST-MORTEM & DECISÃO ARQUITETURAL // ADR]',
-    'inspector.subsystemLabel': 'SUBSISTEMA:',
-    'inspector.rootCause': 'CAUSA-RAIZ / DESAFIO:',
-    'inspector.countermeasure': 'CONTRAMEDIDA ARQUITETURAL:',
-    'inspector.productionOutcome': 'RESULTADO EM PRODUÇÃO:',
-    'inspector.acceptanceCriteriaLabel': 'Critério de Aceitação de Arquitetura:',
-    'inspector.acceptanceCriteria': 'A solução opera em conformidade estrita com garantias ACID e idempotência de eventos, mitigando qualquer necessidade de intervenção manual em janelas críticas.',
-    'sidebar.navAriaLabel': 'Navegação de Vistas',
-    'sidebar.mobileNavAriaLabel': 'Navegação Inferior Mobile',
-    'nav.back': 'Voltar',
-    'auth.revokeDataTooltip': 'Excluir dados da sessão conforme Art. 18 da LGPD',
-    'contactModal.authenticatedSubtitle': 'Sessão autenticada · Contatos liberados',
-    'contactModal.unauthenticatedSubtitle': 'Selecione o canal de sua preferência',
-    'contactModal.copied': 'Copiado',
-    'contactModal.copy': 'Copiar',
-    'contactModal.tapToUnlock': 'Toque para autenticar e liberar',
-    'contactModal.unlock': 'Liberar',
-    'contactModal.activeSession': 'Sessão Ativa',
-    'contactModal.signOut': 'Bloquear e Sair',
+    'resume.downloadBtn': 'Baixar',
+    'resume.generatingPdf': 'Gerando arquivo...',
+    'resume.portfolio': 'Portfólio',
+    'resume.wesEquivalencyLabel': 'Equivalência Acadêmica Canadense (WES):',
+    'resume.officialHashLabel': 'Hash Oficial',
+    'resume.protectedNotice': '[Protegido - Autenticação Necessária]',
+    'resume.location': 'São Paulo, Brasil & Toronto, ON (Ex-Residente | Realocação para o Canadá)',
+    'resume.languagesLabel': 'Idiomas',
+    'resume.languagesSummary': 'Inglês (Fluente — Mais de 3 Anos de Experiência no Canadá) | Português (Nativo)',
+    'resume.langCertTitle': 'IDIOMAS & CERTIFICAÇÕES DE MERCADO',
+    'resume.certSpecLabel': 'Certificações & Especializações',
+    'resume.certificationsSummary': 'Formação Especialista Linux (Admin, Network Servers & Security — 4Linux) · SQL Tuning & Otimização de Queries (MSSQL/Oracle) · Padrões de Projeto GoF e Clean Architecture em C# · GitFlow & Integração Contínua',
     'resume.availability': 'Remoto Global · Híbrido SP · Realocação Internacional',
     'resume.shareWhatsAppMsg': 'Confira o currículo de Thales Everardo (Arquiteto de Sistemas / Staff Systems Engineer): ',
     'resume.shareEmailSubject': 'Currículo de Thales Everardo // Arquiteto de Sistemas',
     'resume.shareEmailBody': 'Olá,\n\nAcesse o currículo em PDF de Thales Everardo através do link abaixo:\n{url}\n\nAtenciosamente,',
-
-    // Formatos de Arquivo de Download
     'resume.formatPdfTitle': 'PDF',
-    'resume.formatPdfSub': 'Gerar em tempo real (.pdf)',
+    'resume.formatPdfSub': 'Portable Document Format',
     'resume.formatTxtTitle': 'Texto Puro',
-    'resume.formatTxtSub': 'Formatação limpa para ATS (.txt)',
+    'resume.formatTxtSub': 'Formato de texto limpo',
     'resume.formatMdTitle': 'Markdown',
-    'resume.formatMdSub': 'Código-fonte estruturado (.md)',
+    'resume.formatMdSub': 'CommonMark estruturado',
 
-    // Canvas & Grafo
+    // Skills
+    'skills.archPatterns': 'Arquitetura & Padrões:',
+    'skills.langFrameworks': 'Linguagens & Frameworks:',
+    'skills.dbMessaging': 'Bancos de Dados & Mensageria:',
+    'skills.devopsInfra': 'DevOps, Infraestrutura & SO:',
+    'skills.hardSkillsTitle': 'COMPETÊNCIAS TÉCNICAS (HARD SKILLS)',
+    'skills.softSkillsTitle': 'LIDERANÇA TÉCNICA & SOFT SKILLS',
+
+    // Academic
+    'academic.kpiHours': 'Horas Auditadas',
+    'academic.kpiHoursSub': 'Carga Horária Formal',
+    'academic.kpiDegrees': 'Títulos Superiores',
+    'academic.kpiDegreesSub': 'Pós & Graduações',
+    'academic.kpiWes': 'WES Canadá',
+    'academic.kpiWesSub': 'Equivalência Federal',
+    'academic.kpiCredentials': 'Certificados Oficiais',
+    'academic.kpiCredentialsSub': 'Hashes Auditáveis',
+    'academic.formalDegreesTitle': 'FORMAÇÃO ACADÊMICA FORMAL',
+    'academic.verifiedCredentialsTitle': 'CERTIFICAÇÕES ACADÉMICAS OFICIAIS (HASH PÚBLICO)',
+    'academic.specializedTracksTitle': 'TRILHAS TÉCNICAS & ESPECIALIZAÇÕES DE MERCADO',
+    'academic.languagesTitle': 'IDIOMAS & PROFICIÊNCIA',
+    'academic.verifyCredential': 'Verificar Hash ↗',
+    'academic.inProgressBadge': '',
+    'academic.completedBadge': 'CONCLUÍDO',
+
+    // Articles & Projects UI
+    'articles.pageTitle': 'Artigos Técnicos de Arquitetura',
+    'articles.pageSubtitle': 'Publicações autorais sobre sistemas distribuídos, mitigação de latência e resiliência transacional por Thales Everardo Albuquerque Reis.',
+    'articles.backToAll': 'Voltar para Todos os Artigos',
+    'articles.openStatic': 'Abrir Página Estática 200 OK',
+    'articles.readArticle': 'Ler Artigo',
+    'projects.pageTitle': 'Estudos de Caso em Produção',
+    'projects.pageSubtitle': 'Casos reais de resolução de gargalos, migração e engenharia de dados liderados por Thales Everardo Albuquerque Reis.',
+    'projects.backToAll': 'Voltar para Todos os Estudos de Caso',
+    'projects.openStatic': 'Abrir Página Estática 200 OK',
+    'projects.viewCase': 'Ver Estudo',
+
+    // Privacy & LGPD Modal
+    'privacy.modalTitle': 'Governança de Dados e Privacidade',
+    'privacy.modalSubtitle': 'Conformidade com a LGPD (Lei Federal nº 13.709/2018) • Minimização de Dados',
+    'privacy.editorialCard': 'Este portfólio de arquitetura é mantido por Thales Everardo Albuquerque Reis (São Paulo, Brasil). O tratamento de dados pessoais neste ambiente é regido com rigor pelos princípios de finalidade, necessidade, livre acesso e segurança estabelecidos no Art. 6º da Lei Geral de Proteção de Dados Pessoais (LGPD).',
+    'privacy.section1Title': '1. Dados Pessoais Tratados e Autenticação Federada',
+    'privacy.section1Desc': 'A navegação por todo o sistema é 100% aberta, anônima e desprovida de rastreadores. Mediante solicitação de acesso à Linha Direta (WhatsApp e e-mail corporativo), recebemos via OAuth 2.0 (Google ou GitHub) exclusivamente: nome completo, endereço de e-mail e identificador de sessão. Nenhuma senha de usuário trafega ou permanece armazenada neste sistema.',
+    'privacy.section2Title': '2. Hipóteses Legais de Tratamento & Proteção Anti-Abuso (Art. 7º da LGPD)',
+    'privacy.section2Desc': 'O tratamento apoia-se no Consentimento do titular (Art. 7º, I) para fornecimento de canais de contato e no Legítimo Interesse do controlador (Art. 7º, IX da LGPD) para certificar a identidade de recrutadores e líderes técnicos, resguardando os canais de contato contra varredura automatizada (scraping) e mensagens invasivas.',
+    'privacy.section3Title': '3. Inexistência de Compartilhamento e Ausência de Rastreamento Comercial',
+    'privacy.section3Desc': 'Seus dados jamais serão comercializados, cedidos ou compartilhados com terceiros, corretores de dados ou plataformas de anúncios. O sistema não utiliza cookies de rastreamento comportamental nem realiza disparos de marketing não solicitado.',
+    'privacy.section4Title': '4. Direitos do Titular & Eliminação Definitiva Sob Demanda (Art. 18 da LGPD)',
+    'privacy.section4Desc': 'Em estrito cumprimento ao Artigo 18, incisos VI e IX da LGPD, qualquer visitante autenticado pode a qualquer momento revogar seu consentimento e requisitar a eliminação definitiva de todos os seus registros de autenticação com um único clique no botão abaixo.',
+    'privacy.confirmTitle': 'Confirmar eliminação definitiva dos seus dados?',
+    'privacy.confirmDesc': 'Atenção: esta ação é irreversível. Todos os registros de autenticação e identificadores de sessão serão permanentemente expurgados da base de dados.',
+    'privacy.purging': 'Eliminando registros da base...',
+    'privacy.confirmBtn': 'Sim, eliminar definitivamente',
+    'privacy.cancelBtn': 'Cancelar',
+    'privacy.purgeSuccessAlert': 'Registros de sessão e credenciais expurgados definitivamente da base de dados com fundamento no Art. 18 da LGPD.',
+    'privacy.purgeErrorAlert': 'Não foi possível concluir o expurgo de dados. Por favor, confirme a autenticação e tente novamente.',
+    'privacy.purgeCommErrorAlert': 'Erro de comunicação ao solicitar a eliminação. Tente novamente.',
+    'privacy.footerNotice': 'Garantias Asseguradas pelo Art. 18 da LGPD (Lei Federal nº 13.709/2018)',
+    'privacy.close': 'Fechar',
+
+    // Canvas
     'canvas.emptyTitle': 'Nenhum subsistema correspondente.',
     'canvas.emptyDesc': 'Nenhum nó de arquitetura correspondeu ao filtro atual.',
     'canvas.resetFilters': 'Limpar Filtros',
@@ -231,7 +290,7 @@ export const TRANSLATIONS = {
     'pwa.installBadge': 'EXPERIÊNCIA OFFLINE PWA',
     'pwa.appInstalled': 'Aplicativo Instalado',
     'pwa.installActionTitle': 'Instalar no Dispositivo',
-    'pwa.cardSubtitle': 'Acesso nativo e modo offline',
+    'pwa.cardSubtitle': 'Acesso offline',
     'pwa.cardSubtitleInstalled': 'Disponível offline no dispositivo',
     'pwa.statusBadge': 'Instalar',
     'pwa.statusBadgeInstalled': 'Ativo',
@@ -254,29 +313,10 @@ export const TRANSLATIONS = {
     'footer.comingSoon': 'Em breve',
     'footer.muteAudio': 'Silenciar Áudio',
     'footer.unmuteAudio': 'Ativar Efeitos Sonoros',
-    'footer.subtitle': 'Engenharia de Sistemas Distribuídos',
     'footer.privacyLink': 'Privacidade & LGPD',
-    'resume.lgpdBadge': 'Conformidade LGPD (Lei 13.709/2018) & GDPR',
-
-    // Métricas e Formação Acadêmica Estruturada
-    'academic.kpiHours': 'Horas Auditadas',
-    'academic.kpiHoursSub': 'Carga Horária Formal',
-    'academic.kpiDegrees': 'Títulos Superiores',
-    'academic.kpiDegreesSub': 'Pós & Graduações',
-    'academic.kpiWes': 'WES Canadá',
-    'academic.kpiWesSub': 'Equivalência Federal',
-    'academic.kpiCredentials': 'Certificados Oficiais',
-    'academic.kpiCredentialsSub': 'Hashes Auditáveis',
-    'academic.formalDegreesTitle': 'FORMAÇÃO ACADÊMICA FORMAL',
-    'academic.verifiedCredentialsTitle': 'CERTIFICAÇÕES ACADÊMICAS OFICIAIS (HASH PÚBLICO)',
-    'academic.specializedTracksTitle': 'TRILHAS TÉCNICAS & ESPECIALIZAÇÕES DE MERCADO',
-    'academic.languagesTitle': 'IDIOMAS & PROFICIÊNCIA',
-    'skills.hardSkillsTitle': 'COMPETÊNCIAS TÉCNICAS (HARD SKILLS)',
-    'skills.softSkillsTitle': 'LIDERANÇA TÉCNICA & SOFT SKILLS',
-    'academic.verifyCredential': 'Verificar Hash ↗',
-    'academic.inProgressBadge': '',
-    'academic.completedBadge': 'CONCLUÍDO',
+    'resume.lgpdBadge': 'Conformidade com a LGPD (Lei nº 13.709/2018)',
   },
+
   EN: {
     // Header & Navigation
     'nav.staffTitle': 'Staff Systems Engineer',
@@ -303,6 +343,7 @@ export const TRANSLATIONS = {
     'nav.appInstalled': 'Application Installed',
     'nav.skipContent': 'Skip to main content',
     'nav.clearSearch': 'Clear search',
+    'nav.back': 'Back',
     'sidebar.graph': 'Graph',
     'sidebar.graphDesc': 'Interactive Architecture',
     'sidebar.timeline': 'Timeline',
@@ -317,6 +358,8 @@ export const TRANSLATIONS = {
     'sidebar.caseStudiesDesc': 'Production Projects',
     'sidebar.collapse': 'Collapse menu',
     'sidebar.expand': 'Expand menu',
+    'sidebar.navAriaLabel': 'View Navigation',
+    'sidebar.mobileNavAriaLabel': 'Mobile Bottom Navigation',
 
     // Lenses
     'lens.all': 'All',
@@ -325,7 +368,7 @@ export const TRANSLATIONS = {
     'lens.software': 'Software Eng.',
     'lens.database': 'Databases',
 
-    // Security Verification Modal
+    // Auth & Contact Modal
     'auth.modalTitle': 'Contact',
     'auth.modalSubtitle': 'For immediate contact with no sign-up, connect via LinkedIn. If you prefer direct access to my personal WhatsApp and corporate email, sign in to unlock direct contact.',
     'auth.continueWithGoogle': 'Continue with Google',
@@ -334,16 +377,17 @@ export const TRANSLATIONS = {
     'auth.orEmail': 'or continue with email',
     'auth.orLinkedIn': 'OR INSTANT ACCESS',
     'auth.connectLinkedIn': 'LinkedIn',
-    'auth.lgpdNotice': 'By continuing, you agree to share your name and email solely for direct contact verification. Your information will never be shared, sold, or used for unsolicited messages (spam).',
-    'auth.privacyPolicyLink': 'Privacy Policy (GDPR / LGPD)',
-    'auth.privacyPolicyTitle': 'Privacy Policy & Data Protection',
-    'auth.privacyController': 'Data Controller: Thales Everardo Albuquerque Reis',
-    'auth.privacyDataCollected': 'Data Collected: Name, email address, and OAuth authentication identifier.',
-    'auth.privacyPurpose': 'Purpose: Legitimate access verification to protect personal contact information from automated scraping.',
-    'auth.privacyRetention': 'Retention & Erasure: Data kept strictly for the duration of the professional contact or purged upon user request.',
-    'auth.privacyRights': 'Your Rights: You may revoke access and request immediate data deletion at any time.',
-    'auth.revokeData': 'Revoke access and erase my data',
-    'auth.revokeSuccess': 'Your data has been erased and access revoked.',
+    'auth.lgpdNotice': 'By continuing, you authorize the processing of your name and email strictly for identity verification to access direct contact channels under the GDPR (Regulation EU 2016/679). Zero commercial sharing or unsolicited marketing.',
+    'auth.privacyPolicyLink': 'Privacy Notice (GDPR)',
+    'auth.privacyPolicyTitle': 'Privacy Policy & Data Protection Notice (GDPR)',
+    'auth.privacyController': 'Data Controller: Thales Everardo Albuquerque Reis (São Paulo, Brazil)',
+    'auth.privacyDataCollected': 'Processed Data: Full name, email address, and federated authentication identifier (OAuth 2.0). No user passwords are ever requested, processed, or stored.',
+    'auth.privacyPurpose': 'Lawful Basis & Purpose: Explicit Consent (Art. 6(1)(a)) and Legitimate Interests (Art. 6(1)(f) GDPR) strictly for anti-bot verification and safeguarding direct communication lines against automated scraping.',
+    'auth.privacyRetention': 'Storage Limitation: Data retained strictly for the duration of the active professional session or permanently erased on demand (Art. 5(1)(e) GDPR).',
+    'auth.privacyRights': 'Data Subject Rights: Right to withdrawal of consent (Art. 7(3)) and Right to Erasure ("Right to be Forgotten", Art. 17 GDPR) available anytime in-app.',
+    'auth.revokeData': 'Withdraw consent and erase my data',
+    'auth.revokeDataTooltip': 'Permanently erase session data under GDPR Art. 17 (Right to Erasure)',
+    'auth.revokeSuccess': 'Your personal data has been permanently erased in compliance with GDPR Art. 17.',
     'auth.emailLabel': 'Email',
     'auth.passwordLabel': 'Password',
     'auth.passwordHint': 'At least 6 characters (letters & numbers)',
@@ -375,10 +419,34 @@ export const TRANSLATIONS = {
     'auth.errorGeneric': 'Authentication could not be completed. Please try again.',
     'auth.errorAccountExists': 'This email is already registered with another sign-in method. Please use your original method.',
 
+    // Contact Modal & Gate
+    'contactModal.channelsTitle': 'Direct Contact Channels',
+    'contactModal.phone': 'Phone',
+    'contactModal.authenticatedSubtitle': 'Authenticated session · Contacts unlocked',
+    'contactModal.unauthenticatedSubtitle': 'Choose your preferred channel',
+    'contactModal.copied': 'Copied',
+    'contactModal.copy': 'Copy',
+    'contactModal.tapToUnlock': 'Tap to sign in and unlock',
+    'contactModal.unlock': 'Unlock',
+    'contactModal.activeSession': 'Active Session',
+    'contactModal.signOut': 'Sign Out',
+    'gate.directEmail': 'Direct Email',
+    'gate.phoneWhatsApp': 'Phone / WhatsApp',
+    'gate.protected': 'Protected',
+    'gate.antiBotTitle': 'Contact',
+    'gate.antiBotDesc': 'Sign in to access direct email, WhatsApp, and phone number.',
+    'gate.unlockContacts': 'Sign in',
+    'gate.copyEmail': 'Copy email',
+    'gate.copyPhone': 'Copy phone',
+    'gate.verifiedSession': 'Verified Session',
+    'gate.lockContacts': 'Lock',
+
+    // Incident Simulation
     'incident.badge': 'SIMULATED INCIDENT:',
     'incident.desc': 'Circuit breaker open · Active failover engaged',
     'incident.autoHeal': 'AUTO-HEAL',
 
+    // Executive Timeline
     'timeline.header': 'Production Systems & Career Milestones',
     'timeline.subheader': 'A linear record of enterprise decisions, latency elimination, and mission-critical system migrations led by Thales Everardo.',
     'timeline.emptyTitle': 'No milestones found',
@@ -387,6 +455,7 @@ export const TRANSLATIONS = {
     'timeline.businessImpact': 'Direct Business Impact:',
     'timeline.inspectButton': 'INSPECT SYSTEM',
 
+    // Inspector
     'inspector.tabArchitecture': 'ARCHITECTURE & CHALLENGE',
     'inspector.tabLogs': 'SYSTEM TRACE',
     'inspector.roiTitle': 'Executive Business ROI:',
@@ -400,31 +469,15 @@ export const TRANSLATIONS = {
     'inspector.prevNode': 'Previous',
     'inspector.nextNode': 'Next',
     'inspector.closeEsc': 'Close (Esc)',
+    'inspector.adrTitle': '[POST-MORTEM & ARCHITECTURAL DECISION // ADR]',
+    'inspector.subsystemLabel': 'SUBSYSTEM:',
+    'inspector.rootCause': 'ROOT CAUSE / CHALLENGE:',
+    'inspector.countermeasure': 'ARCHITECTURAL COUNTERMEASURE:',
+    'inspector.productionOutcome': 'PRODUCTION OUTCOME:',
+    'inspector.acceptanceCriteriaLabel': 'Architectural Acceptance Criteria:',
+    'inspector.acceptanceCriteria': 'The solution operates in strict compliance with ACID guarantees and event idempotency, mitigating any need for manual intervention during critical operational windows.',
 
-    'gate.directEmail': 'Direct Email',
-    'gate.phoneWhatsApp': 'Phone / WhatsApp',
-    'gate.protected': 'Protected',
-    'gate.antiBotTitle': 'Contact',
-    'gate.antiBotDesc': 'Sign in to access direct email, WhatsApp, and phone number.',
-    'gate.unlockContacts': 'Sign in',
-    'gate.copyEmail': 'Copy email',
-    'gate.copyPhone': 'Copy phone',
-    'gate.verifiedSession': 'Verified Session',
-    'gate.lockContacts': 'Lock',
-
-    'handshake.subtitle': 'INITIATE ARCHITECTURAL HANDSHAKE',
-    'handshake.title': 'CONNECT WITH Thales Everardo // SYSTEMS ARCHITECT',
-    'handshake.availabilityTitle': 'PROFESSIONAL AVAILABILITY:',
-    'handshake.availabilityDesc': 'Open to Senior Systems Architect, Staff / Principal Software Engineer, and Tech Lead positions. Models: Global Remote, Hybrid in São Paulo, or Global Relocation.',
-    'handshake.emailLabel': 'EMAIL',
-    'handshake.phoneLabel': 'PHONE / WHATSAPP',
-    'handshake.viewResume': 'VIEW RAW ATS CV',
-    'handshake.rapidDispatch': 'SEND RAPID DISPATCH',
-    'handshake.subjectDefault': 'Senior Systems Architect / Staff Engineer Opportunity',
-    'handshake.notePlaceholder': 'Write a quick note to Thales...',
-    'handshake.sendButton': 'DISPATCH HANDSHAKE EMAIL',
-    'handshake.defaultBody': 'Hi Thales, I explored your interactive architecture portfolio and would like to discuss a systems engineering / technical leadership role.',
-
+    // Resume View
     'resume.title': 'ATS RESUME',
     'resume.copy': 'COPY',
     'resume.copied': 'COPIED',
@@ -436,7 +489,7 @@ export const TRANSLATIONS = {
     'resume.businessRoi': 'Business ROI:',
     'resume.engineeringFeat': 'Engineering Feat:',
     'resume.solution': 'Solution:',
-    'resume.staticDownload': 'Static Download',
+    'resume.staticDownload': 'Available File Formats',
     'resume.shareResume': 'Share Resume',
     'resume.linkCopied': 'Link copied!',
     'resume.otherApps': 'Other Apps...',
@@ -448,20 +501,91 @@ export const TRANSLATIONS = {
     'resume.gateRow1': 'For instant direct contact without sign-in, connect via my LinkedIn profile.',
     'resume.gateRow2': 'To unlock direct access to WhatsApp and corporate email, sign in with your account.',
     'resume.gateButton': 'Sign in',
+    'resume.directLine': 'Direct Line',
+    'resume.downloadBtn': 'Download',
+    'resume.generatingPdf': 'Generating file...',
+    'resume.portfolio': 'Portfolio',
+    'resume.wesEquivalencyLabel': 'Canadian Educational Credential (WES):',
+    'resume.officialHashLabel': 'Official Hash',
+    'resume.protectedNotice': '[Protected - Sign-In Required]',
+    'resume.location': 'São Paulo, Brazil & Toronto, ON (Former Resident | Relocating to Canada)',
+    'resume.languagesLabel': 'Languages',
+    'resume.languagesSummary': 'English (Fluent — 3+ Yrs Canadian Work Experience) | Portuguese (Native)',
+    'resume.langCertTitle': 'LANGUAGES & CERTIFICATIONS',
+    'resume.certSpecLabel': 'Certifications & Specialized Tracks',
+    'resume.certificationsSummary': 'Linux Specialist Certification (Admin, Network Servers & Security — 4Linux) · SQL Tuning & Query Optimization (MSSQL/Oracle) · GoF Design Patterns & Clean Architecture in C# · GitFlow & Continuous Integration',
     'resume.availability': 'Global Remote · Hybrid SP · International Relocation',
     'resume.shareWhatsAppMsg': "Check out Thales Everardo's Resume (Systems Architect / Staff Systems Engineer): ",
     'resume.shareEmailSubject': 'Resume - Thales Everardo // Systems Architect',
     'resume.shareEmailBody': 'Hello,\n\nPlease find the PDF resume of Thales Everardo via the direct link below:\n{url}\n\nBest regards,',
-
-    // Formats
     'resume.formatPdfTitle': 'PDF',
-    'resume.formatPdfSub': 'Real-time print generation (.pdf)',
+    'resume.formatPdfSub': 'Portable Document Format',
     'resume.formatTxtTitle': 'Plain Text',
-    'resume.formatTxtSub': 'ATS-optimized clean text (.txt)',
+    'resume.formatTxtSub': 'Clean text format',
     'resume.formatMdTitle': 'Markdown',
-    'resume.formatMdSub': 'Structured CommonMark source (.md)',
+    'resume.formatMdSub': 'Structured CommonMark',
 
-    // Canvas & Grafo
+    // Skills
+    'skills.archPatterns': 'Architectures & Patterns:',
+    'skills.langFrameworks': 'Languages & Frameworks:',
+    'skills.dbMessaging': 'Databases & Messaging:',
+    'skills.devopsInfra': 'DevOps, Infrastructure & OS:',
+    'skills.hardSkillsTitle': 'TECHNICAL COMPETENCIES (HARD SKILLS)',
+    'skills.softSkillsTitle': 'TECHNICAL LEADERSHIP & SOFT SKILLS',
+
+    // Academic
+    'academic.kpiHours': 'Verified Hours',
+    'academic.kpiHoursSub': 'Formal Coursework',
+    'academic.kpiDegrees': 'Higher Ed Degrees',
+    'academic.kpiDegreesSub': 'Postgrad & Undergrad',
+    'academic.kpiWes': 'WES Canada',
+    'academic.kpiWesSub': 'Federal Equivalency',
+    'academic.kpiCredentials': 'Official Hashes',
+    'academic.kpiCredentialsSub': 'Verifiable Records',
+    'academic.formalDegreesTitle': 'HIGHER EDUCATION & FORMAL DEGREES',
+    'academic.verifiedCredentialsTitle': 'OFFICIAL ACADEMIC CREDENTIALS (PUBLIC HASH)',
+    'academic.specializedTracksTitle': 'TECHNICAL TRACKS & MARKET SPECIALIZATIONS',
+    'academic.languagesTitle': 'LANGUAGES & PROFICIENCY',
+    'academic.verifyCredential': 'Verify Hash ↗',
+    'academic.inProgressBadge': '',
+    'academic.completedBadge': 'COMPLETED',
+
+    // Articles & Projects UI
+    'articles.pageTitle': 'System Architecture Technical Papers',
+    'articles.pageSubtitle': 'Original technical essays on distributed systems, latency mitigation, and transactional resilience by Thales Everardo Albuquerque Reis.',
+    'articles.backToAll': 'Back to All Articles',
+    'articles.openStatic': 'Open 200 OK Static Page',
+    'articles.readArticle': 'Read Article',
+    'projects.pageTitle': 'Production Engineering Case Studies',
+    'projects.pageSubtitle': 'Real enterprise production case studies and architectural interventions led by Thales Everardo Albuquerque Reis.',
+    'projects.backToAll': 'Back to All Case Studies',
+    'projects.openStatic': 'Open 200 OK Static Page',
+    'projects.viewCase': 'View Case',
+
+    // Privacy & GDPR Modal
+    'privacy.modalTitle': 'Data Governance & Privacy Notice',
+    'privacy.modalSubtitle': 'Regulation (EU) 2016/679 (GDPR) Compliance • Strict Data Minimisation',
+    'privacy.editorialCard': 'This system architecture portfolio is operated by Thales Everardo Albuquerque Reis (São Paulo, Brazil). Personal data processing strictly adheres to the core principles of lawfulness, fairness, transparency, and data minimisation established in Article 5 of the General Data Protection Regulation (GDPR).',
+    'privacy.section1Title': '1. Processed Categories & Federated Identification',
+    'privacy.section1Desc': 'Browsing across the portfolio is 100% open, anonymous, and tracker-free. Only upon requesting Direct Contact Line access (personal WhatsApp and corporate email) do we ingest via OAuth 2.0 (Google or GitHub) strictly: full name, email address, and authentication token. No user passwords are ever processed, handled, or stored.',
+    'privacy.section2Title': '2. Lawful Grounds & Anti-Scraping Protection (GDPR Art. 6)',
+    'privacy.section2Desc': 'Processing relies on unambiguous Consent under Art. 6(1)(a) GDPR for direct contact delivery, and Legitimate Interests under Art. 6(1)(f) GDPR (Recital 47) to authenticate human engineering leaders and shield direct communication lines against automated harvesting, credential abuse, and spam bots.',
+    'privacy.section3Title': '3. Zero Commercial Transfers & Anti-Tracking Policy',
+    'privacy.section3Desc': 'Your personal data is never monetised, leased, or transferred to third-party data brokers, analytics conglomerates, or advertising networks. We employ zero cross-site behavioral tracking cookies and dispatch zero unsolicited promotional communications.',
+    'privacy.section4Title': '4. Data Subject Rights & Instant Erasure (GDPR Arts. 7(3) & 17)',
+    'privacy.section4Desc': 'In strict compliance with GDPR Article 17 (Right to Erasure / "Right to be Forgotten") and Article 7(3) (Right to withdraw consent), any authenticated visitor may revoke their session and permanently purge all associated authentication credentials with a single click below.',
+    'privacy.confirmTitle': 'Confirm permanent erasure of your personal data?',
+    'privacy.confirmDesc': 'Warning: this action is irreversible and final. All access tokens, identity attributes, and audit session records will be permanently purged from the database.',
+    'privacy.purging': 'Erasing from database...',
+    'privacy.confirmBtn': 'Yes, permanently delete',
+    'privacy.cancelBtn': 'Cancel',
+    'privacy.purgeSuccessAlert': 'Session records and credentials permanently erased from the database pursuant to GDPR Art. 17.',
+    'privacy.purgeErrorAlert': 'Unable to complete data purge. Please re-authenticate and try again.',
+    'privacy.purgeCommErrorAlert': 'Communication error during purge request. Please try again.',
+    'privacy.footerNotice': 'Enforced under Articles 7(3) & 17 of the GDPR (Regulation EU 2016/679)',
+    'privacy.close': 'Close',
+
+    // Canvas
     'canvas.emptyTitle': 'No subsystems matching current filters.',
     'canvas.emptyDesc': 'No architectural node matched your filter query.',
     'canvas.resetFilters': 'Reset Filters',
@@ -474,7 +598,7 @@ export const TRANSLATIONS = {
     'pwa.installBadge': 'OFFLINE APP EXPERIENCE',
     'pwa.appInstalled': 'Application Installed',
     'pwa.installActionTitle': 'Install on Device',
-    'pwa.cardSubtitle': 'Native launch & offline access',
+    'pwa.cardSubtitle': 'Offline access',
     'pwa.cardSubtitleInstalled': 'Available offline on this device',
     'pwa.statusBadge': 'Install',
     'pwa.statusBadgeInstalled': 'Active',
@@ -497,49 +621,10 @@ export const TRANSLATIONS = {
     'footer.comingSoon': 'Coming soon',
     'footer.muteAudio': 'Mute Audio',
     'footer.unmuteAudio': 'Enable Sound Effects',
-    'footer.subtitle': 'Distributed Systems Engineering',
     'footer.privacyLink': 'Privacy & GDPR',
-    'resume.lgpdBadge': 'LGPD & GDPR Compliance Active',
-
-    // Structured Academic & Credentials
-    'academic.kpiHours': 'Verified Hours',
-    'academic.kpiHoursSub': 'Formal Coursework',
-    'academic.kpiDegrees': 'Higher Ed Degrees',
-    'academic.kpiDegreesSub': 'Postgrad & Undergrad',
-    'academic.kpiWes': 'WES Canada',
-    'academic.kpiWesSub': 'Federal Equivalency',
-    'academic.kpiCredentials': 'Official Hashes',
-    'academic.kpiCredentialsSub': 'Verifiable Records',
-    'academic.formalDegreesTitle': 'HIGHER EDUCATION & FORMAL DEGREES',
-    'academic.verifiedCredentialsTitle': 'OFFICIAL ACADEMIC CREDENTIALS (PUBLIC HASH)',
-    'academic.specializedTracksTitle': 'TECHNICAL TRACKS & MARKET SPECIALIZATIONS',
-    'academic.languagesTitle': 'LANGUAGES & PROFICIENCY',
-    'skills.hardSkillsTitle': 'TECHNICAL COMPETENCIES (HARD SKILLS)',
-    'skills.softSkillsTitle': 'TECHNICAL LEADERSHIP & SOFT SKILLS',
-    'academic.verifyCredential': 'Verify Hash ↗',
-    'academic.inProgressBadge': '',
-    'academic.completedBadge': 'COMPLETED',
-      'resume.directLine': "Direct Line",
-    'inspector.adrTitle': "[POST-MORTEM & ARCHITECTURAL DECISION // ADR]",
-    'inspector.subsystemLabel': "SUBSYSTEM:",
-    'inspector.rootCause': "ROOT CAUSE / CHALLENGE:",
-    'inspector.countermeasure': "ARCHITECTURAL COUNTERMEASURE:",
-    'inspector.productionOutcome': "PRODUCTION OUTCOME:",
-    'inspector.acceptanceCriteriaLabel': "Architectural Acceptance Criteria:",
-    'inspector.acceptanceCriteria': "The solution operates in strict compliance with ACID guarantees and event idempotency, mitigating any need for manual intervention during critical operational windows.",
-    'sidebar.navAriaLabel': "View Navigation",
-    'sidebar.mobileNavAriaLabel': "Mobile Bottom Navigation",
-    'nav.back': "Back",
-    'auth.revokeDataTooltip': "Delete session data in compliance with GDPR Art. 17 / LGPD Art. 18",
-    'contactModal.authenticatedSubtitle': "Authenticated session \u00b7 Contacts unlocked",
-    'contactModal.unauthenticatedSubtitle': "Choose your preferred channel",
-    'contactModal.copied': "Copied",
-    'contactModal.copy': "Copy",
-    'contactModal.tapToUnlock': "Tap to sign in and unlock",
-    'contactModal.unlock': "Unlock",
-    'contactModal.activeSession': "Active Session",
-    'contactModal.signOut': "Sign Out",
+    'resume.lgpdBadge': 'GDPR Compliance (Regulation EU 2016/679)',
   },
+
   ES: {
     // Header & Navegación
     'nav.staffTitle': 'Staff Systems Engineer',
@@ -566,6 +651,7 @@ export const TRANSLATIONS = {
     'nav.appInstalled': 'Aplicación Instalada',
     'nav.skipContent': 'Saltar al contenido principal',
     'nav.clearSearch': 'Limpiar búsqueda',
+    'nav.back': 'Volver',
     'sidebar.graph': 'Grafo',
     'sidebar.graphDesc': 'Arquitectura Interactiva',
     'sidebar.timeline': 'Cronología',
@@ -580,6 +666,8 @@ export const TRANSLATIONS = {
     'sidebar.caseStudiesDesc': 'Proyectos en Producción',
     'sidebar.collapse': 'Contraer menú',
     'sidebar.expand': 'Expandir menú',
+    'sidebar.navAriaLabel': 'Navegación de Vistas',
+    'sidebar.mobileNavAriaLabel': 'Navegación Inferior Móvil',
 
     // Lentes
     'lens.all': 'Todos',
@@ -588,7 +676,7 @@ export const TRANSLATIONS = {
     'lens.software': 'Ing. Software',
     'lens.database': 'Bases de Datos',
 
-    // Modal de Verificación de Seguridad
+    // Auth & Contact Modal
     'auth.modalTitle': 'Contacto',
     'auth.modalSubtitle': 'Para contacto inmediato sin registro, conecta por LinkedIn. Si prefieres acceso directo al WhatsApp personal y correo corporativo, inicia sesión para acceder al contacto directo.',
     'auth.continueWithGoogle': 'Continuar con Google',
@@ -597,16 +685,17 @@ export const TRANSLATIONS = {
     'auth.orEmail': 'o continúa con tu correo electrónico',
     'auth.orLinkedIn': 'O ACCESO INMEDIATO',
     'auth.connectLinkedIn': 'LinkedIn',
-    'auth.lgpdNotice': 'Al continuar, aceptas compartir tu nombre y correo exclusivamente para verificar el acceso al contacto directo. Tus datos nunca se venderán ni se usarán para spam.',
-    'auth.privacyPolicyLink': 'Política de Privacidad (GDPR / LGPD)',
-    'auth.privacyPolicyTitle': 'Política de Privacidad y Protección de Datos',
-    'auth.privacyController': 'Responsable: Thales Everardo Albuquerque Reis',
-    'auth.privacyDataCollected': 'Datos Recopilados: Nombre, dirección de correo electrónico e identificador OAuth.',
-    'auth.privacyPurpose': 'Finalidad: Verificación de acceso legítimo para proteger información de contacto contra raspado automatizado.',
-    'auth.privacyRetention': 'Retención y Supresión: Datos conservados durante el contacto o eliminados a petición del usuario.',
-    'auth.privacyRights': 'Tus Derechos: Puedes revocar el acceso y solicitar la eliminación definitiva en cualquier momento.',
-    'auth.revokeData': 'Revocar acceso y eliminar mis datos',
-    'auth.revokeSuccess': 'Tus datos han sido eliminados y el acceso revocado.',
+    'auth.lgpdNotice': 'Al continuar, autoriza el tratamiento de su nombre y correo estrictamente para verificar la identidad al acceder a los canales de contacto directo, conforme al RGPD (Reglamento UE 2016/679). Cero cesión comercial o spam.',
+    'auth.privacyPolicyLink': 'Política de Privacidad (RGPD)',
+    'auth.privacyPolicyTitle': 'Política de Privacidad y Protección de Datos (RGPD)',
+    'auth.privacyController': 'Responsable del Tratamiento: Thales Everardo Albuquerque Reis (São Paulo, Brasil)',
+    'auth.privacyDataCollected': 'Datos Tratados: Nombre completo, dirección de correo electrónico e identificador de autenticación federada (OAuth 2.0). En ningún caso se solicitan o almacenan contraseñas.',
+    'auth.privacyPurpose': 'Base Jurídica y Finalidad: Consentimiento explícito (Art. 6.1.a) e Interés Legítimo (Art. 6.1.f del RGPD) exclusivamente para verificación humana y blindaje de las vías de contacto frente al raspado automatizado.',
+    'auth.privacyRetention': 'Plazo de Conservación: Datos conservados únicamente durante la sesión activa o suprimidos a petición del interesado (Art. 5.1.e del RGPD).',
+    'auth.privacyRights': 'Derechos del Interesado (Arts. 7.3 y 17 del RGPD): Retirada del consentimiento y derecho de supresión («derecho al olvido») disponibles en cualquier momento en la interfaz.',
+    'auth.revokeData': 'Retirar consentimiento y suprimir mis datos',
+    'auth.revokeDataTooltip': 'Suprimir datos personales de sesión conforme al Art. 17 del RGPD',
+    'auth.revokeSuccess': 'Sus datos personales han sido suprimidos definitivamente con arreglo al Art. 17 del RGPD.',
     'auth.emailLabel': 'Correo electrónico',
     'auth.passwordLabel': 'Contraseña',
     'auth.passwordHint': 'Mínimo 6 caracteres (letras y números)',
@@ -638,10 +727,34 @@ export const TRANSLATIONS = {
     'auth.errorGeneric': 'No se pudo completar la autenticación. Inténtalo de nuevo.',
     'auth.errorAccountExists': 'Este correo ya está registrado con otro método de acceso. Por favor, utiliza el método original.',
 
+    // Contact Modal & Gate
+    'contactModal.channelsTitle': 'Canales de Contacto',
+    'contactModal.phone': 'Teléfono',
+    'contactModal.authenticatedSubtitle': 'Sesión autenticada · Contactos desbloqueados',
+    'contactModal.unauthenticatedSubtitle': 'Selecciona tu canal de preferencia',
+    'contactModal.copied': 'Copiado',
+    'contactModal.copy': 'Copiar',
+    'contactModal.tapToUnlock': 'Toca para autenticar y desbloquear',
+    'contactModal.unlock': 'Desbloquear',
+    'contactModal.activeSession': 'Sesión Activa',
+    'contactModal.signOut': 'Bloquear y Salir',
+    'gate.directEmail': 'Correo directo',
+    'gate.phoneWhatsApp': 'Teléfono / WhatsApp',
+    'gate.protected': 'Protegido',
+    'gate.antiBotTitle': 'Contacto',
+    'gate.antiBotDesc': 'Inicia sesión para ver el correo directo, WhatsApp y teléfono.',
+    'gate.unlockContacts': 'Entrar',
+    'gate.copyEmail': 'Copiar correo',
+    'gate.copyPhone': 'Copiar teléfono',
+    'gate.verifiedSession': 'Sesión Verificada',
+    'gate.lockContacts': 'Bloquear',
+
+    // Incident Simulation
     'incident.badge': 'INCIDENTE SIMULADO:',
     'incident.desc': 'Disyuntor abierto · Conmutación por error activa',
     'incident.autoHeal': 'AUTORRECUPERAR',
 
+    // Timeline
     'timeline.header': 'Sistemas en Producción e Hitos Profesionales',
     'timeline.subheader': 'Registro cronológico de decisiones de arquitectura empresarial, reducción de latencia y sistemas de misión crítica liderados por Thales Everardo.',
     'timeline.emptyTitle': 'No se encontraron hitos',
@@ -650,6 +763,7 @@ export const TRANSLATIONS = {
     'timeline.businessImpact': 'Impacto de Negocio:',
     'timeline.inspectButton': 'INSPECCIONAR SISTEMA',
 
+    // Inspector
     'inspector.tabArchitecture': 'ARQUITECTURA Y RETO',
     'inspector.tabLogs': 'TRAZA DEL SISTEMA',
     'inspector.roiTitle': 'Impacto de Negocio (ROI):',
@@ -663,35 +777,19 @@ export const TRANSLATIONS = {
     'inspector.prevNode': 'Anterior',
     'inspector.nextNode': 'Siguiente',
     'inspector.closeEsc': 'Cerrar (Esc)',
+    'inspector.adrTitle': '[POST-MORTEM Y DECISIÓN DE ARQUITECTURA // ADR]',
+    'inspector.subsystemLabel': 'SUBSISTEMA:',
+    'inspector.rootCause': 'CAUSA RAÍZ / DESAFÍO:',
+    'inspector.countermeasure': 'CONTRAMEDIDA ARQUITECTÓNICA:',
+    'inspector.productionOutcome': 'RESULTADO EN PRODUCCIÓN:',
+    'inspector.acceptanceCriteriaLabel': 'Criterio de Aceptación de Arquitectura:',
+    'inspector.acceptanceCriteria': 'La solución opera en estricta conformidad con garantías ACID e idempotencia de eventos, mitigando cualquier necesidad de intervención manual en ventanas críticas.',
 
-    'gate.directEmail': 'Correo directo',
-    'gate.phoneWhatsApp': 'Teléfono / WhatsApp',
-    'gate.protected': 'Protegido',
-    'gate.antiBotTitle': 'Contacto',
-    'gate.antiBotDesc': 'Inicia sesión para ver el correo directo, WhatsApp y teléfono.',
-    'gate.unlockContacts': 'Entrar',
-    'gate.copyEmail': 'Copiar correo',
-    'gate.copyPhone': 'Copiar teléfono',
-    'gate.verifiedSession': 'Sesión Verificada',
-    'gate.lockContacts': 'Bloquear',
-
-    'handshake.subtitle': 'INICIAR CONTACTO PROFESIONAL',
-    'handshake.title': 'CONTACTAR CON Thales Everardo // ARQUITECTO DE SISTEMAS',
-    'handshake.availabilityTitle': 'DISPONIBILIDAD PROFESIONAL:',
-    'handshake.availabilityDesc': 'Disponible para roles de Arquitecto de Sistemas Senior, Staff / Principal Software Engineer y Tech Lead. Modelos: Remoto global, híbrido en São Paulo o reubicación internacional.',
-    'handshake.emailLabel': 'CORREO ELECTRÓNICO',
-    'handshake.phoneLabel': 'TELÉFONO / WHATSAPP',
-    'handshake.viewResume': 'VER CURRÍCULUM ATS',
-    'handshake.rapidDispatch': 'ENVÍO RÁPIDO POR CORREO',
-    'handshake.subjectDefault': 'Oportunidad para Arquitecto de Sistemas / Ingeniero Staff',
-    'handshake.notePlaceholder': 'Escribe un mensaje breve para Thales...',
-    'handshake.sendButton': 'ENVIAR CORREO DE CONTACTO',
-    'handshake.defaultBody': 'Hola Thales, he explorado tu portafolio interactivo de arquitectura y me gustaría conversar sobre una oportunidad técnica adaptada a tu perfil.',
-
+    // Resume View
     'resume.title': 'CURRÍCULUM ATS',
     'resume.copy': 'COPIAR',
     'resume.copied': 'COPIADO',
-    'resume.print': 'IMPRIMER',
+    'resume.print': 'IMPRIMIR',
     'resume.savePdf': 'DESCARGAR PDF',
     'resume.executiveSummary': 'PERFIL PROFESIONAL',
     'resume.coreExperience': 'EXPERIENCIA PROFESIONAL',
@@ -699,7 +797,7 @@ export const TRANSLATIONS = {
     'resume.businessRoi': 'Impacto Comercial:',
     'resume.engineeringFeat': 'Logro Técnico:',
     'resume.solution': 'Solución:',
-    'resume.staticDownload': 'Descarga Estática',
+    'resume.staticDownload': 'Formatos de Archivo Disponibles',
     'resume.shareResume': 'Compartir CV',
     'resume.linkCopied': '¡Enlace copiado!',
     'resume.otherApps': 'Otras Aplicaciones...',
@@ -711,40 +809,91 @@ export const TRANSLATIONS = {
     'resume.gateRow1': 'Para contacto inmediato sin registro, conecta a través de mi perfil de LinkedIn.',
     'resume.gateRow2': 'Para desbloquear el acceso directo a WhatsApp y correo corporativo, inicia sesión.',
     'resume.gateButton': 'Entrar',
-    'resume.directLine': 'Linha Direta',
-    'inspector.adrTitle': '[POST-MORTEM & DECISÃO ARQUITETURAL // ADR]',
-    'inspector.subsystemLabel': 'SUBSISTEMA:',
-    'inspector.rootCause': 'CAUSA-RAIZ / DESAFIO:',
-    'inspector.countermeasure': 'CONTRAMEDIDA ARQUITETURAL:',
-    'inspector.productionOutcome': 'RESULTADO EM PRODUÇÃO:',
-    'inspector.acceptanceCriteriaLabel': 'Critério de Aceitação de Arquitetura:',
-    'inspector.acceptanceCriteria': 'A solução opera em conformidade estrita com garantias ACID e idempotência de eventos, mitigando qualquer necessidade de intervenção manual em janelas críticas.',
-    'sidebar.navAriaLabel': 'Navegação de Vistas',
-    'sidebar.mobileNavAriaLabel': 'Navegação Inferior Mobile',
-    'nav.back': 'Voltar',
-    'auth.revokeDataTooltip': 'Excluir dados da sessão conforme Art. 18 da LGPD',
-    'contactModal.authenticatedSubtitle': 'Sessão autenticada · Contatos liberados',
-    'contactModal.unauthenticatedSubtitle': 'Selecione o canal de sua preferência',
-    'contactModal.copied': 'Copiado',
-    'contactModal.copy': 'Copiar',
-    'contactModal.tapToUnlock': 'Toque para autenticar e liberar',
-    'contactModal.unlock': 'Liberar',
-    'contactModal.activeSession': 'Sessão Ativa',
-    'contactModal.signOut': 'Bloquear e Sair',
+    'resume.directLine': 'Línea Directa',
+    'resume.downloadBtn': 'Descargar',
+    'resume.generatingPdf': 'Generando archivo...',
+    'resume.portfolio': 'Portafolio',
+    'resume.wesEquivalencyLabel': 'Equivalencia Académica Canadiense (WES):',
+    'resume.officialHashLabel': 'Hash Oficial',
+    'resume.protectedNotice': '[Protegido - Requiere Autenticación]',
+    'resume.location': 'São Paulo, Brasil y Toronto, ON (Ex-residente | Relocalización a Canadá)',
+    'resume.languagesLabel': 'Idiomas',
+    'resume.languagesSummary': 'Inglés (Fluido — Más de 3 Años de Experiencia Laboral en Canadá) | Portugués (Nativo)',
+    'resume.langCertTitle': 'IDIOMAS Y CERTIFICACIONES',
+    'resume.certSpecLabel': 'Certificaciones y Especializaciones',
+    'resume.certificationsSummary': 'Certificación Especialista Linux (Admin, Servidores de Red y Seguridad — 4Linux) · SQL Tuning y Optimización de Consultas (MSSQL/Oracle) · Patrones de Diseño GoF y Clean Architecture en C# · GitFlow e Integración Continua',
     'resume.availability': 'Remoto Global · Híbrido SP · Reubicación Internacional',
     'resume.shareWhatsAppMsg': 'Consulta el currículum de Thales Everardo (Arquitecto de Sistemas / Staff Systems Engineer): ',
     'resume.shareEmailSubject': 'Currículum de Thales Everardo // Arquitecto de Sistemas',
     'resume.shareEmailBody': 'Hola:\n\nPuedes consultar el currículum en PDF de Thales Everardo en el siguiente enlace directo:\n{url}\n\nUn cordial saludo,',
-
-    // Formatos
     'resume.formatPdfTitle': 'PDF',
-    'resume.formatPdfSub': 'Generar en tiempo real (.pdf)',
+    'resume.formatPdfSub': 'Portable Document Format',
     'resume.formatTxtTitle': 'Texto Plano',
-    'resume.formatTxtSub': 'Formato limpio para ATS (.txt)',
+    'resume.formatTxtSub': 'Formato de texto limpio',
     'resume.formatMdTitle': 'Markdown',
-    'resume.formatMdSub': 'Código fuente estructurado (.md)',
+    'resume.formatMdSub': 'CommonMark estructurado',
 
-    // Canvas & Grafo
+    // Skills
+    'skills.archPatterns': 'Arquitectura y Patrones:',
+    'skills.langFrameworks': 'Lenguajes y Frameworks:',
+    'skills.dbMessaging': 'Bases de Datos y Mensajería:',
+    'skills.devopsInfra': 'DevOps, Infraestructura y SO:',
+    'skills.hardSkillsTitle': 'COMPETENCIAS TÉCNICAS (HARD SKILLS)',
+    'skills.softSkillsTitle': 'LIDERAZGO TÉCNICO Y COMPETENCIAS BLANDAS',
+
+    // Academic
+    'academic.kpiHours': 'Horas Auditadas',
+    'academic.kpiHoursSub': 'Carga Lectiva Formal',
+    'academic.kpiDegrees': 'Títulos Superiores',
+    'academic.kpiDegreesSub': 'Posgrado y Grados',
+    'academic.kpiWes': 'WES Canadá',
+    'academic.kpiWesSub': 'Equivalencia Federal',
+    'academic.kpiCredentials': 'Certificados Oficiales',
+    'academic.kpiCredentialsSub': 'Hashes Auditables',
+    'academic.formalDegreesTitle': 'EDUCACIÓN SUPERIOR Y TÍTULOS FORMALES',
+    'academic.verifiedCredentialsTitle': 'CERTIFICACIONES ACADÉMICAS OFICIALES (HASH PÚBLICO)',
+    'academic.specializedTracksTitle': 'ITINERARIOS TÉCNICOS Y ESPECIALIZACIONES',
+    'academic.languagesTitle': 'IDIOMAS Y COMPETENCIA',
+    'academic.verifyCredential': 'Verificar Hash ↗',
+    'academic.inProgressBadge': '',
+    'academic.completedBadge': 'COMPLETADO',
+
+    // Articles & Projects UI
+    'articles.pageTitle': 'Artículos Técnicos de Arquitectura',
+    'articles.pageSubtitle': 'Publicaciones autorales sobre sistemas distribuidos, mitigación de latencia y resiliencia transaccional por Thales Everardo Albuquerque Reis.',
+    'articles.backToAll': 'Volver a Todos los Artículos',
+    'articles.openStatic': 'Abrir Página Estática 200 OK',
+    'articles.readArticle': 'Leer Artículo',
+    'projects.pageTitle': 'Casos de Estudio en Producción',
+    'projects.pageSubtitle': 'Casos reales de resolución de cuellos de botella, migración e ingeniería de datos liderados por Thales Everardo Albuquerque Reis.',
+    'projects.backToAll': 'Volver a Todos los Casos de Estudio',
+    'projects.openStatic': 'Abrir Página Estática 200 OK',
+    'projects.viewCase': 'Ver Caso',
+
+    // Privacy & GDPR Modal
+    'privacy.modalTitle': 'Gobernanza y Política de Protección de Datos',
+    'privacy.modalSubtitle': 'Conformidad con el RGPD (Reglamento UE 2016/679) y LOPDGDD • Principio de Minimización de Datos',
+    'privacy.editorialCard': 'Este portafolio de arquitectura de software es gestionado por Thales Everardo Albuquerque Reis (São Paulo, Brasil). El tratamiento de datos personales se rige rigurosamente por los principios de licitud, lealtad, transparencia y minimización de datos estipulados en el Artículo 5 del Reglamento General de Protección de Datos (RGPD).',
+    'privacy.section1Title': '1. Datos Tratados y Autenticación Federada',
+    'privacy.section1Desc': 'La navegación en todo el sistema es 100% pública, anónima y libre de rastreadores. Únicamente al solicitar acceso a la Línea Directa (WhatsApp y correo corporativo), recabamos mediante OAuth 2.0 (Google o GitHub) exclusivamente: nombre completo, correo electrónico y token de sesión. No se procesa ni almacena ninguna contraseña de usuario.',
+    'privacy.section2Title': '2. Base Jurídica y Prevención de Abusos (Art. 6 del RGPD)',
+    'privacy.section2Desc': 'El tratamiento se fundamenta en el Consentimiento explícito del interesado (Art. 6.1.a del RGPD) para la apertura de canales de comunicación y en el Interés Legítimo del responsable (Art. 6.1.f del RGPD) para autenticar la identidad de reclutadores y líderes técnicos, protegiendo las vías de contacto frente al raspado masivo (web scraping) y el spam.',
+    'privacy.section3Title': '3. Ausencia de Cesión a Terceros y Cero Rastreo Comercial',
+    'privacy.section3Desc': 'Sus datos jamás serán vendidos, cedidos ni compartidos con terceros, intermediarios de datos o redes publicitarias. No utilizamos cookies de seguimiento de comportamiento ni remitimos comunicaciones comerciales no solicitadas.',
+    'privacy.section4Title': '4. Derechos del Interesado y Supresión Inmediata (Arts. 7.3 y 17 del RGPD)',
+    'privacy.section4Desc': 'En estricto cumplimiento del Artículo 17 (Derecho de supresión / «derecho al olvido») y del Artículo 7.3 (Retirada del consentimiento) del RGPD, cualquier usuario autenticado puede revocar su consentimiento y eliminar de forma inmediata y definitiva todos sus registros mediante el botón inferior.',
+    'privacy.confirmTitle': '¿Desea confirmar la supresión definitiva de sus datos?',
+    'privacy.confirmDesc': 'Atención: esta acción es irreversible y definitiva. Todos los registros de autenticación y datos de sesión serán suprimidos permanentemente de la base de datos.',
+    'privacy.purging': 'Suprimiendo de la base de datos...',
+    'privacy.confirmBtn': 'Sí, suprimir definitivamente',
+    'privacy.cancelBtn': 'Cancelar',
+    'privacy.purgeSuccessAlert': 'Registros de sesión y credenciales suprimidos definitivamente con arreglo al Artículo 17 del RGPD.',
+    'privacy.purgeErrorAlert': 'No fue posible completar la supresión de datos. Por favor, reautentíquese e inténtelo de nuevo.',
+    'privacy.purgeCommErrorAlert': 'Error de comunicación al tramitar la supresión. Inténtelo de nuevo.',
+    'privacy.footerNotice': 'Garantías Conforme a los Artículos 7.3 y 17 del RGPD (Reglamento UE 2016/679)',
+    'privacy.close': 'Cerrar',
+
+    // Canvas
     'canvas.emptyTitle': 'Ningún subsistema coincide con los filtros.',
     'canvas.emptyDesc': 'No se encontró ningún nodo de arquitectura para tu búsqueda.',
     'canvas.resetFilters': 'Restablecer Filtros',
@@ -757,7 +906,7 @@ export const TRANSLATIONS = {
     'pwa.installBadge': 'EXPERIENCIA OFFLINE PWA',
     'pwa.appInstalled': 'Aplicación Instalada',
     'pwa.installActionTitle': 'Instalar en el Dispositivo',
-    'pwa.cardSubtitle': 'Acceso nativo y modo offline',
+    'pwa.cardSubtitle': 'Acceso offline',
     'pwa.cardSubtitleInstalled': 'Disponible offline en el dispositivo',
     'pwa.statusBadge': 'Instalar',
     'pwa.statusBadgeInstalled': 'Activo',
@@ -780,29 +929,10 @@ export const TRANSLATIONS = {
     'footer.comingSoon': 'Próximamente',
     'footer.muteAudio': 'Silenciar Audio',
     'footer.unmuteAudio': 'Activar Efectos de Sonido',
-    'footer.subtitle': 'Ingeniería de Sistemas Distribuidos',
-    'footer.privacyLink': 'Privacidad y LGPD/GDPR',
-    'resume.lgpdBadge': 'Cumplimiento LGPD y GDPR Activo',
-
-    // Métricas y Formación Académica
-    'academic.kpiHours': 'Horas Auditadas',
-    'academic.kpiHoursSub': 'Carga Lectiva Formal',
-    'academic.kpiDegrees': 'Títulos Superiores',
-    'academic.kpiDegreesSub': 'Posgrado y Grados',
-    'academic.kpiWes': 'WES Canadá',
-    'academic.kpiWesSub': 'Equivalencia Federal',
-    'academic.kpiCredentials': 'Certificados Oficiales',
-    'academic.kpiCredentialsSub': 'Hashes Auditables',
-    'academic.formalDegreesTitle': 'EDUCACIÓN SUPERIOR Y TÍTULOS FORMALES',
-    'academic.verifiedCredentialsTitle': 'CERTIFICACIONES ACADÉMICAS OFICIALES (HASH PÚBLICO)',
-    'academic.specializedTracksTitle': 'ITINERARIOS TÉCNICOS Y ESPECIALIZACIONES',
-    'academic.languagesTitle': 'IDIOMAS Y COMPETENCIA',
-    'skills.hardSkillsTitle': 'COMPETENCIAS TÉCNICAS (HARD SKILLS)',
-    'skills.softSkillsTitle': 'LIDERAZGO TÉCNICO Y COMPETENCIAS BLANDAS',
-    'academic.verifyCredential': 'Verificar Hash ↗',
-    'academic.inProgressBadge': '',
-    'academic.completedBadge': 'COMPLETADO',
+    'footer.privacyLink': 'Privacidad y RGPD',
+    'resume.lgpdBadge': 'Conformidad con el RGPD (Reglamento UE 2016/679)',
   },
+
   FR: {
     // Header & Navigation
     'nav.staffTitle': 'Staff Systems Engineer',
@@ -829,6 +959,7 @@ export const TRANSLATIONS = {
     'nav.appInstalled': 'Application Installée',
     'nav.skipContent': 'Passer au contenu principal',
     'nav.clearSearch': 'Effacer la recherche',
+    'nav.back': 'Retour',
     'sidebar.graph': 'Graphe',
     'sidebar.graphDesc': 'Architecture Interactive',
     'sidebar.timeline': 'Chronologie',
@@ -843,6 +974,8 @@ export const TRANSLATIONS = {
     'sidebar.caseStudiesDesc': 'Projets en Production',
     'sidebar.collapse': 'Réduire le menu',
     'sidebar.expand': 'Développer le menu',
+    'sidebar.navAriaLabel': 'Navigation des Vues',
+    'sidebar.mobileNavAriaLabel': 'Navigation Inférieure Mobile',
 
     // Lenses
     'lens.all': 'Tous',
@@ -851,7 +984,7 @@ export const TRANSLATIONS = {
     'lens.software': 'Ing. Logiciel',
     'lens.database': 'Bases de Données',
 
-    // Modal de Vérification de Sécurité
+    // Auth & Contact Modal
     'auth.modalTitle': 'Contact',
     'auth.modalSubtitle': 'Pour un contact immédiat sans inscription, connectez-vous via LinkedIn. Si vous préférez un accès direct à mon WhatsApp personnel et e-mail corporatif, connectez-vous pour libérer le contact direct.',
     'auth.continueWithGoogle': 'Continuer avec Google',
@@ -860,16 +993,17 @@ export const TRANSLATIONS = {
     'auth.orEmail': 'ou continuez avec votre e-mail',
     'auth.orLinkedIn': 'OU ACCÈS SANS INSCRIPTION',
     'auth.connectLinkedIn': 'LinkedIn',
-    'auth.lgpdNotice': 'En continuant, vous acceptez de partager votre nom et e-mail exclusivement pour vérifier l’accès aux coordonnées directes. Vos données ne seront jamais vendues ni utilisées pour du spam.',
-    'auth.privacyPolicyLink': 'Politique de Confidentialité (GDPR / LGPD)',
-    'auth.privacyPolicyTitle': 'Politique de Confidentialité et Protection des Données',
-    'auth.privacyController': 'Responsable: Thales Everardo Albuquerque Reis',
-    'auth.privacyDataCollected': 'Données Collectées: Nom, adresse e-mail et identifiant d’authentification OAuth.',
-    'auth.privacyPurpose': 'Finalité: Contrôle d’accès légitime pour protéger les coordonnées contre l’aspiration automatisée.',
-    'auth.privacyRetention': 'Conservation et Suppression: Données conservées strictement pour la durée du contact ou supprimées à la demande.',
-    'auth.privacyRights': 'Vos Droits: Vous pouvez révoquer l’accès et demander la suppression définitive à tout moment.',
-    'auth.revokeData': 'Révoquer l’accès et supprimer mes données',
-    'auth.revokeSuccess': 'Vos données ont été supprimées et l’accès révoqué.',
+    'auth.lgpdNotice': 'En continuant, vous autorisez le traitement de votre nom et e-mail strictement pour la vérification d’identité lors de l’accès aux canaux de contact direct, conformément au RGPD (Règlement UE 2016/679). Aucune cession commerciale ni message non sollicité.',
+    'auth.privacyPolicyLink': 'Politique de Confidentialité (RGPD)',
+    'auth.privacyPolicyTitle': 'Politique de Confidentialité et Protection des Données (RGPD)',
+    'auth.privacyController': 'Responsable du Traitement : Thales Everardo Albuquerque Reis (São Paulo, Brésil)',
+    'auth.privacyDataCollected': 'Données Traitées : Nom complet, adresse e-mail et identifiant d’authentification fédéré (OAuth 2.0). Aucun mot de passe utilisateur n’est jamais sollicité, traité ou conservé.',
+    'auth.privacyPurpose': 'Bases Légales et Finalité : Consentement univoque (Art. 6(1)(a)) et Intérêt Légitime (Art. 6(1)(f) du RGPD) exclusivement pour la vérification humaine et la protection des canaux directs contre l’aspiration automatisée.',
+    'auth.privacyRetention': 'Limitation de Conservation : Données conservées uniquement pendant la session active ou purgées immédiatement sur demande de la personne concernée (Art. 5(1)(e) du RGPD).',
+    'auth.privacyRights': 'Droits de la Personne Concernée (Art. 7(3) et 17 du RGPD) : Droit de retirer son consentement et droit à l’effacement (« droit à l’oubli ») exerçables à tout instant dans l’interface.',
+    'auth.revokeData': 'Retirer mon consentement et effacer mes données',
+    'auth.revokeDataTooltip': 'Supprimer les données de session conformément à l’Art. 17 du RGPD',
+    'auth.revokeSuccess': 'Vos données personnelles ont été définitivement effacées en application de l’Art. 17 du RGPD.',
     'auth.emailLabel': 'E-mail',
     'auth.passwordLabel': 'Mot de passe',
     'auth.passwordHint': 'Au moins 6 caractères (lettres et chiffres)',
@@ -901,10 +1035,34 @@ export const TRANSLATIONS = {
     'auth.errorGeneric': 'Impossible de finaliser l’authentification. Veuillez réessayer.',
     'auth.errorAccountExists': 'Cet e-mail est déjà associé à un autre mode de connexion. Veuillez utiliser votre méthode d’origine.',
 
+    // Contact Modal & Gate
+    'contactModal.channelsTitle': 'Canaux de Contact',
+    'contactModal.phone': 'Téléphone',
+    'contactModal.authenticatedSubtitle': 'Session authentifiée · Contacts débloqués',
+    'contactModal.unauthenticatedSubtitle': 'Sélectionnez votre canal préféré',
+    'contactModal.copied': 'Copié',
+    'contactModal.copy': 'Copier',
+    'contactModal.tapToUnlock': 'Appuyez pour vous connecter et débloquer',
+    'contactModal.unlock': 'Débloquer',
+    'contactModal.activeSession': 'Session Active',
+    'contactModal.signOut': 'Verrouiller et Quitter',
+    'gate.directEmail': 'E-mail direct',
+    'gate.phoneWhatsApp': 'Téléphone / WhatsApp',
+    'gate.protected': 'Protégé',
+    'gate.antiBotTitle': 'Contact',
+    'gate.antiBotDesc': 'Connectez-vous pour accéder à l’e-mail direct, WhatsApp et au téléphone.',
+    'gate.unlockContacts': 'Se connecter',
+    'gate.copyEmail': 'Copier l’e-mail',
+    'gate.copyPhone': 'Copier le numéro',
+    'gate.verifiedSession': 'Session Vérifiée',
+    'gate.lockContacts': 'Verrouiller',
+
+    // Incident Simulation
     'incident.badge': 'INCIDENT SIMULÉ :',
     'incident.desc': 'Disjoncteur ouvert · Basculement actif engagé',
     'incident.autoHeal': 'AUTO-RÉTABLISSEMENT',
 
+    // Timeline
     'timeline.header': 'Systèmes en Production & Parcours Professionnel',
     'timeline.subheader': 'Historique chronologique des décisions d’architecture, élimination de latence et systèmes de mission critique menés par Thales Everardo.',
     'timeline.emptyTitle': 'Aucun jalon trouvé',
@@ -913,6 +1071,7 @@ export const TRANSLATIONS = {
     'timeline.businessImpact': 'Impact Business :',
     'timeline.inspectButton': 'INSPECTER LE SYSTÈME',
 
+    // Inspector
     'inspector.tabArchitecture': 'ARCHITECTURE & DÉFI',
     'inspector.tabLogs': 'TRACÉ SYSTÈME',
     'inspector.roiTitle': 'Impact Business (ROI) :',
@@ -926,32 +1085,15 @@ export const TRANSLATIONS = {
     'inspector.prevNode': 'Précédent',
     'inspector.nextNode': 'Suivant',
     'inspector.closeEsc': 'Fermer (Échap)',
+    'inspector.adrTitle': "[POST-MORTEM & DÉCISION D'ARCHITECTURE // ADR]",
+    'inspector.subsystemLabel': 'SOUS-SYSTÈME :',
+    'inspector.rootCause': 'CAUSE FONDAMENTALE / DÉFI :',
+    'inspector.countermeasure': 'CONTRE-MESURE ARCHITECTURALE :',
+    'inspector.productionOutcome': 'RÉSULTAT EN PRODUCTION :',
+    'inspector.acceptanceCriteriaLabel': "Critère d'Acceptation d'Architecture :",
+    'inspector.acceptanceCriteria': "La solution fonctionne en stricte conformité avec les garanties ACID et l'idempotence des événements, éliminant tout besoin d'intervention manuelle lors des fenêtres critiques.",
 
-    'gate.directEmail': 'E-mail direct',
-    'gate.phoneWhatsApp': 'Téléphone / WhatsApp',
-    'gate.protected': 'Protégé',
-    'gate.antiBotTitle': 'Contact',
-    'gate.antiBotDesc': 'Connectez-vous pour accéder à l’e-mail direct, WhatsApp et au téléphone.',
-    'gate.unlockContacts': 'Se connecter',
-    'gate.copyEmail': 'Copier l’e-mail',
-    'gate.copyPhone': 'Copier le numéro',
-    'gate.verifiedSession': 'Session Vérifiée',
-    'gate.lockContacts': 'Verrouiller',
-
-    'handshake.subtitle': 'INITIER UN CONTACT PROFESSIONNEL',
-    'handshake.title': 'CONTACTER Thales Everardo // ARCHITECTE SYSTÈMES',
-    'handshake.availabilityTitle': 'DISPONIBILITÉ PROFESSIONNELLE :',
-    'handshake.availabilityDesc': 'Ouvert aux rôles d’Architecte Logiciel Senior, Staff / Principal Engineer et Tech Lead. Télétravail mondial, hybride à São Paulo ou relocalisation internationale.',
-    'handshake.emailLabel': 'E-MAIL',
-    'handshake.phoneLabel': 'TÉLÉPHONE / WHATSAPP',
-    'handshake.viewResume': 'VOIR LE CV ATS',
-    'handshake.rapidDispatch': 'ENVOI RAPIDE PAR E-MAIL',
-    'handshake.subjectDefault': 'Opportunité pour Architecte Systèmes / Ingénieur Staff',
-    'handshake.notePlaceholder': 'Écrivez un message rapide à Thales...',
-    'handshake.sendButton': 'ENVOYER UN E-MAIL',
-    'handshake.defaultBody': 'Bonjour Thales, j’ai exploré votre portfolio interactif d’architecture et j’aimerais échanger sur un rôle technique adapté à votre expertise.',
-
-    // Modal de Currículo ATS & Ações
+    // Resume View
     'resume.title': 'CV ATS',
     'resume.copy': 'COPIER',
     'resume.copied': 'COPIÉ',
@@ -963,7 +1105,7 @@ export const TRANSLATIONS = {
     'resume.businessRoi': 'Impact Commercial :',
     'resume.engineeringFeat': 'Prouesse Technique :',
     'resume.solution': 'Solution :',
-    'resume.staticDownload': 'Téléchargement Direct',
+    'resume.staticDownload': 'Formats de Fichiers Disponibles',
     'resume.shareResume': 'Partager le CV',
     'resume.linkCopied': 'Lien copié !',
     'resume.otherApps': 'Autres Applications...',
@@ -975,20 +1117,91 @@ export const TRANSLATIONS = {
     'resume.gateRow1': 'Pour un contact immédiat sans inscription, échangez directement via mon profil LinkedIn.',
     'resume.gateRow2': 'Pour débloquer l’accès direct au WhatsApp et à l’e-mail professionnel, connectez-vous.',
     'resume.gateButton': 'Se connecter',
+    'resume.directLine': 'Ligne Directe',
+    'resume.downloadBtn': 'Télécharger',
+    'resume.generatingPdf': 'Génération du fichier...',
+    'resume.portfolio': 'Portfolio',
+    'resume.wesEquivalencyLabel': 'Équivalence Académique Canadienne (WES) :',
+    'resume.officialHashLabel': 'Hash Officiel',
+    'resume.protectedNotice': '[Protégé - Authentification Requise]',
+    'resume.location': 'São Paulo, Brésil & Toronto, ON (Ancien Résident | Relocalisation au Canada)',
+    'resume.languagesLabel': 'Langues',
+    'resume.languagesSummary': "Anglais (Courant — 3+ Ans d'Expérience Professionnelle au Canada) | Portugais (Natif)",
+    'resume.langCertTitle': 'LANGUES & CERTIFICATIONS',
+    'resume.certSpecLabel': 'Certifications & Spécialisations',
+    'resume.certificationsSummary': "Certification Spécialiste Linux (Admin, Serveurs Réseau & Sécurité — 4Linux) · Tuning SQL & Optimisation de Requêtes (MSSQL/Oracle) · Design Patterns GoF & Clean Architecture en C# · GitFlow & Intégration Continue",
     'resume.availability': 'Télétravail Mondial · Hybride SP · Relocalisation',
     'resume.shareWhatsAppMsg': 'Consultez le CV de Thales Everardo (Architecte Systèmes / Staff Systems Engineer) : ',
     'resume.shareEmailSubject': 'CV de Thales Everardo // Architecte Systèmes',
     'resume.shareEmailBody': 'Bonjour,\n\nVeuillez trouver le CV au format PDF de Thales Everardo via le lien direct ci-dessous:\n{url}\n\nCordialement,',
-
-    // Formatos
     'resume.formatPdfTitle': 'PDF',
-    'resume.formatPdfSub': 'Génération en temps réel (.pdf)',
+    'resume.formatPdfSub': 'Portable Document Format',
     'resume.formatTxtTitle': 'Texte Brut',
-    'resume.formatTxtSub': 'Format épuré pour ATS (.txt)',
+    'resume.formatTxtSub': 'Format de texte brut',
     'resume.formatMdTitle': 'Markdown',
-    'resume.formatMdSub': 'Code source CommonMark (.md)',
+    'resume.formatMdSub': 'CommonMark structuré',
 
-    // Canvas & Grafo
+    // Skills
+    'skills.archPatterns': 'Architectures & Patterns :',
+    'skills.langFrameworks': 'Langages & Frameworks :',
+    'skills.dbMessaging': 'Bases de Données & Messagerie :',
+    'skills.devopsInfra': 'DevOps, Infrastructure & OS :',
+    'skills.hardSkillsTitle': 'COMPÉTENCES TECHNIQUES (HARD SKILLS)',
+    'skills.softSkillsTitle': 'LEADERSHIP TECHNIQUE ET COMPÉTENCES COMPORTEMENTALES',
+
+    // Academic
+    'academic.kpiHours': 'Heures Auditées',
+    'academic.kpiHoursSub': 'Volume Horaire Formel',
+    'academic.kpiDegrees': 'Diplômes Supérieurs',
+    'academic.kpiDegreesSub': 'Postgrad & Licences',
+    'academic.kpiWes': 'WES Canada',
+    'academic.kpiWesSub': 'Équivalence Fédérale',
+    'academic.kpiCredentials': 'Certificats Officiels',
+    'academic.kpiCredentialsSub': 'Hashes Vérifiables',
+    'academic.formalDegreesTitle': 'ENSEIGNEMENT SUPÉRIEUR ET DIPLÔMES FORMELS',
+    'academic.verifiedCredentialsTitle': 'CERTIFICATIONS ACADÉMIQUES OFFICIELLES (HASH PUBLIC)',
+    'academic.specializedTracksTitle': 'PARCOURS TECHNIQUES ET SPÉCIALISATIONS',
+    'academic.languagesTitle': 'LANGUES ET MAÎTRISE',
+    'academic.verifyCredential': 'Vérifier Hash ↗',
+    'academic.inProgressBadge': '',
+    'academic.completedBadge': 'DIPLÔMÉ',
+
+    // Articles & Projects UI
+    'articles.pageTitle': 'Articles Techniques d’Architecture',
+    'articles.pageSubtitle': 'Publications sur les systèmes distribués, l’atténuation de la latence et la résilience transactionnelle par Thales Everardo Albuquerque Reis.',
+    'articles.backToAll': 'Retour à Tous les Articles',
+    'articles.openStatic': 'Ouvrir la Page Statique 200 OK',
+    'articles.readArticle': 'Lire l’Article',
+    'projects.pageTitle': 'Études de Cas en Production',
+    'projects.pageSubtitle': 'Cas réels de résolution de goulots d’étranglement, migration et ingénierie de données menés par Thales Everardo Albuquerque Reis.',
+    'projects.backToAll': 'Retour à Toutes les Études de Cas',
+    'projects.openStatic': 'Ouvrir la Page Statique 200 OK',
+    'projects.viewCase': 'Voir l’Étude',
+
+    // Privacy & RGPD Modal
+    'privacy.modalTitle': 'Gouvernance des Données & Politique de Confidentialité',
+    'privacy.modalSubtitle': 'Conformité au RGPD (Règlement UE 2016/679) • Principe de Minimisation des Données',
+    'privacy.editorialCard': 'Ce portfolio d’architecture logicielle est administré par Thales Everardo Albuquerque Reis (São Paulo, Brésil). Les traitements de données à caractère personnel y sont strictement subordonnés aux principes de licéité, de loyauté, de transparence et de minimisation définis à l’Article 5 du Règlement Général sur la Protection des Données (RGPD).',
+    'privacy.section1Title': '1. Données Traitées et Authentification Fédérée',
+    'privacy.section1Desc': 'La consultation du portfolio est 100% ouverte, anonyme et exempte de traceurs. Lors d’une demande d’accès à la Ligne Directe (WhatsApp et e-mail professionnel), nous recevons via OAuth 2.0 (Google ou GitHub) exclusivement : nom complet, adresse e-mail et jeton de session. Aucun mot de passe utilisateur n’est jamais sollicité, traité ou conservé.',
+    'privacy.section2Title': '2. Bases Légales et Prévention des Abus (Art. 6 du RGPD)',
+    'privacy.section2Desc': 'Le traitement repose sur le Consentement univoque de la personne concernée (Art. 6(1)(a) du RGPD) pour l’accès aux voies de contact, ainsi que sur l’Intérêt Légitime du responsable (Art. 6(1)(f) du RGPD) afin de certifier l’identité humaine des recruteurs et leaders techniques et prémunir les coordonnées contre le web scraping et les robots de spam.',
+    'privacy.section3Title': '3. Non-Cession à des Tiers & Absence de Ciblage Commercial',
+    'privacy.section3Desc': 'Vos données personnelles ne sont jamais vendues, louées ni cédées à des tiers, courtiers de données ou réseaux publicitaires. Nous n’employons aucun cookie de traçage comportemental et n’adressons aucun message de prospection non sollicité.',
+    'privacy.section4Title': '4. Droits de la Personne Concernée & Effacement Immédiat (Art. 7(3) & 17 du RGPD)',
+    'privacy.section4Desc': 'En stricte conformité avec l’Article 17 (Droit à l’effacement / « droit à l’oubli ») et l’Article 7(3) (Retrait du consentement) du RGPD, tout visiteur authentifié peut révoquer sa session et déclencher l’effacement définitif et complet de ses identifiants en un clic ci-dessous.',
+    'privacy.confirmTitle': 'Confirmer l’effacement définitif de vos données ?',
+    'privacy.confirmDesc': 'Attention : cette opération est définitive et irréversible. Toutes les données d’authentification et traces de session seront purgées de manière permanente.',
+    'privacy.purging': 'Effacement des enregistrements...',
+    'privacy.confirmBtn': 'Oui, effacer définitivement',
+    'privacy.cancelBtn': 'Annuler',
+    'privacy.purgeSuccessAlert': 'Enregistrements de session et identifiants définitivement purgés en application de l’Article 17 du RGPD.',
+    'privacy.purgeErrorAlert': 'Impossible de finaliser l’effacement. Veuillez vous réauthentifier puis réessayer.',
+    'privacy.purgeCommErrorAlert': 'Erreur de communication lors de la demande d’effacement. Veuillez réessayer.',
+    'privacy.footerNotice': 'Garanties Appliquées selon les Articles 7(3) et 17 du RGPD (Règlement UE 2016/679)',
+    'privacy.close': 'Fermer',
+
+    // Canvas
     'canvas.emptyTitle': 'Aucun sous-système ne correspond aux filtres.',
     'canvas.emptyDesc': 'Aucun nœud d’architecture trouvé pour votre recherche.',
     'canvas.resetFilters': 'Réinitialiser les Filtres',
@@ -1001,7 +1214,7 @@ export const TRANSLATIONS = {
     'pwa.installBadge': 'EXPÉRIENCE APP HORS-LIGNE',
     'pwa.appInstalled': 'Application Installée',
     'pwa.installActionTitle': 'Installer sur l’Appareil',
-    'pwa.cardSubtitle': 'Accès natif et mode hors-ligne',
+    'pwa.cardSubtitle': 'Accès hors-ligne',
     'pwa.cardSubtitleInstalled': 'Disponible hors-ligne sur cet appareil',
     'pwa.statusBadge': 'Installer',
     'pwa.statusBadgeInstalled': 'Actif',
@@ -1024,48 +1237,8 @@ export const TRANSLATIONS = {
     'footer.comingSoon': 'Bientôt disponible',
     'footer.muteAudio': 'Couper le Son',
     'footer.unmuteAudio': 'Activer les Effets Sonores',
-    'footer.subtitle': 'Ingénierie des Systèmes Distribués',
     'footer.privacyLink': 'Confidentialité & RGPD',
-    'resume.lgpdBadge': 'Conformité RGPD et LGPD Active',
-
-    // Métriques et Formation Académique
-    'academic.kpiHours': 'Heures Auditées',
-    'academic.kpiHoursSub': 'Volume Horaire Formel',
-    'academic.kpiDegrees': 'Diplômes Supérieurs',
-    'academic.kpiDegreesSub': 'Postgrad & Licences',
-    'academic.kpiWes': 'WES Canada',
-    'academic.kpiWesSub': 'Équivalence Fédérale',
-    'academic.kpiCredentials': 'Certificats Officiels',
-    'academic.kpiCredentialsSub': 'Hashes Vérifiables',
-    'academic.formalDegreesTitle': 'ENSEIGNEMENT SUPÉRIEUR ET DIPLÔMES FORMELS',
-    'academic.verifiedCredentialsTitle': 'CERTIFICATIONS ACADÉMIQUES OFFICIELLES (HASH PUBLIC)',
-    'academic.specializedTracksTitle': 'PARCOURS TECHNIQUES ET SPÉCIALISATIONS',
-    'academic.languagesTitle': 'LANGUES ET MAÎTRISE',
-    'skills.hardSkillsTitle': 'COMPÉTENCES TECHNIQUES (HARD SKILLS)',
-    'skills.softSkillsTitle': 'LEADERSHIP TECHNIQUE ET COMPÉTENCES COMPORTEMENTALES',
-    'academic.verifyCredential': 'Vérifier Hash ↗',
-    'academic.inProgressBadge': '',
-    'academic.completedBadge': 'DIPLÔMÉ',
-      'resume.directLine': "Ligne Directe",
-    'inspector.adrTitle': "[POST-MORTEM & D\u00c9CISION D'ARCHITECTURE // ADR]",
-    'inspector.subsystemLabel': "SOUS-SYST\u00c8ME :",
-    'inspector.rootCause': "CAUSE FONDAMENTALE / D\u00c9FI :",
-    'inspector.countermeasure': "CONTRE-MESURE ARCHITECTURALE :",
-    'inspector.productionOutcome': "R\u00c9SULTAT EN PRODUCTION :",
-    'inspector.acceptanceCriteriaLabel': "Crit\u00e8re d'Acceptation d'Architecture :",
-    'inspector.acceptanceCriteria': "La solution fonctionne en stricte conformit\u00e9 avec les garanties ACID et l'idempotence des \u00e9v\u00e9nements, \u00e9liminant tout besoin d'intervention manuelle lors des fen\u00eatres critiques.",
-    'sidebar.navAriaLabel': "Navigation des Vues",
-    'sidebar.mobileNavAriaLabel': "Navigation Inf\u00e9rieure Mobile",
-    'nav.back': "Retour",
-    'auth.revokeDataTooltip': "Supprimer les donn\u00e9es de session conform\u00e9ment au RGPD / LGPD",
-    'contactModal.authenticatedSubtitle': "Session authentifi\u00e9e \u00b7 Contacts d\u00e9bloqu\u00e9s",
-    'contactModal.unauthenticatedSubtitle': "S\u00e9lectionnez votre canal pr\u00e9f\u00e9r\u00e9",
-    'contactModal.copied': "Copi\u00e9",
-    'contactModal.copy': "Copier",
-    'contactModal.tapToUnlock': "Appuyez pour vous connecter et d\u00e9bloquer",
-    'contactModal.unlock': "D\u00e9bloquer",
-    'contactModal.activeSession': "Session Active",
-    'contactModal.signOut': "Verrouiller et Quitter",
+    'resume.lgpdBadge': 'Conformité au RGPD (Règlement UE 2016/679)',
   },
 } as const;
 
@@ -1074,131 +1247,6 @@ export type TranslationKey = keyof typeof TRANSLATIONS.EN;
 export function t(lang: AppLanguage, key: TranslationKey): string {
   const dictionary = TRANSLATIONS[lang] || TRANSLATIONS.EN;
   return (dictionary as Record<string, string>)[key] || TRANSLATIONS.EN[key] || key;
-}
-
-function resolveRegionalOverrides(node: ArchitectureNode, lang: AppLanguage) {
-  const compLower = node.company.toLowerCase();
-  const roleLower = node.role.toLowerCase();
-
-  if (lang === "ES") {
-    if (compLower.includes("magalu")) {
-      return {
-        role: "Staff Systems Engineer y Arquitecto de Sistemas",
-        businessValue: "Cero bloqueos en producción y mitigación total de riesgos de indisponibilidad durante cierres fiscales críticos.",
-        engineeringFeat: "Purga asíncrona particionada de 11TB de logs transaccionales en SQL Server sin bloqueos transaccionales en caliente.",
-        architecturalSolution: "Construcción de pipeline desacoplado en lotes dinámicos con monitoreo de telemetría de buffers de log y control de presión.",
-      };
-    }
-    if (compLower.includes("gps")) {
-      return {
-        role: "Ingeniero de Software Senior",
-        businessValue: "Reducción del 99,8% en el tiempo de procesamiento contable y liquidación de nóminas corporativas.",
-        engineeringFeat: "Reducción de la latencia del pipeline de cálculo financiero de 7 días a solo 20 minutos con consistencia total.",
-        architecturalSolution: "Optimización profunda de índices agrupados, particionamiento de tablas históricas y paralelización asíncrona en C#.",
-      };
-    }
-    if (compLower.includes("summerhill") && (roleLower.includes("system") || roleLower.includes("gerente") || roleLower.includes("dba"))) {
-      return {
-        role: "Gerente de Sistemas de TI, Ingeniero de Soluciones y DBA",
-        businessValue: "Gobernanza tecnológica unificada en 5 tiendas físicas con facturación íntegra en más de 500.000 transacciones mensuales y 30.000 SKUs.",
-        engineeringFeat: "Implementó plan de Disaster Recovery (DR/BCP) con recuperación total de 1 mes de datos críticos en 24 horas y sincronización POS/ERP en tiempo real.",
-        architecturalSolution: "Desarrollo de microservicios y APIs RESTful en C#/.NET conectando el catálogo GS1 al ERP con sincronización en tiempo real.",
-      };
-    }
-    if (compLower.includes("summerhill")) {
-      return {
-        role: "Líder de Operaciones y Optimización de Procesos",
-        businessValue: "Reducción del 70% en el descarte de materia prima y aumento de la capacidad de producción en un 50% sin nuevas contrataciones.",
-        engineeringFeat: "Aplicó conceptos formales de ingeniería de software (Teoría de Colas y flujo Just-in-Time) directamente a la logística de producción física.",
-        architecturalSolution: "Modelado predictivo de demanda con datos históricos de ventas y estandarización de pipelines de producción por lotes.",
-      };
-    }
-    if (compLower.includes("ambar")) {
-      return {
-        role: "Ingeniero de Software Especialista",
-        businessValue: "Sincronización en tiempo real de catálogos e inventarios en 5 centros de distribución sin pérdida de pedidos.",
-        engineeringFeat: "Broker de mensajería estándar GS1 que conecta ERP central y terminales de punto de venta POS en tiempo real.",
-        architecturalSolution: "Patrón Transactional Outbox con RabbitMQ y almacenamiento local idempotente con tolerancia a desconexión.",
-      };
-    }
-    if (compLower.includes("altitude") || compLower.includes("ultra")) {
-      return {
-        role: "Ingeniero de Software / Analista Desarrollador",
-        businessValue: "Recuperación de 11 Terabytes de almacenamiento en servidores de producción al 99% de capacidad, evitando costos masivos de hardware.",
-        engineeringFeat: "Reducción del tiempo de ejecución de un proceso crítico mensual de 1 mes a solo 2 horas (ganancia del 99,7%).",
-        architecturalSolution: "Expurgo transaccional particionado de datos históricos desindexados con 100% de integridad referencial y módulos en ASP.NET / T-SQL.",
-      };
-    }
-    if (compLower.includes("atento")) {
-      return {
-        role: "Ingeniero de Soporte Técnico III y Arquitecto de Automatización",
-        businessValue: "Garantizó el 99,98% de disponibilidad operativa en atención corporativa; redujo indisponibilidades en un 97% con ahorro superior a US$ 500.000.",
-        engineeringFeat: "Estabilizó pipelines de ingestión continua para más de 100.000 registros diarios de voz y telefonía sin pérdida de paquetes.",
-        architecturalSolution: "Gestión de tráfico masivo de voz y datos, optimización LAN/WAN y SIP/VoIP, y automatización con scripts ETL hacia SQL.",
-      };
-    }
-  }
-
-  if (lang === "FR") {
-    if (compLower.includes("magalu")) {
-      return {
-        role: "Staff Systems Engineer & Architecte Systèmes",
-        businessValue: "Zéro verrouillage en production et élimination des risques de panne lors des clôtures fiscales critiques.",
-        engineeringFeat: "Purge asynchrone partitionnée de 11 To de journaux sur SQL Server sans lock escalations en production.",
-        architecturalSolution: "Conception d'un pipeline découplé par lots dynamiques avec surveillance télémétrique de la pression des journaux.",
-      };
-    }
-    if (compLower.includes("gps")) {
-      return {
-        role: "Ingénieur Logiciel Senior",
-        businessValue: "Réduction de 99,8% du temps de traitement comptable et de règlement de paie multi-entités.",
-        engineeringFeat: "Réduction de la latence du pipeline de calcul financier de 7 jours à 20 minutes avec cohérence absolue.",
-        architecturalSolution: "Optimisation approfondie des index, partitionnement des tables historiques et parallélisation asynchrone en C#.",
-      };
-    }
-    if (compLower.includes("summerhill") && (roleLower.includes("system") || roleLower.includes("gerente") || roleLower.includes("dba"))) {
-      return {
-        role: "Responsable des Systèmes IT, Ingénieur Solutions & DBA",
-        businessValue: "Gouvernance technologique unifiée sur 5 magasins physiques avec facturation intègre sur plus de 500 000 transactions mensuelles et 30 000 SKUs.",
-        engineeringFeat: "Mise en œuvre d'un plan de reprise après sinistre (DR/BCP) avec restauration intégrale d'un mois de données critiques en 24 heures.",
-        architecturalSolution: "Développement de microservices et d'APIs RESTful en C#/.NET reliant le catalogue GS1 à l'ERP avec synchronisation en temps réel.",
-      };
-    }
-    if (compLower.includes("summerhill")) {
-      return {
-        role: "Responsable Opérations & Optimisation des Processus",
-        businessValue: "Réduction de 70% du gaspillage de matières premières et augmentation de 50% de la capacité de production sans nouveaux recrutements.",
-        engineeringFeat: "Application directe des principes d'ingénierie logicielle (Théorie des files d'attente et Just-in-Time) à la logistique physique.",
-        architecturalSolution: "Modélisation prédictive de la demande basée sur les historiques de ventes et standardisation des flux de production par lots.",
-      };
-    }
-    if (compLower.includes("ambar")) {
-      return {
-        role: "Ingénieur Logiciel Spécialiste",
-        businessValue: "Synchronisation en temps réel des catalogues et stocks sur 5 centres de distribution sans aucune perte de commande.",
-        engineeringFeat: "Broker de messagerie au standard GS1 reliant ERP central et points de vente POS en temps réel.",
-        architecturalSolution: "Pattern Transactional Outbox avec files RabbitMQ et persistance locale idempotente tolérante aux pannes.",
-      };
-    }
-    if (compLower.includes("altitude") || compLower.includes("ultra")) {
-      return {
-        role: "Ingénieur Logiciel / Développeur Analyste",
-        businessValue: "Récupération de 11 To de stockage sur des serveurs de production saturés à 99%, évitant des coûts massifs d'infrastructure.",
-        engineeringFeat: "Réduction du temps d'exécution d'un processus critique mensuel de 1 mois à seulement 2 heures (gain de 99,7%).",
-        architecturalSolution: "Purge transactionnelle partitionnée de données historiques désindexées avec intégrité référentielle à 100% et modules en ASP.NET / T-SQL.",
-      };
-    }
-    if (compLower.includes("atento")) {
-      return {
-        role: "Ingénieur Support Technique III & Architecte Automatisation",
-        businessValue: "Garantie de 99,98% de disponibilité opérationnelle; réduction des interruptions de 97% générant plus de 500 000 $ d'économies.",
-        engineeringFeat: "Conception et stabilisation de pipelines d'ingestion continue de plus de 100 000 enregistrements quotidiens de voix sans perte de paquets.",
-        architecturalSolution: "Gestion du trafic massif voix/données, optimisation LAN/WAN et SIP/VoIP, et automatisation de scripts ETL vers SQL.",
-      };
-    }
-  }
-
-  return null;
 }
 
 export function getNodeContent(node: ArchitectureNode, lang: AppLanguage): {
@@ -1215,17 +1263,17 @@ export function getNodeContent(node: ArchitectureNode, lang: AppLanguage): {
   interactiveActionDescription?: string;
 } {
   const transObj = lang === 'PT' ? node.pt : lang === 'ES' ? node.es : lang === 'FR' ? node.fr : null;
-  const overrides = resolveRegionalOverrides(node, lang);
+  const overlay = getRegionalNodeOverlay(node, lang);
 
   if (transObj && 'shortTitle' in transObj) {
     const trans = transObj as Required<Partial<typeof node.pt>>;
     return {
       shortTitle: trans.shortTitle ?? node.shortTitle,
-      role: overrides?.role ?? trans.role ?? node.role,
-      businessValue: overrides?.businessValue ?? trans.businessValue ?? node.businessValue,
-      engineeringFeat: overrides?.engineeringFeat ?? trans.engineeringFeat ?? node.engineeringFeat,
+      role: overlay?.role ?? trans.role ?? node.role,
+      businessValue: overlay?.businessValue ?? trans.businessValue ?? node.businessValue,
+      engineeringFeat: overlay?.engineeringFeat ?? trans.engineeringFeat ?? node.engineeringFeat,
       contextProblem: trans.contextProblem ?? node.contextProblem,
-      architecturalSolution: overrides?.architecturalSolution ?? trans.architecturalSolution ?? node.architecturalSolution,
+      architecturalSolution: overlay?.architecturalSolution ?? trans.architecturalSolution ?? node.architecturalSolution,
       engineeringLesson: trans.engineeringLesson ?? node.engineeringLesson,
       metricHighlight: trans.metricHighlight ?? node.metricHighlight,
       metricDetails: trans.metricDetails ?? node.metricDetails,
@@ -1236,11 +1284,11 @@ export function getNodeContent(node: ArchitectureNode, lang: AppLanguage): {
 
   return {
     shortTitle: node.shortTitle,
-    role: overrides?.role ?? node.role,
-    businessValue: overrides?.businessValue ?? node.businessValue,
-    engineeringFeat: overrides?.engineeringFeat ?? node.engineeringFeat,
+    role: overlay?.role ?? node.role,
+    businessValue: overlay?.businessValue ?? node.businessValue,
+    engineeringFeat: overlay?.engineeringFeat ?? node.engineeringFeat,
     contextProblem: node.contextProblem,
-    architecturalSolution: overrides?.architecturalSolution ?? node.architecturalSolution,
+    architecturalSolution: overlay?.architecturalSolution ?? node.architecturalSolution,
     engineeringLesson: node.engineeringLesson,
     metricHighlight: node.metricHighlight,
     metricDetails: node.metricDetails,

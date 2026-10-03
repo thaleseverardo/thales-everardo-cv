@@ -53,13 +53,7 @@ export const MobileContactModal: React.FC<MobileContactModalProps> = ({
         <div className="px-5 pt-[max(1.125rem,env(safe-area-inset-top,0px))] pb-4 border-b border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between shrink-0">
           <div>
             <h2 className="font-sans font-bold text-base tracking-tight text-zinc-900 dark:text-zinc-100">
-              {language === 'PT'
-                ? 'Canais de Contato'
-                : language === 'ES'
-                ? 'Canales de Contacto'
-                : language === 'FR'
-                ? 'Canaux de Contact'
-                : 'Direct Contact Channels'}
+              {t(language, 'contactModal.channelsTitle')}
             </h2>
             <p className="text-xs text-zinc-500 dark:text-zinc-400 font-sans mt-0.5">
               {isAuthenticated
@@ -277,7 +271,7 @@ export const MobileContactModal: React.FC<MobileContactModalProps> = ({
                 <Phone className="w-5 h-5 text-amber-500 shrink-0" />
                 <div className="min-w-0">
                   <div className="text-xs font-bold text-zinc-900 dark:text-zinc-100 leading-tight">
-                    {language === 'PT' ? 'Telefone' : language === 'ES' ? 'Teléfono' : language === 'FR' ? 'Téléphone' : 'Phone'}
+                    {t(language, 'contactModal.phone')}
                   </div>
                   <div className="text-[11.5px] font-mono text-zinc-600 dark:text-zinc-400 truncate mt-0.5">
                     {phone}
@@ -324,7 +318,7 @@ export const MobileContactModal: React.FC<MobileContactModalProps> = ({
                 <Phone className="w-5 h-5 text-zinc-400 dark:text-zinc-500 shrink-0" />
                 <div className="min-w-0">
                   <div className="text-xs font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5 leading-tight">
-                    <span>{language === 'PT' ? 'Telefone' : language === 'ES' ? 'Teléfono' : language === 'FR' ? 'Téléphone' : 'Phone'}</span>
+                    <span>{t(language, 'contactModal.phone')}</span>
                     <Lock className="w-3 h-3 text-amber-500" />
                   </div>
                   <div className="text-[11px] text-zinc-400 dark:text-zinc-500 truncate mt-0.5">
