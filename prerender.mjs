@@ -76,7 +76,7 @@ for (const lang of languages) {
     `<link rel="canonical" href="${canonicalUrl}" />`
   );
 
-  // 5. Injeção do Schema SiteNavigationElement para gatilho dos Sitelinks no Google
+  // 5. Injeção do Schema SiteNavigationElement
   const navigationSchema = `
     <!-- Google Sitelinks Navigation Schema -->
     <script type="application/ld+json">
@@ -91,7 +91,7 @@ for (const lang of languages) {
   `;
   localizedHtml = localizedHtml.replace('</head>', `${navigationSchema}\n</head>`);
 
-  // 6. Pre-hydration script no head para carregar a SPA com idioma síncrono no frame zero
+  // 6. Pre-hydration script no head para carregar o idioma síncrono
   const bootstrapScript = `
     <script>
       (function() {
@@ -107,7 +107,7 @@ for (const lang of languages) {
   `;
   localizedHtml = localizedHtml.replace('</head>', `${bootstrapScript}\n</head>`);
 
-  // 7. Navegação semântica estática pura dentro do <noscript>
+  // 7. Navegação semântica estática dentro do <noscript>
   const semanticNav = `
       <nav aria-label="Navegação de Idiomas / Sitelinks" style="margin: 1.5rem 0; padding: 1rem; border: 1px solid #27272a; border-radius: 8px;">
         <p style="margin: 0 0 0.5rem 0; font-weight: bold; font-size: 0.9rem;">Versões por Idioma / Language Navigation:</p>
@@ -128,14 +128,24 @@ for (const lang of languages) {
 }
 
 // ==============================================================================
-// GERAÇÃO AUTOMÁTICA E DINÂMICA DO SITEMAP.XML NO BUILD TIME
+// GERAÇÃO DO SITEMAP.XML SEMÂNTICO (COM HREFLANG RECÍPROCO E LASTMOD REAL)
 // ==============================================================================
-console.log('🗺️  [SEO] Gerando sitemap.xml dinâmico atualizado...');
+console.log('🗺️  [SEO] Gerando sitemap.xml com reciprocidade bidirecional e lastmod real...');
 
 const today = new Date().toISOString().split('T')[0];
 const baseUrl = 'https://thaleseverardo.github.io/thales-everardo-cv';
 
-// Varredura automática de artigos e projetos presentes em public/
+// Helper para obter a data de modificação real do arquivo no disco
+function getFileLastMod(filePath) {
+  try {
+    if (fs.existsSync(filePath)) {
+      const stats = fs.statSync(filePath);
+      return stats.mtime.toISOString().split('T')[0];
+    }
+  } catch {}
+  return today;
+}
+
 const getSubdirectories = (parentPath) => {
   if (!fs.existsSync(parentPath)) return [];
   return fs
@@ -147,59 +157,59 @@ const getSubdirectories = (parentPath) => {
 const articles = getSubdirectories(path.join(publicDir, 'articles'));
 const projects = getSubdirectories(path.join(publicDir, 'projects'));
 
-let sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-
-  <!-- Raiz Canônica com Alternates de Idioma -->
-  <url>
-    <loc>${baseUrl}/</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="pt" href="${baseUrl}/pt/"/>
+// Bloco comum de anotações recíprocas (exatamente igual para todas as páginas do cluster)
+const reciprocalHreflangBlock = `    <xhtml:link rel="alternate" hreflang="pt" href="${baseUrl}/pt/"/>
     <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}/en/"/>
     <xhtml:link rel="alternate" hreflang="es" href="${baseUrl}/es/"/>
     <xhtml:link rel="alternate" hreflang="fr" href="${baseUrl}/fr/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}/"/>`;
+
+let sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- 1. Raiz Canônica (Entrada Global / x-default) -->
+  <url>
+    <loc>${baseUrl}/</loc>
+    <lastmod>${today}</lastmod>
+${reciprocalHreflangBlock}
   </url>
 
-  <!-- Páginas Estáticas Dedicadas de Idioma (Sitelinks Targets) -->
+  <!-- 2. Versões Linguísticas Recíprocas (Sitelinks Targets) -->
 `;
 
 for (const lang of languages) {
   sitemapXml += `  <url>
     <loc>${baseUrl}/${lang.code}/</loc>
     <lastmod>${today}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
+${reciprocalHreflangBlock}
   </url>\n`;
 }
 
-sitemapXml += `\n  <!-- Artigos Técnicos de Arquitetura -->\n`;
+sitemapXml += `\n  <!-- 3. Artigos Técnicos de Arquitetura (Monolíngues com lastmod real) -->\n`;
 for (const art of articles) {
+  const artFile = path.join(publicDir, 'articles', art, 'index.html');
+  const artLastMod = getFileLastMod(artFile);
   sitemapXml += `  <url>
     <loc>${baseUrl}/articles/${art}/</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
+    <lastmod>${artLastMod}</lastmod>
   </url>\n`;
 }
 
-sitemapXml += `\n  <!-- Estudos de Caso & Projetos em Produção -->\n`;
+sitemapXml += `\n  <!-- 4. Estudos de Caso & Projetos (Monolíngues com lastmod real) -->\n`;
 for (const proj of projects) {
+  const projFile = path.join(publicDir, 'projects', proj, 'index.html');
+  const projLastMod = getFileLastMod(projFile);
   sitemapXml += `  <url>
     <loc>${baseUrl}/projects/${proj}/</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
+    <lastmod>${projLastMod}</lastmod>
   </url>\n`;
 }
 
-sitemapXml += `\n</urlset>\n`;
+sitemapXml += `</urlset>\n`;
 
-// Grava tanto em dist/ (para o deploy final) quanto em public/ (para manter o repositório sincronizado)
+// Grava em dist/ (deploy) e em public/ (repositório)
 fs.writeFileSync(path.join(distDir, 'sitemap.xml'), sitemapXml, 'utf-8');
 fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), sitemapXml, 'utf-8');
 
-console.log(`  ✓ Sitemap gravado com data de hoje (${today}) e ${1 + languages.length + articles.length + projects.length} rotas ativas.`);
-console.log('✅ [Build Complete] Todas as páginas e sitemap sincronizados com sucesso!');
+console.log(`  ✓ Sitemap semântico gravado com sucesso (${1 + languages.length + articles.length + projects.length} URLs).`);
+console.log('✅ [Build Complete] Páginas e sitemap 100% em conformidade com o Google Search Central!');

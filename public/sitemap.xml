@@ -1,95 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
-  <!-- Raiz Canônica com Alternates de Idioma -->
+  <!-- 1. Raiz Canônica (Entrada Global / x-default) -->
   <url>
     <loc>https://thaleseverardo.github.io/thales-everardo-cv/</loc>
-    <lastmod>2026-10-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <lastmod>2026-10-03</lastmod>
     <xhtml:link rel="alternate" hreflang="pt" href="https://thaleseverardo.github.io/thales-everardo-cv/pt/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://thaleseverardo.github.io/thales-everardo-cv/en/"/>
     <xhtml:link rel="alternate" hreflang="es" href="https://thaleseverardo.github.io/thales-everardo-cv/es/"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://thaleseverardo.github.io/thales-everardo-cv/fr/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://thaleseverardo.github.io/thales-everardo-cv/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thaleseverardo.github.io/thales-everardo-cv/"/>
   </url>
 
-  <!-- Páginas Estáticas Dedicadas de Idioma (Sitelinks Targets) -->
+  <!-- 2. Versões Linguísticas Recíprocas (Sitelinks Targets) -->
   <url>
     <loc>https://thaleseverardo.github.io/thales-everardo-cv/pt/</loc>
-    <lastmod>2026-10-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
+    <lastmod>2026-10-03</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://thaleseverardo.github.io/thales-everardo-cv/pt/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thaleseverardo.github.io/thales-everardo-cv/en/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thaleseverardo.github.io/thales-everardo-cv/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://thaleseverardo.github.io/thales-everardo-cv/fr/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thaleseverardo.github.io/thales-everardo-cv/"/>
   </url>
   <url>
     <loc>https://thaleseverardo.github.io/thales-everardo-cv/en/</loc>
-    <lastmod>2026-10-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
+    <lastmod>2026-10-03</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://thaleseverardo.github.io/thales-everardo-cv/pt/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thaleseverardo.github.io/thales-everardo-cv/en/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thaleseverardo.github.io/thales-everardo-cv/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://thaleseverardo.github.io/thales-everardo-cv/fr/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thaleseverardo.github.io/thales-everardo-cv/"/>
   </url>
   <url>
     <loc>https://thaleseverardo.github.io/thales-everardo-cv/es/</loc>
-    <lastmod>2026-10-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
+    <lastmod>2026-10-03</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://thaleseverardo.github.io/thales-everardo-cv/pt/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thaleseverardo.github.io/thales-everardo-cv/en/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thaleseverardo.github.io/thales-everardo-cv/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://thaleseverardo.github.io/thales-everardo-cv/fr/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thaleseverardo.github.io/thales-everardo-cv/"/>
   </url>
   <url>
     <loc>https://thaleseverardo.github.io/thales-everardo-cv/fr/</loc>
-    <lastmod>2026-10-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
+    <lastmod>2026-10-03</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://thaleseverardo.github.io/thales-everardo-cv/pt/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thaleseverardo.github.io/thales-everardo-cv/en/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://thaleseverardo.github.io/thales-everardo-cv/es/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://thaleseverardo.github.io/thales-everardo-cv/fr/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://thaleseverardo.github.io/thales-everardo-cv/"/>
   </url>
 
-  <!-- Artigos Técnicos de Arquitetura -->
+  <!-- 3. Artigos Técnicos de Arquitetura (Monolíngues com lastmod real) -->
   <url>
     <loc>https://thaleseverardo.github.io/thales-everardo-cv/articles/data-engineering-architecture-scalability/</loc>
-    <lastmod>2026-10-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
+    <lastmod>2026-10-01</lastmod>
   </url>
   <url>
     <loc>https://thaleseverardo.github.io/thales-everardo-cv/articles/database-partitioning-distributed-systems/</loc>
-    <lastmod>2026-10-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
+    <lastmod>2026-10-01</lastmod>
   </url>
   <url>
     <loc>https://thaleseverardo.github.io/thales-everardo-cv/articles/fault-tolerant-distributed-systems/</loc>
-    <lastmod>2026-10-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
+    <lastmod>2026-10-01</lastmod>
   </url>
   <url>
     <loc>https://thaleseverardo.github.io/thales-everardo-cv/articles/reducing-latency-distributed-systems/</loc>
-    <lastmod>2026-10-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
+    <lastmod>2026-10-01</lastmod>
   </url>
   <url>
     <loc>https://thaleseverardo.github.io/thales-everardo-cv/articles/system-architecture-principles/</loc>
-    <lastmod>2026-10-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
+    <lastmod>2026-10-01</lastmod>
   </url>
 
-  <!-- Estudos de Caso & Projetos em Produção -->
+  <!-- 4. Estudos de Caso & Projetos (Monolíngues com lastmod real) -->
   <url>
     <loc>https://thaleseverardo.github.io/thales-everardo-cv/projects/ambar-gs1-sync/</loc>
-    <lastmod>2026-10-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
+    <lastmod>2026-09-28</lastmod>
   </url>
   <url>
     <loc>https://thaleseverardo.github.io/thales-everardo-cv/projects/gps-financial-latency/</loc>
-    <lastmod>2026-10-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
+    <lastmod>2026-09-28</lastmod>
   </url>
   <url>
     <loc>https://thaleseverardo.github.io/thales-everardo-cv/projects/magalu-11tb-purge/</loc>
-    <lastmod>2026-10-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.88</priority>
+    <lastmod>2026-09-28</lastmod>
   </url>
-
 </urlset>
